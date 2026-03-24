@@ -66,7 +66,6 @@
             background: #721c24;
         }
         #logoutBtn:hover { background: #9b2c2c; }
-
         /* Tabs */
         .tabs {
             display: flex;
@@ -92,7 +91,6 @@
             z-index: 2;
             position: relative;
         }
-
         /* Pages */
         .page {
             display: none;
@@ -114,7 +112,6 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
-
         .auth-container {
             max-width: 420px;
             margin: 80px auto;
@@ -125,7 +122,6 @@
             text-align: center;
         }
         .hidden { display: none !important; }
-
         .upload-area {
             border: 2px dashed #1e3a5f;
             padding: 30px;
@@ -177,6 +173,28 @@
             width: 90%;
             text-align: center;
         }
+        /* New styles for search results */
+        .profile-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .masked {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #495057;
+        }
+        .no-results {
+            color: #dc3545;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
         @media print {
             body * { visibility: hidden; }
             #printableReport, #printableReport * { visibility: visible; }
@@ -186,7 +204,6 @@
     </style>
 </head>
 <body>
-
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
     <h1>TRX InfoSec</h1>
@@ -202,14 +219,12 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
         <h2>TRX InfoSec — Inheritance & Succession Management</h2>
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
-
     <div class="container">
         <!-- Tabs -->
         <div class="tabs">
@@ -221,7 +236,6 @@
             <div class="tab" onclick="switchTab(5)" id="tab-administrator">Administrator</div>
             <div class="tab" onclick="switchTab(6)" id="tab-profile">My Profile</div>
         </div>
-
         <!-- Banking Page -->
         <div id="bankingPage" class="page active">
             <div class="card">
@@ -249,7 +263,6 @@
                         <option value="unknown">Unknown</option>
                     </select>
                 </div>
-
                 <div class="card">
                     <h3>Subject (Patient / Deceased)</h3>
                     <label for="subjectName">Full Name</label>
@@ -272,7 +285,6 @@
                         <option value="yes">Yes</option>
                     </select>
                 </div>
-
                 <div class="card">
                     <h3>Legal Authority</h3>
                     <div id="successionSection">
@@ -308,7 +320,6 @@
                     <label for="caseNumber">Court Case Number (if any)</label>
                     <input type="text" id="caseNumber">
                 </div>
-
                 <div class="card">
                     <h3>Transaction Details</h3>
                     <label for="amount">Requested Amount (KES)</label>
@@ -331,53 +342,40 @@
                     <label for="approvedBy">Transaction Approved/Denied By <span style="color:#dc3545;">*</span></label>
                     <input type="text" id="approvedBy" placeholder="Name / Staff ID / Branch">
                 </div>
-
                 <button onclick="analyze()">Analyze Risk</button>
                 <button onclick="printReport()">Print Report</button>
                 <div id="output"></div>
             </div>
         </div>
-
         <!-- Other placeholder pages (kept short) -->
         <div id="propertyPage" class="page property"><div class="card"><h3>Property Succession Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
         <div id="unclaimedPage" class="page unclaimed"><div class="card"><h3>Unclaimed Assets Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
         <div id="liabilitiesPage" class="page liabilities"><div class="card"><h3>Liabilities & Debts Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
         <div id="guardianshipPage" class="page guardianship"><div class="card"><h3>Guardianship Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
         <div id="administratorPage" class="page administrator"><div class="card"><h3>Administrator / Executor Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-
                 <!-- Profile Form -->
                 <label for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
-
                 <label for="profileID">National ID Number</label>
                 <input type="text" id="profileID" disabled>
-
                 <label for="profileAddress">Residential Address</label>
                 <textarea id="profileAddress" disabled></textarea>
-
                 <label for="profilePhone">Phone Number</label>
                 <input type="tel" id="profilePhone" disabled>
-
                 <label for="profileEmail">Email Address</label>
                 <input type="email" id="profileEmail" disabled>
-
                 <label for="profileProperty">Property Numbers / Land Reference Numbers</label>
                 <textarea id="profileProperty" disabled></textarea>
-
                 <label for="profileBank">Bank Account Numbers</label>
                 <textarea id="profileBank" disabled></textarea>
-
                 <label for="profileLiabilities">Known Liabilities / Debts</label>
                 <textarea id="profileLiabilities" disabled></textarea>
-
                 <label for="profileNotes">General Notes</label>
                 <textarea id="profileNotes" disabled></textarea>
-
                 <!-- Document Uploads -->
                 <h4 style="margin-top:30px;">Document Uploads</h4>
                 <div class="upload-area" id="uploadArea">
@@ -386,56 +384,46 @@
                     <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileUpload(event)">
                 </div>
                 <div class="document-list" id="documentList"></div>
-
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
                 <button onclick="editMyProfile()">Edit My Profile</button>
                 <button onclick="showMyProfileInNewWindow()">Show My Profile</button>
-
                 <!-- Search Profiles -->
                 <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
                 <label for="searchTerm">Search Term</label>
-                <input type="text" id="searchTerm" placeholder="Enter name, ID, address or phone">
-                <button onclick="searchProfiles()">Search</button>
+                <input type="text" id="searchTerm" placeholder="Enter ID number, full names, address, phone number or email" onkeyup="if(event.key === 'Enter') searchProfiles()">
+                <button onclick="searchProfiles()">Search Profiles</button>
                 <div id="searchResults" class="search-results"></div>
-
                 <!-- Submit Information -->
                 <div class="submit-section">
                     <h3>Submit Information</h3>
                     <label for="submitterName">Submitter Full Names <span style="color:#dc3545;">*</span></label>
                     <input type="text" id="submitterName">
-
                     <label for="submitterID">Submitter National ID Number <span style="color:#dc3545;">*</span></label>
                     <input type="text" id="submitterID">
-
                     <label for="submitterPhone">Submitter Phone Number <span style="color:#dc3545;">*</span></label>
                     <input type="tel" id="submitterPhone">
-
                     <label for="infoType">Information Type</label>
                     <select id="infoType" onchange="toggleDeathDate()">
                         <option value="">Select information type</option>
                         <option value="dateOfDeath">Date of Death</option>
                         <option value="other">Other Update</option>
                     </select>
-
                     <div id="deathDateContainer" style="display:none;">
                         <label for="deathDateSubmit">Date of Death</label>
                         <input type="date" id="deathDateSubmit">
                     </div>
-
                     <h4 style="margin-top:20px;">Upload Supporting Document</h4>
                     <div class="upload-area" id="submitUploadArea">
                         <button onclick="document.getElementById('submitFileInput').click()">Browse Files</button>
                         <input type="file" id="submitFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleSubmitFileUpload(event)">
                     </div>
                     <div class="document-list" id="submitDocumentList"></div>
-
                     <button onclick="submitNewInformation()" style="background:#dc3545;">Submit New Information</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Verification Modal -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
@@ -447,7 +435,6 @@
         <button onclick="closeModal()" style="background:#721c24;">Cancel</button>
     </div>
 </div>
-
 <script>
 // Global variables
 let allProfiles = [];
@@ -456,7 +443,6 @@ let submitDocs = [];
 let currentLoggedInEmail = null;
 let editVerificationCode = null;
 let isEditing = false;
-
 // Auth logic
 function handleRegister() {
     const email = document.getElementById("email").value.trim();
@@ -475,20 +461,16 @@ function handleRegister() {
     msg.style.color = "#155724";
     msg.textContent = "Account created successfully!";
 }
-
 function handleLogin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-
     const storedEmail = localStorage.getItem("fd_user_email");
     const storedPass = localStorage.getItem("fd_user_pass");
-
     if (!storedEmail || email !== storedEmail || pass !== storedPass) {
         msg.textContent = "Incorrect email or password.";
         return;
     }
-
     currentLoggedInEmail = email;
     sessionStorage.setItem("fd_logged_in", "true");
     sessionStorage.setItem("fd_logged_email", email);
@@ -497,14 +479,12 @@ function handleLogin() {
     loadAllProfiles();
     loadProfile();
 }
-
 function logout() {
     sessionStorage.clear();
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
     currentLoggedInEmail = null;
 }
-
 // Load / Save global profiles
 function loadAllProfiles() {
     const saved = localStorage.getItem("allUserProfiles");
@@ -526,7 +506,6 @@ function loadAllProfiles() {
         localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
     }
 }
-
 function saveToAllProfiles(profileData) {
     const index = allProfiles.findIndex(p => p.email === currentLoggedInEmail);
     if (index > -1) {
@@ -536,14 +515,12 @@ function saveToAllProfiles(profileData) {
     }
     localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
 }
-
 // Tab switching
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
     const pages = ['bankingPage','propertyPage','unclaimedPage','liabilitiesPage','guardianshipPage','administratorPage','profilePage'];
     pages.forEach((id, i) => document.getElementById(id).classList.toggle('active', i === tabIndex));
 }
-
 // Banking functions (unchanged - abbreviated for space)
 function toggleFields(){/* same as before */}
 function toggleAnnualReporting(){/* same */}
@@ -552,11 +529,9 @@ function generateBeneficiaryFields(){/* same */}
 function generateReportId(){/* same */}
 function analyze(){/* full logic from previous version */}
 function printReport(){ window.print(); }
-
 // Profile functions
 function handleFileUpload(e) {
     if (!isEditing) return;
-    // ... same as before
     const files = e.target.files;
     for (let file of files) {
         const reader = new FileReader();
@@ -579,15 +554,64 @@ function renderDocumentList() {
     });
 }
 function removeDocument(i) { uploadedDocuments.splice(i,1); renderDocumentList(); }
-
 // Submit functions (unchanged - abbreviated)
 function handleSubmitFileUpload(e){/* same */}
 function renderSubmitDocumentList(){/* same */}
 function removeSubmitDoc(i){/* same */}
 function toggleDeathDate(){/* same */}
-function searchProfiles(){/* same as previous */}
-function submitNewInformation(){/* same as previous */}
 
+// ==================== NEW SEARCH FUNCTIONALITY ====================
+function maskValue(value) {
+    if (!value || value.length <= 5) return value || "N/A";
+    return "••••" + value.slice(-5);
+}
+
+function searchProfiles() {
+    const term = document.getElementById("searchTerm").value.trim().toLowerCase();
+    const resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = "";
+
+    if (!term) {
+        resultsContainer.innerHTML = '<p class="no-results">Please enter a search term (ID, name, address, phone or email)</p>';
+        return;
+    }
+
+    loadAllProfiles(); // ensure latest data
+
+    const matches = allProfiles.filter(profile => {
+        return (
+            (profile.nationalID && profile.nationalID.toLowerCase().includes(term)) ||
+            (profile.fullName && profile.fullName.toLowerCase().includes(term)) ||
+            (profile.address && profile.address.toLowerCase().includes(term)) ||
+            (profile.phone && profile.phone.toLowerCase().includes(term)) ||
+            (profile.email && profile.email.toLowerCase().includes(term))
+        );
+    });
+
+    if (matches.length === 0) {
+        resultsContainer.innerHTML = '<p class="no-results">No matching profiles found.</p>';
+        return;
+    }
+
+    let html = `<h4>Found ${matches.length} matching profile(s)</h4>`;
+    
+    matches.forEach(profile => {
+        html += `
+            <div class="profile-card">
+                <strong>Full Name:</strong> ${profile.fullName || "N/A"}<br>
+                <strong>National ID:</strong> <span class="masked">${maskValue(profile.nationalID)}</span><br>
+                <strong>Address:</strong> ${profile.address || "N/A"}<br>
+                <strong>Phone:</strong> <span class="masked">${maskValue(profile.phone)}</span><br>
+                <strong>Email:</strong> ${profile.email || "N/A"}
+            </div>
+        `;
+    });
+
+    resultsContainer.innerHTML = html;
+}
+// ==================================================================
+
+function submitNewInformation(){/* same as previous */}
 // NEW: Show My Profile in New Window
 function showMyProfileInNewWindow() {
     const profileHTML = `
@@ -612,7 +636,6 @@ function showMyProfileInNewWindow() {
     win.document.write(profileHTML);
     win.document.close();
 }
-
 // NEW: Edit My Profile - only for logged-in user
 function editMyProfile() {
     if (!currentLoggedInEmail) {
@@ -623,10 +646,8 @@ function editMyProfile() {
     editVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     // In real app this would be sent via email. Here we simulate
     alert(`A 6-digit verification code has been sent to your email: ${currentLoggedInEmail}\n\nFor demo purposes the code is: ${editVerificationCode}`);
-
     document.getElementById("verificationModal").style.display = "flex";
 }
-
 // Verify code
 function verifyCode() {
     const entered = document.getElementById("verificationCode").value.trim();
@@ -639,12 +660,10 @@ function verifyCode() {
         alert("Incorrect code. Please try again.");
     }
 }
-
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
     document.getElementById("verificationCode").value = "";
 }
-
 function enableEditing() {
     const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","profileProperty","profileBank","profileLiabilities","profileNotes"];
     fields.forEach(id => {
@@ -654,7 +673,6 @@ function enableEditing() {
     document.getElementById("fileInput").disabled = false;
     document.querySelector("#uploadArea button").disabled = false;
 }
-
 // Save Profile (only allowed after verification)
 function saveProfile() {
     if (!isEditing) {
@@ -666,7 +684,7 @@ function saveProfile() {
         nationalID: document.getElementById("profileID").value,
         address: document.getElementById("profileAddress").value,
         phone: document.getElementById("profilePhone").value,
-        email: currentLoggedInEmail,   // enforce logged-in email
+        email: currentLoggedInEmail, // enforce logged-in email
         property: document.getElementById("profileProperty").value,
         bankAccounts: document.getElementById("profileBank").value,
         liabilities: document.getElementById("profileLiabilities").value,
@@ -686,7 +704,6 @@ function saveProfile() {
     document.getElementById("fileInput").disabled = true;
     document.querySelector("#uploadArea button").disabled = true;
 }
-
 // Load current user's profile
 function loadProfile() {
     loadAllProfiles();
@@ -705,7 +722,6 @@ function loadProfile() {
         renderDocumentList();
     }
 }
-
 // Auto-login
 window.onload = function() {
     if (sessionStorage.getItem("fd_logged_in") === "true") {
