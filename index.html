@@ -21,7 +21,7 @@
         }
         .container {
             padding: 20px;
-            max-width: 920px;
+            max-width: 980px;
             margin: 0 auto;
         }
         .card {
@@ -36,13 +36,17 @@
             margin: 12px 0 6px;
             font-weight: 600;
         }
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1em;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
         button {
             padding: 11px 24px;
@@ -63,20 +67,22 @@
         }
         #logoutBtn:hover { background: #9b2c2c; }
 
-        /* Tab Navigation */
+        /* Tabs */
         .tabs {
             display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
             margin-bottom: 10px;
             border-bottom: 2px solid #ddd;
         }
         .tab {
-            padding: 12px 30px;
+            padding: 12px 20px;
             cursor: pointer;
             font-weight: bold;
             background: #f1f1f1;
             border-radius: 8px 8px 0 0;
-            margin-right: 5px;
             transition: all 0.3s;
+            white-space: nowrap;
         }
         .tab.active {
             background: white;
@@ -87,7 +93,7 @@
             position: relative;
         }
 
-        /* Page Overlap Effect */
+        /* Pages with overlap effect */
         .page {
             display: none;
             background: white;
@@ -99,9 +105,14 @@
         .page.active {
             display: block;
         }
-        .page.property {
-            margin-top: -15px; /* Creates overlapping effect */
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        .page.property,
+        .page.unclaimed,
+        .page.liabilities,
+        .page.guardianship,
+        .page.administrator,
+        .page.profile {
+            margin-top: -18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
 
         .auth-container {
@@ -164,11 +175,56 @@
             background: rgba(0,0,0,0.03);
             border-left: 5px solid #1e3a5f;
         }
+        .placeholder {
+            padding: 50px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 1.05em;
+        }
+
+        /* Profile specific styles */
+        .upload-area {
+            border: 2px dashed #1e3a5f;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 15px 0;
+            background: #f9fbff;
+        }
+        .document-list {
+            margin-top: 15px;
+        }
+        .document-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .save-btn {
+            background: #155724;
+        }
+        .save-btn:hover {
+            background: #1e7e34;
+        }
+        .search-results {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .submit-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
         @media print {
             body * { visibility: hidden; }
             #printableReport, #printableReport * { visibility: visible; }
             #printableReport { position: absolute; top: 0; left: 0; width: 100%; }
-            button, header, .auth-container, .tabs { display: none !important; }
+            button, header, .tabs, .auth-container { display: none !important; }
         }
     </style>
 </head>
@@ -198,13 +254,18 @@
     </header>
 
     <div class="container">
-        <!-- Tabs -->
+        <!-- Navigation Tabs -->
         <div class="tabs">
             <div class="tab active" onclick="switchTab(0)" id="tab-banking">Banking</div>
             <div class="tab" onclick="switchTab(1)" id="tab-property">Property</div>
+            <div class="tab" onclick="switchTab(2)" id="tab-unclaimed">Unclaimed Assets</div>
+            <div class="tab" onclick="switchTab(3)" id="tab-liabilities">Liabilities</div>
+            <div class="tab" onclick="switchTab(4)" id="tab-guardianship">Guardianship</div>
+            <div class="tab" onclick="switchTab(5)" id="tab-administrator">Administrator</div>
+            <div class="tab" onclick="switchTab(6)" id="tab-profile">My Profile</div>
         </div>
 
-        <!-- Banking Page (Default - First Page) -->
+        <!-- Banking Page (Default First Page) -->
         <div id="bankingPage" class="page active">
             <div class="card">
                 <h3>Banking Transaction Risk Screener</h3>
@@ -323,23 +384,114 @@
             </div>
         </div>
 
-        <!-- Property Page (Overlapping Second Page) -->
+        <!-- Placeholder Pages -->
         <div id="propertyPage" class="page property">
+            <div class="card"><h3>Property Succession Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div>
+        </div>
+        <div id="unclaimedPage" class="page unclaimed">
+            <div class="card"><h3>Unclaimed Assets Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div>
+        </div>
+        <div id="liabilitiesPage" class="page liabilities">
+            <div class="card"><h3>Liabilities & Debts Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div>
+        </div>
+        <div id="guardianshipPage" class="page guardianship">
+            <div class="card"><h3>Guardianship Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div>
+        </div>
+        <div id="administratorPage" class="page administrator">
+            <div class="card"><h3>Administrator / Executor Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div>
+        </div>
+
+        <!-- My Profile Page -->
+        <div id="profilePage" class="page profile">
             <div class="card">
-                <h3>Property Succession Risk Screener</h3>
-                <p style="color:#555; font-style:italic;">
-                    This section is under development. It will assess risks related to land, buildings, vehicles, and other immovable/movable property in succession matters.
-                </p>
-                <div style="padding: 40px; text-align:center; color:#888;">
-                    <h4>🚧 Property Module Coming Soon</h4>
-                    <p>Features will include:</p>
-                    <ul style="text-align:left; display:inline-block;">
-                        <li>Land title verification (Title Deed / Lease)</li>
-                        <li>Property valuation & encumbrance check</li>
-                        <li>Multiple heirs / co-ownership risks</li>
-                        <li>Mutation & transfer documentation</li>
-                        <li>Family dispute risk scoring</li>
-                    </ul>
+                <h3>My Personal Profile</h3>
+                <p style="color:#555;">Manage your personal information and documents for succession planning.</p>
+
+                <label for="profileFullName">Full Names</label>
+                <input type="text" id="profileFullName" placeholder="Your full legal name">
+
+                <label for="profileID">National ID Number</label>
+                <input type="text" id="profileID" placeholder="ID number / Passport number">
+
+                <label for="profileAddress">Residential Address</label>
+                <textarea id="profileAddress" placeholder="Full physical address"></textarea>
+
+                <label for="profilePhone">Phone Number</label>
+                <input type="tel" id="profilePhone" placeholder="+254 7XX XXX XXX">
+
+                <label for="profileEmail">Email Address</label>
+                <input type="email" id="profileEmail" placeholder="your@email.com">
+
+                <label for="profileProperty">Property Numbers / Land Reference Numbers</label>
+                <textarea id="profileProperty" placeholder="e.g. LR No. 12345, Title No. XXX, Vehicle Reg. KXX 123X"></textarea>
+
+                <label for="profileBank">Bank Account Numbers</label>
+                <textarea id="profileBank" placeholder="Bank name + Account number"></textarea>
+
+                <label for="profileLiabilities">Known Liabilities / Debts</label>
+                <textarea id="profileLiabilities" placeholder="List any outstanding loans, taxes, etc."></textarea>
+
+                <label for="profileNotes">General Notes</label>
+                <textarea id="profileNotes" placeholder="Any additional information or wishes regarding your estate"></textarea>
+
+                <!-- Document Upload Section -->
+                <h4 style="margin-top:30px;">Document Uploads</h4>
+                <div class="upload-area" id="uploadArea">
+                    <p>Drag & drop files here or</p>
+                    <button onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                    <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileUpload(event)">
+                    <p style="font-size:0.9em; color:#666; margin-top:10px;">Supported: PDF, JPG, PNG (National ID, Birth Certificate, Marriage Certificate, Will, etc.)</p>
+                </div>
+                <div class="document-list" id="documentList"></div>
+
+                <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+                <button onclick="loadProfile()">Load Saved Profile</button>
+
+                <!-- NEW: Search Profiles Section -->
+                <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
+                <p style="color:#555;">Search all existing profiles in storage by full names, ID number, address or phone number.</p>
+                <label for="searchTerm">Search Term</label>
+                <input type="text" id="searchTerm" placeholder="Enter name, ID, address or phone">
+                <button onclick="searchProfiles()">Search</button>
+                <div id="searchResults" class="search-results"></div>
+
+                <!-- NEW: Submit Information Section -->
+                <div class="submit-section">
+                    <h3>Submit Information</h3>
+                    <p style="color:#555;">Submit new information (e.g. date of death) that will be attached to an existing profile.</p>
+
+                    <label for="submitterName">Submitter Full Names <span style="color:#dc3545;">*</span></label>
+                    <input type="text" id="submitterName" placeholder="Your full name">
+
+                    <label for="submitterID">Submitter National ID Number <span style="color:#dc3545;">*</span></label>
+                    <input type="text" id="submitterID" placeholder="Your ID number">
+
+                    <label for="submitterPhone">Submitter Phone Number <span style="color:#dc3545;">*</span></label>
+                    <input type="tel" id="submitterPhone" placeholder="+254 7XX XXX XXX">
+
+                    <label for="infoType">Information Type</label>
+                    <select id="infoType" onchange="toggleDeathDate()">
+                        <option value="">Select information type</option>
+                        <option value="dateOfDeath">Date of Death</option>
+                        <option value="other">Other Update</option>
+                    </select>
+
+                    <div id="deathDateContainer" style="display:none;">
+                        <label for="deathDateSubmit">Date of Death</label>
+                        <input type="date" id="deathDateSubmit">
+                    </div>
+
+                    <!-- Submit Document Upload -->
+                    <h4 style="margin-top:20px;">Upload Supporting Document</h4>
+                    <div class="upload-area" id="submitUploadArea">
+                        <p>Drag & drop or</p>
+                        <button onclick="document.getElementById('submitFileInput').click()">Browse Files</button>
+                        <input type="file" id="submitFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleSubmitFileUpload(event)">
+                        <p style="font-size:0.9em; color:#666; margin-top:10px;">Supported: PDF, JPG, PNG</p>
+                    </div>
+                    <div class="document-list" id="submitDocumentList"></div>
+
+                    <button onclick="submitNewInformation()" style="background:#dc3545;">Submit New Information</button>
                 </div>
             </div>
         </div>
@@ -347,6 +499,11 @@
 </div>
 
 <script>
+// Global storage for ALL profiles (multiple users)
+let allProfiles = [];
+let uploadedDocuments = [];
+let submitDocs = [];
+
 // Auth logic
 function handleRegister() {
     const email = document.getElementById("email").value.trim();
@@ -383,6 +540,7 @@ function handleLogin() {
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         msg.textContent = "";
+        loadProfile();
     } else {
         msg.textContent = "Incorrect email or password.";
     }
@@ -394,38 +552,83 @@ function logout() {
     document.getElementById("authScreen").classList.remove("hidden");
 }
 
+// Load / Save all profiles (array in localStorage)
+function loadAllProfiles() {
+    const saved = localStorage.getItem("allUserProfiles");
+    allProfiles = saved ? JSON.parse(saved) : [];
+    // Add demo profiles if none exist
+    if (allProfiles.length === 0) {
+        allProfiles = [
+            {
+                fullName: "John Doe",
+                nationalID: "12345678",
+                address: "Nairobi, Kenya",
+                phone: "0712345678",
+                email: "john@example.com",
+                property: "LR No. 45678",
+                bankAccounts: "Equity Bank 1234567890",
+                liabilities: "None",
+                notes: "Demo profile",
+                documents: [],
+                submissions: []
+            },
+            {
+                fullName: "Jane Smith",
+                nationalID: "87654321",
+                address: "Mombasa, Kenya",
+                phone: "0723456789",
+                email: "jane@example.com",
+                property: "Title No. ABC123",
+                bankAccounts: "KCB 0987654321",
+                liabilities: "Small loan",
+                notes: "Demo profile 2",
+                documents: [],
+                submissions: []
+            }
+        ];
+        localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
+    }
+}
+
+function saveToAllProfiles(profileData) {
+    const index = allProfiles.findIndex(p => p.nationalID === profileData.nationalID);
+    if (index > -1) {
+        allProfiles[index] = { ...allProfiles[index], ...profileData };
+    } else {
+        allProfiles.push({ ...profileData, submissions: [] });
+    }
+    localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
+}
+
 // Tab switching
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => {
         tab.classList.toggle('active', i === tabIndex);
     });
-    document.getElementById('bankingPage').classList.toggle('active', tabIndex === 0);
-    document.getElementById('propertyPage').classList.toggle('active', tabIndex === 1);
+    const pages = ['bankingPage','propertyPage','unclaimedPage','liabilitiesPage','guardianshipPage','administratorPage','profilePage'];
+    pages.forEach((pageId, i) => {
+        document.getElementById(pageId).classList.toggle('active', i === tabIndex);
+    });
 }
 
-// Banking page functions (same as before)
+// Banking logic (full unchanged)
 function toggleFields() {
     const isAlive = document.getElementById("status").value === "alive";
     document.getElementById("deathDate").disabled = isAlive;
     document.getElementById("deathCert").disabled = isAlive;
     document.getElementById("deathDate").classList.toggle("disabled", isAlive);
     document.getElementById("deathCert").classList.toggle("disabled", isAlive);
-
     document.getElementById("successionSection").classList.toggle("disabled", isAlive);
     document.getElementById("successionSection").querySelector("select").disabled = isAlive;
-
     document.getElementById("guardianshipSection").classList.toggle("disabled", !isAlive);
     document.getElementById("guardianshipSection").querySelector("select").disabled = !isAlive;
-
     toggleAnnualReporting();
 }
-
 function toggleAnnualReporting() {
     const awardDate = document.getElementById("awardDate").value;
     const sec = document.getElementById("annualReportingSection");
     const sel = document.getElementById("annualVerified");
     const req = document.getElementById("annualRequired");
-
     if (!awardDate) {
         sec.classList.add("disabled");
         sel.disabled = true;
@@ -433,33 +636,27 @@ function toggleAnnualReporting() {
         toggleBeneficiariesSection();
         return;
     }
-
     const grantDate = new Date(awardDate);
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     const isOldEnough = grantDate <= oneYearAgo;
-
     sec.classList.toggle("disabled", !isOldEnough);
     sel.disabled = !isOldEnough;
     req.style.display = isOldEnough ? "inline" : "none";
-
     if (!isOldEnough) {
         sel.value = "";
         toggleBeneficiariesSection();
     }
 }
-
 function toggleBeneficiariesSection() {
     const annualVerified = document.getElementById("annualVerified").value;
     const sec = document.getElementById("beneficiariesSection");
     const inp = document.getElementById("numBeneficiaries");
     const req = document.getElementById("benRequired");
     const enable = (annualVerified === "no");
-
     sec.classList.toggle("disabled", !enable);
     inp.disabled = !enable;
     req.style.display = enable ? "inline" : "none";
-
     if (!enable) {
         inp.value = "";
         document.getElementById("beneficiaryContactsContainer").innerHTML = "";
@@ -467,7 +664,6 @@ function toggleBeneficiariesSection() {
         generateBeneficiaryFields();
     }
 }
-
 function generateBeneficiaryFields() {
     const n = parseInt(document.getElementById("numBeneficiaries").value) || 0;
     const container = document.getElementById("beneficiaryContactsContainer");
@@ -483,7 +679,6 @@ function generateBeneficiaryFields() {
         container.appendChild(div);
     }
 }
-
 function generateReportId() {
     const now = new Date();
     const ts = now.getFullYear().toString().slice(-2) +
@@ -494,11 +689,9 @@ function generateReportId() {
     const rand = Math.floor(1000 + Math.random() * 9000);
     return `FRD-${ts}-${rand}`;
 }
-
 function analyze() {
     let score = 0;
     let reasons = [];
-    // (Same risk logic as previous version - kept compact for brevity)
     const idVerified = document.getElementById("idVerified").value;
     const relationship = document.getElementById("relationship").value;
     const status = document.getElementById("status").value;
@@ -592,21 +785,233 @@ function analyze() {
         <em>Decision-support tool only. Escalate HIGH/CRITICAL cases to legal/risk team.</em>
     </p>
 </div>`;
-
     document.getElementById("output").innerHTML = rep;
 }
+function printReport() { window.print(); }
 
-function printReport() {
-    window.print();
+// Profile document upload
+function handleFileUpload(e) {
+    const files = e.target.files;
+    for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            uploadedDocuments.push({
+                name: file.name,
+                size: (file.size / 1024).toFixed(1) + " KB",
+                data: ev.target.result
+            });
+            renderDocumentList();
+        };
+        reader.readAsDataURL(file);
+    }
+}
+function renderDocumentList() {
+    const container = document.getElementById("documentList");
+    container.innerHTML = "";
+    uploadedDocuments.forEach((doc, index) => {
+        const div = document.createElement("div");
+        div.className = "document-item";
+        div.innerHTML = `
+            <span><strong>${doc.name}</strong> (${doc.size})</span>
+            <button onclick="removeDocument(${index})" style="background:#dc3545; padding:4px 10px; font-size:0.85em;">Remove</button>
+        `;
+        container.appendChild(div);
+    });
+}
+function removeDocument(index) {
+    uploadedDocuments.splice(index, 1);
+    renderDocumentList();
 }
 
-// Auto-login & initial setup
+// Submit document upload
+function handleSubmitFileUpload(e) {
+    const files = e.target.files;
+    for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            submitDocs.push({
+                name: file.name,
+                size: (file.size / 1024).toFixed(1) + " KB",
+                data: ev.target.result
+            });
+            renderSubmitDocumentList();
+        };
+        reader.readAsDataURL(file);
+    }
+}
+function renderSubmitDocumentList() {
+    const container = document.getElementById("submitDocumentList");
+    container.innerHTML = "";
+    submitDocs.forEach((doc, index) => {
+        const div = document.createElement("div");
+        div.className = "document-item";
+        div.innerHTML = `
+            <span><strong>${doc.name}</strong> (${doc.size})</span>
+            <button onclick="removeSubmitDoc(${index})" style="background:#dc3545; padding:4px 10px; font-size:0.85em;">Remove</button>
+        `;
+        container.appendChild(div);
+    });
+}
+function removeSubmitDoc(index) {
+    submitDocs.splice(index, 1);
+    renderSubmitDocumentList();
+}
+
+// Toggle death date field
+function toggleDeathDate() {
+    const type = document.getElementById("infoType").value;
+    document.getElementById("deathDateContainer").style.display = (type === "dateOfDeath") ? "block" : "none";
+}
+
+// NEW: Search all profiles
+function searchProfiles() {
+    const term = document.getElementById("searchTerm").value.toLowerCase().trim();
+    const resultsDiv = document.getElementById("searchResults");
+    if (!term) {
+        resultsDiv.innerHTML = "<p style='color:#dc3545;'>Please enter a search term.</p>";
+        return;
+    }
+    const matches = allProfiles.filter(p => 
+        (p.fullName || "").toLowerCase().includes(term) ||
+        (p.nationalID || "").includes(term) ||
+        (p.address || "").toLowerCase().includes(term) ||
+        (p.phone || "").includes(term)
+    );
+    if (matches.length === 0) {
+        resultsDiv.innerHTML = `<p><strong>No records found.</strong></p>`;
+        return;
+    }
+    let html = `<p><strong>Record found: ${matches.length} match(es)</strong></p><ul style="list-style:none; padding:0;">`;
+    matches.forEach(m => {
+        const last4 = (m.phone && m.phone.length >= 4) ? m.phone.slice(-4) : "****";
+        html += `<li style="margin-bottom:12px; padding:10px; background:white; border-radius:4px;">
+            <strong>${m.fullName}</strong><br>
+            Address: ${m.address || "N/A"}<br>
+            Phone: ****${last4}
+        </li>`;
+    });
+    html += `</ul>`;
+    resultsDiv.innerHTML = html;
+}
+
+// NEW: Submit new information (attached to existing profile)
+function submitNewInformation() {
+    const submitterName = document.getElementById("submitterName").value.trim();
+    const submitterID = document.getElementById("submitterID").value.trim();
+    const submitterPhone = document.getElementById("submitterPhone").value.trim();
+    const infoType = document.getElementById("infoType").value;
+    const deathDate = document.getElementById("deathDateSubmit").value;
+
+    if (!submitterName || !submitterID || !submitterPhone || !infoType) {
+        alert("Please fill in all required submitter fields and select information type.");
+        return;
+    }
+
+    // Attach to the profile currently loaded in the form (by National ID)
+    const targetID = document.getElementById("profileID").value.trim();
+    if (!targetID) {
+        alert("Please load or save a profile first (National ID is required to attach information).");
+        return;
+    }
+
+    const index = allProfiles.findIndex(p => p.nationalID === targetID);
+    if (index === -1) {
+        alert("Target profile not found. Please save the profile first.");
+        return;
+    }
+
+    const submission = {
+        type: infoType,
+        dateOfDeath: (infoType === "dateOfDeath") ? deathDate : null,
+        document: submitDocs.length > 0 ? submitDocs[0] : null,
+        submittedBy: {
+            fullName: submitterName,
+            nationalID: submitterID,
+            phone: submitterPhone
+        },
+        timestamp: new Date().toISOString()
+    };
+
+    allProfiles[index].submissions.push(submission);
+    localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
+
+    alert("Information submitted successfully and attached to the profile!");
+    
+    // Clear submit form
+    document.getElementById("submitterName").value = "";
+    document.getElementById("submitterID").value = "";
+    document.getElementById("submitterPhone").value = "";
+    document.getElementById("infoType").value = "";
+    document.getElementById("deathDateSubmit").value = "";
+    document.getElementById("deathDateContainer").style.display = "none";
+    submitDocs = [];
+    renderSubmitDocumentList();
+}
+
+// Profile save / load
+function saveProfile() {
+    const profileData = {
+        fullName: document.getElementById("profileFullName").value,
+        nationalID: document.getElementById("profileID").value,
+        address: document.getElementById("profileAddress").value,
+        phone: document.getElementById("profilePhone").value,
+        email: document.getElementById("profileEmail").value,
+        property: document.getElementById("profileProperty").value,
+        bankAccounts: document.getElementById("profileBank").value,
+        liabilities: document.getElementById("profileLiabilities").value,
+        notes: document.getElementById("profileNotes").value,
+        documents: uploadedDocuments
+    };
+    if (!profileData.nationalID) {
+        alert("National ID is required to save profile.");
+        return;
+    }
+    saveToAllProfiles(profileData);
+    alert("Profile saved successfully and added to global storage!");
+}
+
+function loadProfile() {
+    loadAllProfiles(); // ensure loaded
+    const saved = localStorage.getItem("userProfile"); // keep backward compatibility for current user
+    if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById("profileFullName").value = data.fullName || "";
+        document.getElementById("profileID").value = data.nationalID || "";
+        document.getElementById("profileAddress").value = data.address || "";
+        document.getElementById("profilePhone").value = data.phone || "";
+        document.getElementById("profileEmail").value = data.email || "";
+        document.getElementById("profileProperty").value = data.property || "";
+        document.getElementById("profileBank").value = data.bankAccounts || "";
+        document.getElementById("profileLiabilities").value = data.liabilities || "";
+        document.getElementById("profileNotes").value = data.notes || "";
+        uploadedDocuments = data.documents || [];
+        renderDocumentList();
+    } else if (allProfiles.length > 0) {
+        // fallback to first profile in global list
+        const data = allProfiles[0];
+        document.getElementById("profileFullName").value = data.fullName || "";
+        document.getElementById("profileID").value = data.nationalID || "";
+        document.getElementById("profileAddress").value = data.address || "";
+        document.getElementById("profilePhone").value = data.phone || "";
+        document.getElementById("profileEmail").value = data.email || "";
+        document.getElementById("profileProperty").value = data.property || "";
+        document.getElementById("profileBank").value = data.bankAccounts || "";
+        document.getElementById("profileLiabilities").value = data.liabilities || "";
+        document.getElementById("profileNotes").value = data.notes || "";
+        uploadedDocuments = data.documents || [];
+        renderDocumentList();
+    }
+}
+
+// Auto-login & initialization
 window.onload = function() {
+    loadAllProfiles();
     if (sessionStorage.getItem("fd_logged_in") === "true") {
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
+        loadProfile();
     }
-    toggleFields(); // Initialize banking fields
+    toggleFields();
 };
 </script>
 </body>
