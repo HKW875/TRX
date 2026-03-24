@@ -1,282 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Inheritance and Succession Management Tool</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    margin: 0;
-    min-height: 100vh;
-}
-header {
-    background: #1e3a5f;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    position: relative;
-}
-.container {
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-.card {
-    background: white;
-    padding: 25px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-label { display: block; margin: 12px 0 5px; font-weight: 600; }
-input, select {
-    width: 100%;
-    padding: 9px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-button {
-    padding: 10px 22px;
-    background: #1e3a5f;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    margin: 8px 12px 8px 0;
-}
-button:hover { background: #2c5282; }
-#logoutBtn {
-    position: absolute;
-    top: 18px;
-    right: 25px;
-    background: #721c24;
-}
-#logoutBtn:hover { background: #9b2c2c; }
-.auth-container {
-    max-width: 420px;
-    margin: 80px auto;
-    background: white;
-    padding: 35px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    text-align: center;
-}
-.hidden { display: none !important; }
-.result {
-    padding: 20px;
-    margin-top: 15px;
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #ddd;
-}
-.result::before {
-    content: "trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec";
-    position: absolute;
-    top: 0; left: 0;
-    width: 200%; height: 200%;
-    font-size: 40px;
-    color: rgba(0,0,0,0.04);
-    transform: rotate(-30deg);
-    line-height: 80px;
-    white-space: pre-wrap;
-    pointer-events: none;
-}
-/* Risk colors */
-.low { background: #e6ffe6; color: #1a3c1a; }
-.medium { background: #fff3cd; color: #856404; }
-.high { background: #f8d7da; color: #721c24; }
-.critical { background: #dc3545; color: white; }
-/* Disabled styling */
-.disabled, .disabled input, .disabled select { background: #f0f0f0; color: #888; cursor: not-allowed; }
-.disabled label { color: #999; }
-/* Warnings */
-.missing { color: #dc3545; font-size: 0.9em; margin: -4px 0 8px; }
-/* Beneficiary rows */
-.beneficiary-row { border: 1px solid #ddd; padding: 12px; margin: 10px 0; border-radius: 6px; background: #fafafa; }
-.beneficiary-row input { width: 48%; display: inline-block; margin-right: 2%; }
-.print-note { font-style: italic; margin-top: 16px; padding: 10px; background: rgba(0,0,0,0.03); border-left: 4px solid #1e3a5f; }
-/* Print */
-@media print {
-    body * { visibility: hidden; }
-    #printableReport, #printableReport * { visibility: visible; }
-    #printableReport { position: absolute; top: 0; left: 0; width: 100%; }
-    button, header, .auth-container { display: none !important; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRX InfoSec | Inheritance & Succession Management</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            min-height: 100vh;
+            color: #333;
+        }
+        header {
+            background: #1e3a5f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .container {
+            padding: 20px;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            padding: 11px 24px;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 12px 10px 0;
+        }
+        button:hover { background: #2c5282; }
+        #logoutBtn {
+            position: absolute;
+            top: 18px;
+            right: 25px;
+            background: #721c24;
+        }
+        #logoutBtn:hover { background: #9b2c2c; }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 12px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #f1f1f1;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            background: white;
+            border: 2px solid #1e3a5f;
+            border-bottom: none;
+            color: #1e3a5f;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Page Overlap Effect */
+        .page {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            position: relative;
+        }
+        .page.active {
+            display: block;
+        }
+        .page.property {
+            margin-top: -15px; /* Creates overlapping effect */
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .auth-container {
+            max-width: 420px;
+            margin: 80px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .hidden { display: none !important; }
+
+        .result {
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+        .result::before {
+            content: "trxinfosec trxinfosec trxinfosec trxinfosec trxinfosec";
+            position: absolute;
+            top: 0; left: 0;
+            width: 200%; height: 200%;
+            font-size: 38px;
+            color: rgba(0,0,0,0.04);
+            transform: rotate(-28deg);
+            line-height: 70px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .low { background: #e6ffe6; color: #1a3c1a; }
+        .medium { background: #fff3cd; color: #856404; }
+        .high { background: #f8d7da; color: #721c24; }
+        .critical { background: #dc3545; color: white; }
+
+        .disabled, .disabled input, .disabled select {
+            background: #f0f0f0;
+            color: #888;
+            cursor: not-allowed;
+        }
+        .beneficiary-row {
+            border: 1px solid #ddd;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        .beneficiary-row input {
+            width: 48%;
+            display: inline-block;
+            margin-right: 2%;
+        }
+        .print-note {
+            font-style: italic;
+            margin-top: 18px;
+            padding: 12px;
+            background: rgba(0,0,0,0.03);
+            border-left: 5px solid #1e3a5f;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printableReport, #printableReport * { visibility: visible; }
+            #printableReport { position: absolute; top: 0; left: 0; width: 100%; }
+            button, header, .auth-container, .tabs { display: none !important; }
+        }
+    </style>
 </head>
 <body>
-<!-- Login / Register Screen -->
+
+<!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
     <h1>TRX InfoSec</h1>
     <h5>Inheritance and Succession Management Tool</h5>
     <h2>Login / Register</h2>
-    <label>Email</label>
-    <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
-    <label>Password</label>
-    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-    <div style="margin-top: 20px;">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="your@email.com">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <div style="margin-top: 25px;">
         <button onclick="handleLogin()">Login</button>
         <button onclick="handleRegister()">Create Account</button>
     </div>
-    <p id="authMessage" style="color:#dc3545; min-height:24px; margin-top:12px;"></p>
+    <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
 
-<!-- Main App -->
+<!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
-        <h2>TRX InfoSec</h2>
-        <h2>Guardianship & Succession Transaction Risk Screener</h2>
+        <h2>TRX InfoSec — Inheritance & Succession Management</h2>
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
+
     <div class="container">
-
-        <!-- Claimant -->
-        <div class="card">
-            <h3>Claimant Information</h3>
-            <label>Full Name</label>
-            <input type="text" id="name">
-            <label>National ID</label>
-            <input type="text" id="id">
-            <label>ID Verified & Copy Taken?</label>
-            <select id="idVerified">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <label>Relationship</label>
-            <select id="relationship">
-                <option value="">Select</option>
-                <option value="spouse">Spouse</option>
-                <option value="child">Child</option>
-                <option value="relative">Relative</option>
-                <option value="lawyer">Lawyer</option>
-                <option value="guardian">Guardian (Court Appointed)</option>
-                <option value="unknown">Unknown</option>
-            </select>
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)" id="tab-banking">Banking</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-property">Property</div>
         </div>
 
-        <!-- Patient / Deceased -->
-        <div class="card">
-            <h3>Patient / Deceased Information</h3>
-            <label>Name</label>
-            <input type="text" id="subjectName">
-            <label>Status</label>
-            <select id="status" onchange="toggleFields()">
-                <option value="deceased">Deceased</option>
-                <option value="alive">Alive (Sick / Incapacitated)</option>
-            </select>
-            <label>Date of Death</label>
-            <input type="date" id="deathDate">
-            <label>Death Certificate</label>
-            <select id="deathCert">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <label>Medical Proof of Incapacity (if alive)</label>
-            <select id="medicalProof">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
+        <!-- Banking Page (Default - First Page) -->
+        <div id="bankingPage" class="page active">
+            <div class="card">
+                <h3>Banking Transaction Risk Screener</h3>
+                <!-- Claimant -->
+                <div class="card">
+                    <h3>Claimant Information</h3>
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Claimant full name">
+                    <label for="id">National ID / Passport</label>
+                    <input type="text" id="id" placeholder="ID number">
+                    <label for="idVerified">ID Verified & Copy Taken?</label>
+                    <select id="idVerified">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                    <label for="relationship">Relationship to Subject</label>
+                    <select id="relationship">
+                        <option value="">Select relationship</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="child">Child</option>
+                        <option value="relative">Other Relative</option>
+                        <option value="lawyer">Lawyer / Agent</option>
+                        <option value="guardian">Court-Appointed Guardian</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+
+                <!-- Subject -->
+                <div class="card">
+                    <h3>Subject (Patient / Deceased)</h3>
+                    <label for="subjectName">Full Name</label>
+                    <input type="text" id="subjectName">
+                    <label for="status">Status</label>
+                    <select id="status" onchange="toggleFields()">
+                        <option value="deceased">Deceased</option>
+                        <option value="alive">Alive (Sick / Incapacitated)</option>
+                    </select>
+                    <label for="deathDate">Date of Death</label>
+                    <input type="date" id="deathDate">
+                    <label for="deathCert">Death Certificate Available?</label>
+                    <select id="deathCert">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                    <label for="medicalProof">Medical Proof of Incapacity (if alive)</label>
+                    <select id="medicalProof">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+
+                <!-- Legal -->
+                <div class="card">
+                    <h3>Legal Authority</h3>
+                    <div id="successionSection">
+                        <label for="grant">Grant of Representation</label>
+                        <select id="grant">
+                            <option value="none">None</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                        </select>
+                    </div>
+                    <div id="guardianshipSection">
+                        <label for="guardianOrder">Guardian Court Order</label>
+                        <select id="guardianOrder">
+                            <option value="none">None</option>
+                            <option value="provided">Provided</option>
+                        </select>
+                    </div>
+                    <label for="awardDate">Date of Grant / Court Order</label>
+                    <input type="date" id="awardDate" onchange="toggleAnnualReporting()">
+                    <div id="annualReportingSection" class="disabled">
+                        <label for="annualVerified">Annual Reporting Verified <span id="annualRequired" style="color:#dc3545;">*</span></label>
+                        <select id="annualVerified" onchange="toggleBeneficiariesSection()">
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div id="beneficiariesSection" class="disabled">
+                        <label for="numBeneficiaries">Number of Beneficiaries <span id="benRequired" style="color:#dc3545;">*</span></label>
+                        <input type="number" id="numBeneficiaries" min="1" onchange="generateBeneficiaryFields()">
+                        <div id="beneficiaryContactsContainer"></div>
+                    </div>
+                    <label for="caseNumber">Court Case Number (if any)</label>
+                    <input type="text" id="caseNumber">
+                </div>
+
+                <!-- Transaction -->
+                <div class="card">
+                    <h3>Transaction Details</h3>
+                    <label for="amount">Requested Amount (KES)</label>
+                    <input type="number" id="amount" min="0" step="0.01">
+                    <label for="balance">Current Balance (KES)</label>
+                    <input type="number" id="balance" min="0" step="0.01">
+                    <label for="purpose">Purpose of Withdrawal</label>
+                    <select id="purpose">
+                        <option value="upkeep">Medical / Upkeep</option>
+                        <option value="unknown">Unknown</option>
+                        <option value="personal">Personal Use</option>
+                    </select>
+                    <label for="urgency">Is the request marked as urgent?</label>
+                    <select id="urgency">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                    <label for="riskAnalysisBy">Risk Analysis Conducted By <span style="color:#dc3545;">*</span></label>
+                    <input type="text" id="riskAnalysisBy" placeholder="Name / Staff ID / Branch">
+                    <label for="approvedBy">Transaction Approved/Denied By <span style="color:#dc3545;">*</span></label>
+                    <input type="text" id="approvedBy" placeholder="Name / Staff ID / Branch">
+                </div>
+
+                <button onclick="analyze()">Analyze Risk</button>
+                <button onclick="printReport()">Print Report</button>
+                <div id="output"></div>
+            </div>
         </div>
 
-        <!-- Legal -->
-        <div class="card">
-            <h3>Legal Authority</h3>
-            <div id="successionSection">
-                <label>Grant of Representation</label>
-                <select id="grant">
-                    <option value="none">None</option>
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                </select>
+        <!-- Property Page (Overlapping Second Page) -->
+        <div id="propertyPage" class="page property">
+            <div class="card">
+                <h3>Property Succession Risk Screener</h3>
+                <p style="color:#555; font-style:italic;">
+                    This section is under development. It will assess risks related to land, buildings, vehicles, and other immovable/movable property in succession matters.
+                </p>
+                <div style="padding: 40px; text-align:center; color:#888;">
+                    <h4>🚧 Property Module Coming Soon</h4>
+                    <p>Features will include:</p>
+                    <ul style="text-align:left; display:inline-block;">
+                        <li>Land title verification (Title Deed / Lease)</li>
+                        <li>Property valuation & encumbrance check</li>
+                        <li>Multiple heirs / co-ownership risks</li>
+                        <li>Mutation & transfer documentation</li>
+                        <li>Family dispute risk scoring</li>
+                    </ul>
+                </div>
             </div>
-            <div id="guardianshipSection">
-                <label>Guardian Court Order</label>
-                <select id="guardianOrder">
-                    <option value="none">None</option>
-                    <option value="provided">Provided</option>
-                </select>
-            </div>
-            <label>Date of Grant / Court Order</label>
-            <input type="date" id="awardDate" onchange="toggleAnnualReporting()">
-            <div id="annualReportingSection" class="disabled">
-                <label>Annual reporting verified <span id="annualRequired" style="color:#dc3545; display:none;">*</span></label>
-                <select id="annualVerified" onchange="toggleBeneficiariesSection()">
-                    <option value="">Select</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div id="beneficiariesSection" class="disabled">
-                <label>Number of beneficiaries <span id="benRequired" style="color:#dc3545; display:none;">*</span></label>
-                <input type="number" id="numBeneficiaries" min="1" onchange="generateBeneficiaryFields()">
-                <div id="beneficiaryContactsContainer"></div>
-            </div>
-            <label>Court Case Number</label>
-            <input type="text" id="caseNumber">
         </div>
-
-        <!-- Transaction -->
-        <div class="card">
-            <h3>Transaction Details</h3>
-            <label>Amount (KES)</label>
-            <input type="number" id="amount" min="0">
-            <label>Balance (KES)</label>
-            <input type="number" id="balance" min="0">
-            <label>Purpose</label>
-            <select id="purpose">
-                <option value="upkeep">Medical / Upkeep</option>
-                <option value="unknown">Unknown</option>
-                <option value="personal">Personal Use</option>
-            </select>
-            <label>Urgency?</label>
-            <select id="urgency">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-            <label>Transaction risk analysis conducted by <span style="color:#dc3545;">*</span></label>
-            <input type="text" id="riskAnalysisBy" placeholder="Name / Staff ID / Branch" required>
-            <label>Transaction approval or denial by <span style="color:#dc3545;">*</span></label>
-            <input type="text" id="approvedBy" placeholder="Name / Staff ID / Branch" required>
-        </div>
-
-        <button onclick="analyze()">Analyze</button>
-        <button onclick="printReport()">Print Report</button>
-        <div id="output"></div>
     </div>
 </div>
 
 <script>
-// ────────────────────────────────────────────────
-// Auth logic (localStorage – demo only!)
-// ────────────────────────────────────────────────
+// Auth logic
 function handleRegister() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
     if (!email || !pass) {
-        msg.textContent = "Please enter both email and password.";
+        msg.textContent = "Email and password are required.";
         return;
     }
     if (localStorage.getItem("fd_user_email")) {
-        msg.textContent = "Account already exists. Please login.";
+        msg.textContent = "Account already exists. Please log in.";
         return;
     }
     localStorage.setItem("fd_user_email", email);
-    localStorage.setItem("fd_user_pass", pass); // WARNING: plain text – demo only
+    localStorage.setItem("fd_user_pass", pass);
     msg.style.color = "#155724";
-    msg.textContent = "Account created! You can now log in.";
+    msg.textContent = "Account created successfully! You can now log in.";
 }
 
 function handleLogin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
+
     const storedEmail = localStorage.getItem("fd_user_email");
     const storedPass = localStorage.getItem("fd_user_pass");
+
     if (!storedEmail) {
         msg.textContent = "No account found. Please register first.";
         return;
@@ -295,23 +392,98 @@ function logout() {
     sessionStorage.removeItem("fd_logged_in");
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("authMessage").textContent = "You have been logged out.";
 }
 
-// Auto-login check
-window.onload = function() {
-    if (sessionStorage.getItem("fd_logged_in") === "true") {
-        document.getElementById("authScreen").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
-    }
-    toggleFields();
-};
+// Tab switching
+function switchTab(tabIndex) {
+    document.querySelectorAll('.tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === tabIndex);
+    });
+    document.getElementById('bankingPage').classList.toggle('active', tabIndex === 0);
+    document.getElementById('propertyPage').classList.toggle('active', tabIndex === 1);
+}
 
-// ────────────────────────────────────────────────
-// Core logic
-// ────────────────────────────────────────────────
+// Banking page functions (same as before)
+function toggleFields() {
+    const isAlive = document.getElementById("status").value === "alive";
+    document.getElementById("deathDate").disabled = isAlive;
+    document.getElementById("deathCert").disabled = isAlive;
+    document.getElementById("deathDate").classList.toggle("disabled", isAlive);
+    document.getElementById("deathCert").classList.toggle("disabled", isAlive);
+
+    document.getElementById("successionSection").classList.toggle("disabled", isAlive);
+    document.getElementById("successionSection").querySelector("select").disabled = isAlive;
+
+    document.getElementById("guardianshipSection").classList.toggle("disabled", !isAlive);
+    document.getElementById("guardianshipSection").querySelector("select").disabled = !isAlive;
+
+    toggleAnnualReporting();
+}
+
+function toggleAnnualReporting() {
+    const awardDate = document.getElementById("awardDate").value;
+    const sec = document.getElementById("annualReportingSection");
+    const sel = document.getElementById("annualVerified");
+    const req = document.getElementById("annualRequired");
+
+    if (!awardDate) {
+        sec.classList.add("disabled");
+        sel.disabled = true;
+        req.style.display = "none";
+        toggleBeneficiariesSection();
+        return;
+    }
+
+    const grantDate = new Date(awardDate);
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const isOldEnough = grantDate <= oneYearAgo;
+
+    sec.classList.toggle("disabled", !isOldEnough);
+    sel.disabled = !isOldEnough;
+    req.style.display = isOldEnough ? "inline" : "none";
+
+    if (!isOldEnough) {
+        sel.value = "";
+        toggleBeneficiariesSection();
+    }
+}
+
+function toggleBeneficiariesSection() {
+    const annualVerified = document.getElementById("annualVerified").value;
+    const sec = document.getElementById("beneficiariesSection");
+    const inp = document.getElementById("numBeneficiaries");
+    const req = document.getElementById("benRequired");
+    const enable = (annualVerified === "no");
+
+    sec.classList.toggle("disabled", !enable);
+    inp.disabled = !enable;
+    req.style.display = enable ? "inline" : "none";
+
+    if (!enable) {
+        inp.value = "";
+        document.getElementById("beneficiaryContactsContainer").innerHTML = "";
+    } else if (inp.value) {
+        generateBeneficiaryFields();
+    }
+}
+
+function generateBeneficiaryFields() {
+    const n = parseInt(document.getElementById("numBeneficiaries").value) || 0;
+    const container = document.getElementById("beneficiaryContactsContainer");
+    container.innerHTML = "";
+    for (let i = 1; i <= n; i++) {
+        const div = document.createElement("div");
+        div.className = "beneficiary-row";
+        div.innerHTML = `
+            <strong>Beneficiary ${i}</strong><br>
+            <input type="email" class="ben-email" placeholder="Email address">
+            <input type="tel" class="ben-phone" placeholder="Phone number">
+        `;
+        container.appendChild(div);
+    }
+}
+
 function generateReportId() {
     const now = new Date();
     const ts = now.getFullYear().toString().slice(-2) +
@@ -323,92 +495,10 @@ function generateReportId() {
     return `FRD-${ts}-${rand}`;
 }
 
-function toggleFields() {
-    let st = document.getElementById("status").value;
-    let isAlive = st === "alive";
-    document.getElementById("deathDate").disabled = isAlive;
-    document.getElementById("deathCert").disabled = isAlive;
-    document.getElementById("deathDate").classList.toggle("disabled", isAlive);
-    document.getElementById("deathCert").classList.toggle("disabled", isAlive);
-    toggleLegalFields();
-    toggleAnnualReporting();
-}
-
-function toggleLegalFields() {
-    let st = document.getElementById("status").value;
-    let isAlive = st === "alive";
-    let succ = document.getElementById("successionSection");
-    let guard = document.getElementById("guardianshipSection");
-    succ.classList.toggle("disabled", isAlive);
-    succ.querySelector("select").disabled = isAlive;
-    guard.classList.toggle("disabled", !isAlive);
-    guard.querySelector("select").disabled = !isAlive;
-}
-
-function toggleAnnualReporting() {
-    const aw = document.getElementById("awardDate").value;
-    const sec = document.getElementById("annualReportingSection");
-    const sel = document.getElementById("annualVerified");
-    const req = document.getElementById("annualRequired");
-    if (!aw) {
-        sec.classList.add("disabled");
-        sel.disabled = true;
-        req.style.display = "none";
-        toggleBeneficiariesSection();
-        return;
-    }
-    const date = new Date(aw);
-    const today = new Date();
-    const oneYrAgo = new Date(today);
-    oneYrAgo.setFullYear(today.getFullYear() - 1);
-    const oldEnough = date <= oneYrAgo;
-    sec.classList.toggle("disabled", !oldEnough);
-    sel.disabled = !oldEnough;
-    req.style.display = oldEnough ? "inline" : "none";
-    if (!oldEnough) {
-        sel.value = "";
-        toggleBeneficiariesSection();
-    }
-}
-
-function toggleBeneficiariesSection() {
-    const val = document.getElementById("annualVerified").value;
-    const sec = document.getElementById("beneficiariesSection");
-    const inp = document.getElementById("numBeneficiaries");
-    const req = document.getElementById("benRequired");
-    const enable = (val === "no");
-    sec.classList.toggle("disabled", !enable);
-    inp.disabled = !enable;
-    req.style.display = enable ? "inline" : "none";
-    if (!enable) {
-        inp.value = "";
-        document.getElementById("beneficiaryContactsContainer").innerHTML = "";
-    } else if (inp.value) {
-        generateBeneficiaryFields();
-    }
-}
-
-function generateBeneficiaryFields() {
-    const n = parseInt(document.getElementById("numBeneficiaries").value) || 0;
-    const cont = document.getElementById("beneficiaryContactsContainer");
-    cont.innerHTML = "";
-    for (let i = 1; i <= n; i++) {
-        const div = document.createElement("div");
-        div.className = "beneficiary-row";
-        div.innerHTML = `
-            <strong>Beneficiary ${i}</strong><br>
-            <input type="email" class="ben-email" placeholder="Email" required>
-            <input type="tel" class="ben-phone" placeholder="Phone" required>
-        `;
-        cont.appendChild(div);
-    }
-}
-
 function analyze() {
     let score = 0;
     let reasons = [];
-
-    // Basic collection (expand these rules as needed)
+    // (Same risk logic as previous version - kept compact for brevity)
     const idVerified = document.getElementById("idVerified").value;
     const relationship = document.getElementById("relationship").value;
     const status = document.getElementById("status").value;
@@ -425,88 +515,81 @@ function analyze() {
     const urgency = document.getElementById("urgency").value;
     const caseNumber = document.getElementById("caseNumber").value.trim();
 
-    if (idVerified === "no") { score += 50; reasons.push("ID not verified or copy not taken"); }
-    if (relationship === "unknown" || relationship === "lawyer") { score += 35; reasons.push("High-risk relationship (unknown or lawyer)"); }
+    if (idVerified === "no") { score += 50; reasons.push("Claimant ID not verified"); }
+    if (relationship === "unknown" || relationship === "lawyer") { score += 35; reasons.push("High-risk relationship"); }
     if (status === "deceased" && deathCert === "no") { score += 45; reasons.push("No death certificate"); }
     if (status === "alive" && medicalProof === "no") { score += 50; reasons.push("No medical proof of incapacity"); }
     if (status === "deceased" && grant === "none") { score += 60; reasons.push("No Grant of Representation"); }
     if (status === "deceased" && grant === "pending") { score += 30; reasons.push("Grant still pending"); }
     if (status === "alive" && guardianOrder === "none") { score += 70; reasons.push("No guardianship court order"); }
 
-    let annualReq = false;
+    let annualRequired = false;
     if (awardDate) {
         const d = new Date(awardDate);
-        const today = new Date();
-        const ago = new Date(today); ago.setFullYear(today.getFullYear()-1);
-        annualReq = d <= ago;
+        const ago = new Date(); ago.setFullYear(ago.getFullYear()-1);
+        annualRequired = d <= ago;
     }
-    if (annualReq && annualVerified === "no") {
+    if (annualRequired && annualVerified === "no") {
         score = Math.max(score, 65);
-        reasons.push("Annual reporting NOT verified (high risk)");
+        reasons.push("Annual reporting NOT verified");
     }
 
     let benContactsOk = true;
-    if (annualReq && annualVerified === "no" && numBen >= 1) {
+    if (annualRequired && annualVerified === "no" && numBen >= 1) {
         const emails = document.querySelectorAll(".ben-email");
         const phones = document.querySelectorAll(".ben-phone");
         benContactsOk = [...emails].every(e => e.value.trim()) && [...phones].every(p => p.value.trim());
-        if (!benContactsOk) {
-            score += 35;
-            reasons.push("Incomplete beneficiary contact details");
-        }
-    } else if (annualReq && annualVerified === "no" && numBen === 0) {
-        score += 40;
-        reasons.push("No beneficiaries listed when annual reporting missing");
+        if (!benContactsOk) { score += 35; reasons.push("Incomplete beneficiary contacts"); }
+    } else if (annualRequired && annualVerified === "no" && numBen === 0) {
+        score += 40; reasons.push("No beneficiaries listed");
     }
 
-    if (amount > (balance || 1) * 0.5) { score += 25; reasons.push("Withdrawal > 50% of available balance"); }
-    if (purpose === "personal" || purpose === "unknown") { score += 30; reasons.push("Purpose unclear or personal"); }
-    if (urgency === "yes" && purpose !== "upkeep") { score += 20; reasons.push("Urgent request without medical justification"); }
-    if (!caseNumber) { score += 20; reasons.push("No court case number provided"); }
+    if (amount > balance * 0.5) { score += 25; reasons.push("Withdrawal > 50% of balance"); }
+    if (purpose === "personal" || purpose === "unknown") { score += 30; reasons.push("Unclear or personal purpose"); }
+    if (urgency === "yes" && purpose !== "upkeep") { score += 20; reasons.push("Urgent without justification"); }
+    if (!caseNumber) { score += 20; reasons.push("No court case number"); }
 
-    // Risk classification
-    let lvl = "LOW RISK";
-    let cls = "low";
+    let lvl = "LOW RISK", cls = "low";
     if (score >= 80) { lvl = "CRITICAL FRAUD RISK"; cls = "critical"; }
     else if (score >= 60) { lvl = "HIGH RISK"; cls = "high"; }
     else if (score >= 35) { lvl = "MEDIUM RISK"; cls = "medium"; }
 
-    // Build report
     const reportId = generateReportId();
-    const nameVal = document.getElementById("name").value.trim() || "[Not entered]";
-    const subjectVal = document.getElementById("subjectName").value.trim() || "[Not entered]";
-    const amountVal = amount ? amount.toLocaleString("en-KE") : "[Not entered]";
-    const benText = annualReq && annualVerified === "no" ? `${numBen} beneficiary(ies)` : "Not required";
-    const contactsText = (annualReq && annualVerified === "no") ? (benContactsOk ? "Yes – all provided" : "No / incomplete") : "N/A";
+    const nameVal = document.getElementById("name").value.trim() || "[Not provided]";
+    const subjectVal = document.getElementById("subjectName").value.trim() || "[Not provided]";
+    const amountVal = amount ? amount.toLocaleString("en-KE") : "[Not provided]";
 
-    let approvalNote = (cls === "medium" || cls === "high" || cls === "critical") ?
-        `<p class="print-note"><strong>Approval requirement:</strong> Medium / High / Critical risk → mandatory beneficiary outreach + second-level approval.</p>` : "";
+    const benText = annualRequired && annualVerified === "no" ? `${numBen} beneficiary(ies)` : "Not required";
+    const contactsText = (annualRequired && annualVerified === "no") ? (benContactsOk ? "Complete" : "Incomplete") : "N/A";
 
-    let reasonsHtml = reasons.length ?
-        `<ul>${reasons.map(r => `<li>${r}</li>`).join("")}</ul>` :
-        "<p><em>No major red flags detected based on current rules.</em></p>";
+    const approvalNote = (cls !== "low") ? 
+        `<p class="print-note"><strong>Approval requirement:</strong> Mandatory beneficiary outreach + second-level approval.</p>` : "";
 
-    let rep = `
+    const reasonsHtml = reasons.length ? 
+        `<ul>${reasons.map(r => `<li>${r}</li>`).join("")}</ul>` : 
+        "<p><em>No major red flags detected.</em></p>";
+
+    const rep = `
 <div id="printableReport" class="card result ${cls}">
-    <h2>Fraud Risk Assessment Report</h2>
+    <h2>Banking Fraud Risk Assessment Report</h2>
     <p><strong>Report ID:</strong> ${reportId}</p>
     <p><strong>Generated:</strong> ${new Date().toLocaleString("en-KE")}</p>
     <hr>
-    <h3 style="margin-top:0;">Risk Outcome</h3>
-    <p style="font-size:1.4em; font-weight:bold; margin:8px 0;">${lvl}</p>
-    <p><strong>Risk Score:</strong> ${score} / 100+</p>
+    <h3>Risk Outcome</h3>
+    <p style="font-size:1.5em; font-weight:bold;">${lvl}</p>
+    <p><strong>Risk Score:</strong> ${score}</p>
     <hr>
     <p><strong>Claimant:</strong> ${nameVal}</p>
-    <p><strong>Subject (Patient/Deceased):</strong> ${subjectVal}</p>
+    <p><strong>Subject:</strong> ${subjectVal}</p>
     <p><strong>Requested Amount:</strong> KES ${amountVal}</p>
-    <p><strong>Number of beneficiaries (when required):</strong> ${benText}</p>
-    <p><strong>Beneficiary contacts provided:</strong> ${contactsText}</p>
+    <p><strong>Beneficiaries:</strong> ${benText}</p>
+    <p><strong>Contacts:</strong> ${contactsText}</p>
     <hr>
-    <h3>Key Findings / Reasons</h3>
+    <h3>Key Findings</h3>
     ${reasonsHtml}
     ${approvalNote}
-    <p style="margin-top:20px; font-size:0.9em; color:#555;">
-        <em>Always escalate HIGH or CRITICAL cases to legal/risk team. This is a decision-support tool only.</em>
+    <p style="margin-top:25px; font-size:0.9em; color:#555;">
+        <em>Decision-support tool only. Escalate HIGH/CRITICAL cases to legal/risk team.</em>
     </p>
 </div>`;
 
@@ -516,6 +599,15 @@ function analyze() {
 function printReport() {
     window.print();
 }
+
+// Auto-login & initial setup
+window.onload = function() {
+    if (sessionStorage.getItem("fd_logged_in") === "true") {
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+    }
+    toggleFields(); // Initialize banking fields
+};
 </script>
 </body>
 </html>
