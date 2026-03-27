@@ -591,77 +591,99 @@ let isEditing = false;
 let propertyFields = [];
 let bankAccounts = [];
     
-// Auth logic (unchanged)
+// ================= AUTH FUNCTIONS (FIXED) =================
+
+// REGISTER
 async function handleRegister() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const res = await fetch("http://localhost:5000/api/auth/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
-
-  const data = await res.json();
-  console.log(data);
-}
-
-    
-function handleRegister() {
     const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("password").value.trim();
+    const password = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-    if (!email || !pass) {
+
+    if (!email || !password) {
+        msg.style.color = "red";
         msg.textContent = "Email and password are required.";
         return;
     }
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        email: email,
-        password: password
-      })
-    });
 
-    const data = await res.json();
+    try {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-    
-    msg.style.color = "#155724";
-    msg.textContent = "Account created successfully!";
+        const data = await res.json();
+
+        if (res.ok) {
+            msg.style.color = "green";
+            msg.textContent = "Account created successfully!";
+        } else {
+            msg.style.color = "red";
+            msg.textContent = data.msg || "Registration failed.";
+        }
+
+    } catch (error) {
+        msg.style.color = "red";
+        msg.textContent = "Server error. Check backend.";
+        console.error(error);
     }
 }
-function handleLogin() {
+
+
+// LOGIN
+async function handleLogin() {
     const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("password").value.trim();
+    const password = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
 
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem("token", data.token); // ✅ OK
-      alert("Login successful");
-    } else {
-      alert(data.msg);
+    if (!email || !password) {
+        msg.style.color = "red";
+        msg.textContent = "Email and password are required.";
+        return;
     }
-    currentLoggedInEmail = email;
-    sessionStorage.setItem("fd_logged_in", "true");
-    sessionStorage.setItem("fd_logged_email", email);
-    document.getElementById("authScreen").classList.add("hidden");
-    document.getElementById("mainApp").classList.remove("hidden");
-    loadAllProfiles();
-    loadProfile();
+
+    try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+            // Save token
+            localStorage.setItem("token", data.token);
+
+            currentLoggedInEmail = email;
+            sessionStorage.setItem("fd_logged_in", "true");
+            sessionStorage.setItem("fd_logged_email", email);
+
+            // Switch UI
+            document.getElementById("authScreen").classList.add("hidden");
+            document.getElementById("mainApp").classList.remove("hidden");
+
+            loadAllProfiles();
+            loadProfile();
+
+        } else {
+            msg.style.color = "red";
+            msg.textContent = data.msg || "Login failed.";
+        }
+
+    } catch (error) {
+        msg.style.color = "red";
+        msg.textContent = "Server error. Check backend.";
+        console.error(error);
+    }
 }
+
+
+    
 function logout() {
     sessionStorage.clear();
     document.getElementById("mainApp").classList.add("hidden");
