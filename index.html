@@ -109,7 +109,6 @@
         }
         .page.property,
         .page.unclaimed,
-        .page.liabilities,
         .page.guardianship,
         .page.administrator,
         .page.profile {
@@ -215,6 +214,17 @@
             background: #155724;
         }
         .add-property-btn:hover, .add-bank-btn:hover { background: #1e7e34; }
+        .blurred {
+            filter: blur(4px);
+            user-select: none;
+        }
+        .guidance-section {
+            margin-bottom: 25px;
+        }
+        .guidance-section h4 {
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -233,7 +243,6 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -246,12 +255,10 @@
             <div class="tab active" onclick="switchTab(0)" id="tab-banking">Banking</div>
             <div class="tab" onclick="switchTab(1)" id="tab-property">Property</div>
             <div class="tab" onclick="switchTab(2)" id="tab-unclaimed">Unclaimed Assets</div>
-            <div class="tab" onclick="switchTab(3)" id="tab-liabilities">Liabilities</div>
-            <div class="tab" onclick="switchTab(4)" id="tab-guardianship">Guardianship</div>
-            <div class="tab" onclick="switchTab(5)" id="tab-administrator">Administrator</div>
-            <div class="tab" onclick="switchTab(6)" id="tab-profile">My Profile</div>
+            <div class="tab" onclick="switchTab(3)" id="tab-guardianship">Guardianship</div>
+            <div class="tab" onclick="switchTab(4)" id="tab-administrator">Administrator</div>
+            <div class="tab" onclick="switchTab(5)" id="tab-profile">My Profile</div>
         </div>
-
         <!-- Banking Page (unchanged) -->
         <div id="bankingPage" class="page active">
             <div class="card">
@@ -363,19 +370,154 @@
                 <div id="output"></div>
             </div>
         </div>
-
-        <!-- Other placeholder pages unchanged -->
-        <div id="propertyPage" class="page property"><div class="card"><h3>Property Succession Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-        <div id="unclaimedPage" class="page unclaimed"><div class="card"><h3>Unclaimed Assets Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-        <div id="liabilitiesPage" class="page liabilities"><div class="card"><h3>Liabilities & Debts Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-        <div id="guardianshipPage" class="page guardianship"><div class="card"><h3>Guardianship Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-        <div id="administratorPage" class="page administrator"><div class="card"><h3>Administrator / Executor Risk Screener</h3><div class="placeholder"><h4>🚧 Under Development</h4></div></div></div>
-
-        <!-- My Profile Page - Only Bank Accounts section changed -->
+        <!-- Property Page - FULL GUIDANCE NOTES -->
+        <div id="propertyPage" class="page property">
+            <div class="card">
+                <h3>Property Succession Guidance Notes</h3>
+                <div class="guidance-section">
+                    <h4><strong>Obtaining Grant of Representation</strong></h4>
+                    <p>The Law of Succession Act (Cap 160) requires a Grant of Representation (Probate if there is a valid Will or Letters of Administration if intestate) before any immovable property such as land or buildings can be transferred to heirs. The petitioner must file a petition in the High Court or appropriate Magistrates Court including a full inventory of assets and list of beneficiaries. Once confirmed, the grant allows legal transfer of title deeds. In cases of delay, the Public Trustee may be appointed as interim administrator to protect the estate.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Dealing with Family Disputes in Property Succession</strong></h4>
+                    <p>Family disputes often arise over unequal distribution, forged wills, or exclusion of certain heirs. Mediation through the court or alternative dispute resolution is strongly encouraged before litigation to avoid lengthy delays and high legal costs. All parties must be served with notice and given opportunity to file objections. The court may order DNA tests or witness testimony to establish legitimacy of claims. A confirmed grant can only be issued after disputes are resolved or withdrawn.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Handling Rented Properties and Tenants</strong></h4>
+                    <p>When the deceased owned rental property, the administrator must first notify all tenants in writing and collect any outstanding rent into the estate account. Tenants cannot be evicted without court approval unless they breach the lease. Rental income forms part of the estate and must be accounted for in annual reports. Existing lease agreements remain binding until expiry or mutual termination. The administrator is responsible for maintaining the property and paying rates and utilities until distribution.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Land Reference Numbers and Title Transfer</strong></h4>
+                    <p>Every parcel of land in Kenya has a unique Land Reference (LR) Number or Title Number registered at the Land Registry. The administrator must obtain certified copies of title deeds and lodge a transfer instrument together with the confirmed grant. Stamp duty at 2% of the market value or probate valuation is payable. The new owner’s name is then registered and a new title issued. Any encumbrances such as charges or caveats must be cleared before transfer.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Role of the Public Trustee in Property Matters</strong></h4>
+                    <p>The Public Trustee can be appointed by the court when there is no suitable family member willing or able to act as administrator, especially in complex cases with multiple properties or disputes. The Public Trustee holds the property in trust, collects rents, pays debts, and distributes the residue according to the grant. This option provides professional management and reduces family conflict but incurs administrative fees deducted from the estate.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Distribution of Property to Beneficiaries</strong></h4>
+                    <p>After all debts, taxes, and funeral expenses are settled, the remaining property is distributed according to the will or intestacy rules (spouse and children first). The administrator prepares a final account and obtains court approval for distribution. Beneficiaries receive transfer documents or sale proceeds if the property is sold by agreement. Any minor beneficiaries require a guardian to hold the property until they reach 18 years.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Tax and Duty Implications</strong></h4>
+                    <p>Stamp duty is payable on transfer of immovable property upon succession. Capital Gains Tax may apply if the property is sold shortly after transfer. The administrator must also ensure all outstanding land rates and rents are cleared before final distribution. Proper valuation by a registered valuer is required for probate purposes and tax calculations.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Unclaimed Assets Page - FULL GUIDANCE NOTES -->
+        <div id="unclaimedPage" class="page unclaimed">
+            <div class="card">
+                <h3>Unclaimed Assets Guidance Notes</h3>
+                <div class="guidance-section">
+                    <h4><strong>What Constitutes Unclaimed Assets</strong></h4>
+                    <p>Unclaimed assets include dormant bank accounts, uncashed cheques, insurance proceeds, pension benefits, safe deposit box contents, and shares that have not been claimed by rightful owners or heirs for a statutory period. In Kenya, banks and institutions are required to report such assets to the Unclaimed Financial Assets Authority (UFAA) after seven years of inactivity. These assets remain the property of the original owner or estate until successfully claimed.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Claiming Unclaimed Bank Balances and Deposits</strong></h4>
+                    <p>To claim dormant bank accounts, the next of kin or administrator must present a confirmed Grant of Representation, death certificate, and proof of relationship. The bank will verify the claim and release funds after deducting any applicable fees. If the account was already transferred to UFAA, the claim must be filed directly with UFAA using the online portal or their offices. All claims require certified identification documents.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Unclaimed Insurance Proceeds and Policies</strong></h4>
+                    <p>Life insurance policies that remain unclaimed after the insured’s death must be claimed by named beneficiaries or the estate administrator. The insurer requires a death certificate, policy document, and Grant of Representation. Proceeds are paid directly to the estate account if no beneficiary was named. Claims must be made within the policy’s statutory limitation period to avoid forfeiture.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Pensions and Retirement Benefits</strong></h4>
+                    <p>Unclaimed pension benefits from NSSF, RBA-regulated schemes, or employer pensions can be claimed by the surviving spouse, children, or administrator. A Grant of Representation together with the deceased’s membership number and proof of death is required. The fund administrator will release the lump sum or annuity after verification. Surviving dependents may also qualify for survivor benefits under the scheme rules.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Safe Deposit Boxes and Physical Valuables</strong></h4>
+                    <p>Banks holding unclaimed safe deposit boxes will notify the estate administrator once a Grant of Representation is presented. An inventory is prepared in the presence of the claimant and bank officials. Contents such as jewellery, title deeds, or cash are released against signed receipt. Any valuable items must be declared for probate and may be subject to stamp duty or capital gains tax upon distribution.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Claim Process through the Public Trustee or UFAA</strong></h4>
+                    <p>When no family member is available, the Public Trustee can initiate claims on behalf of the estate. UFAA maintains a public database of unclaimed assets that can be searched online using the deceased’s name or ID number. Successful claims require submission of supporting documents and payment of a small administrative fee. Once verified, assets are transferred to the estate account within 30–90 days.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Time Limits and Risk of Escheat</strong></h4>
+                    <p>Most unclaimed assets revert to the government (escheat) after 15 years if not claimed. Early action is critical once the Grant of Representation is obtained. Regular searches of UFAA and bank records are recommended during the succession process to ensure no assets are lost. Proper record-keeping by the administrator prevents future claims being rejected due to missing documentation.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Guardianship Page - FULL GUIDANCE NOTES -->
+        <div id="guardianshipPage" class="page guardianship">
+            <div class="card">
+                <h3>Guardianship Guidance Notes</h3>
+                <div class="guidance-section">
+                    <h4><strong>Appointment of Guardian for Minors</strong></h4>
+                    <p>Under the Children Act and Law of Succession, a guardian must be appointed for any minor children (under 18) who inherit property or receive funds. The guardian is usually named in the will or appointed by the court if no will exists. The appointment protects the child’s interests and ensures proper management of inherited assets until majority. The court considers the best interests of the child and may require background checks on the proposed guardian.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Guardianship for Incapacitated Adults (Patients)</strong></h4>
+                    <p>For a living but incapacitated patient (due to illness, dementia, or accident), a guardian or manager of the estate can be appointed by the court under the Mental Health Act or Law of Succession. Medical evidence from two doctors is required to prove incapacity. The guardian is granted powers to manage bank accounts, property, and medical decisions on behalf of the patient. This order remains in force until the patient recovers or passes away.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Court Process for Obtaining Guardianship Orders</strong></h4>
+                    <p>A petition for guardianship is filed in the High Court or Children’s Court with supporting affidavits, medical reports, and consent from close family. All interested parties must be served notice. The court may appoint the Public Trustee as interim guardian if disputes exist. Once granted, the order is registered and the guardian receives official letters of authority to deal with banks and land registries.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Duties and Responsibilities of a Guardian</strong></h4>
+                    <p>The guardian must manage the patient’s or minor’s assets prudently, keep detailed accounts, and file annual reports to the court. They cannot sell major assets without court approval. All income and expenditure must benefit the ward only. Guardians are personally liable for any misuse of funds and must maintain separate estate accounts. Regular court oversight ensures transparency.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Managing Property and Finances for the Patient</strong></h4>
+                    <p>The guardian can collect rent from inherited or patient-owned properties, pay bills, and maintain the assets. For rented properties, the guardian steps into the shoes of the patient and must honour existing leases. Any major decisions such as selling land require fresh court approval. Medical and upkeep expenses are paid from the estate and must be documented for annual reporting.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Integration with Succession Process</strong></h4>
+                    <p>When the patient eventually passes away, the guardianship order automatically terminates and the estate falls under normal succession rules. The former guardian may apply to become administrator if suitable. All accounts and assets managed under guardianship must be handed over seamlessly to the new administrator. This ensures continuity and prevents loss of value during transition.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Revocation or Change of Guardian</strong></h4>
+                    <p>Any interested party can petition the court to revoke or replace a guardian if they are not acting in the ward’s best interest or have mismanaged funds. Evidence of misconduct must be presented. The court will hear both sides and may order an audit before deciding. A new guardian is then appointed following the same rigorous process used for the original appointment.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Administrator Page - FULL GUIDANCE NOTES -->
+        <div id="administratorPage" class="page administrator">
+            <div class="card">
+                <h3>Administrator / Executor Guidance Notes</h3>
+                <div class="guidance-section">
+                    <h4><strong>Role of Administrator or Executor</strong></h4>
+                    <p>An administrator (intestate) or executor (named in a will) is the legal person appointed by the court to collect all assets, pay debts, and distribute the estate according to law or the will. They act as trustee of the estate until final distribution. The role carries significant legal responsibility and requires honesty, diligence, and proper record-keeping throughout the succession process.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Types of Administrators in Kenyan Succession Law</strong></h4>
+                    <p>There are two main types: (1) Executor – named by the deceased in a valid will and granted Probate; (2) Administrator – appointed by the court when there is no will or the named executor is unable to act (Letters of Administration). In complex cases the Public Trustee or a professional administrator may be appointed. Joint administrators can also be named when multiple family members apply together.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Appointment Process for Administrators</strong></h4>
+                    <p>Application is made to the High Court or Magistrates Court with a petition, inventory of assets, and list of next of kin. All beneficiaries must be notified. Objections can be filed within the prescribed time. Once the court is satisfied, the grant is issued and the administrator receives official letters of authority to deal with banks, land registries, and other institutions.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Duties in Collecting and Distributing Assets</strong></h4>
+                    <p>The administrator must identify and secure all property including land, bank accounts, and unclaimed assets. They pay funeral expenses, debts, and taxes before distribution. Annual accounts must be filed with the court. For immovable property, the administrator facilitates transfer using the confirmed grant. Final distribution occurs only after court confirmation of accounts.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Handling Family Disputes as Administrator</strong></h4>
+                    <p>Administrators often face disputes over asset valuation, exclusion of heirs, or allegations of favouritism. They must remain neutral and can apply to court for directions or mediation. The administrator should document all communications and decisions. Court intervention may be required to resolve conflicts before any distribution can proceed, preventing personal liability for the administrator.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Managing Rented Properties and Tenants</strong></h4>
+                    <p>When the estate includes rental properties, the administrator becomes the legal landlord and must collect rent, maintain the premises, and honour existing tenancy agreements. Tenants cannot be evicted arbitrarily. Rental income is estate property and must be banked separately. Any disputes with tenants are handled through the Rent Tribunal or court. Proper records protect the administrator from later claims.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Accounting and Annual Reporting Requirements</strong></h4>
+                    <p>Administrators are required to file detailed annual accounts showing all income, expenditure, and asset movements. The court reviews these reports before allowing further actions such as property sales. Failure to file accounts can result in removal of the administrator and personal liability. Professional accountants may be engaged to ensure compliance and transparency.</p>
+                </div>
+                <div class="guidance-section">
+                    <h4><strong>Liabilities and Protection for Administrators</strong></h4>
+                    <p>Administrators can be personally sued for mismanagement, delay, or breach of duty. They are protected if they act in good faith and follow court orders. Professional indemnity insurance is advisable. The court can remove an administrator who is unfit and appoint a replacement. Full disclosure and regular reporting significantly reduce personal risk.</p>
+                </div>
+            </div>
+        </div>
+        <!-- My Profile Page (unchanged) -->
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-                <!-- Profile Form -->
+               
+                <label class="required">Permanent Profile ID</label>
+                <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
+                <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
                 <label class="required" for="profileID">National ID Number</label>
@@ -386,74 +528,47 @@
                 <input type="tel" id="profilePhone" disabled>
                 <label class="required" for="profileEmail">Email Address</label>
                 <input type="email" id="profileEmail" disabled>
-
                 <!-- Property Numbers (unchanged) -->
                 <label style="margin-top:25px;">Property Numbers / Land Reference Numbers</label>
                 <div id="propertiesContainer"></div>
                 <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Property</button>
-
-                <!-- CHANGED: Bank Accounts section -->
+                <!-- Bank Accounts section (unchanged) -->
                 <label style="margin-top:25px;">Bank Accounts</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Bank Account</button>
-
+                <!-- Next of Kin -->
+                <label style="margin-top:25px;" class="required">Next of Kin</label>
+                <div class="property-item">
+                    <label for="nextOfKinName">Next of Kin Full Name</label>
+                    <input type="text" id="nextOfKinName" disabled>
+                </div>
+                <div class="property-item">
+                    <label for="nextOfKinRelation">Relationship</label>
+                    <input type="text" id="nextOfKinRelation" disabled>
+                </div>
                 <label for="profileLiabilities">Known Liabilities / Debts</label>
                 <textarea id="profileLiabilities" disabled></textarea>
                 <label for="profileNotes">General Notes</label>
                 <textarea id="profileNotes" disabled></textarea>
-
-                <!-- Document Uploads -->
-                <h4 style="margin-top:30px;">Document Uploads</h4>
-                <div class="upload-area" id="uploadArea">
-                    <p>Drag & drop files here or</p>
-                    <button onclick="document.getElementById('fileInput').click()" disabled>Browse Files</button>
-                    <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileUpload(event)">
+                <!-- Consent section -->
+                <div style="margin:25px 0;">
+                    <input type="checkbox" id="consentCheckbox" checked style="width:auto;">
+                    <label for="consentCheckbox" class="required" style="font-weight:normal; color:#444;">
+                        I consent to allowing my next of kin to access my profile data in case I am not able to manage my affairs on my own or in case of my death.
+                    </label>
                 </div>
-                <div class="document-list" id="documentList"></div>
-
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
                 <button onclick="editMyProfile()">Edit My Profile</button>
-                <button onclick="showMyProfileInNewWindow()">Show My Profile</button>
-
                 <!-- Search Profiles -->
                 <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
                 <label for="searchTerm">Search Term</label>
                 <input type="text" id="searchTerm" placeholder="Enter ID number, full names, address, phone number or email" onkeyup="if(event.key === 'Enter') searchProfiles()">
                 <button onclick="searchProfiles()">Search Profiles</button>
                 <div id="searchResults" class="search-results"></div>
-
-                <!-- Submit Information -->
-                <div class="submit-section">
-                    <h3>Submit Information</h3>
-                    <label for="submitterName">Submitter Full Names <span style="color:#dc3545;">*</span></label>
-                    <input type="text" id="submitterName">
-                    <label for="submitterID">Submitter National ID Number <span style="color:#dc3545;">*</span></label>
-                    <input type="text" id="submitterID">
-                    <label for="submitterPhone">Submitter Phone Number <span style="color:#dc3545;">*</span></label>
-                    <input type="tel" id="submitterPhone">
-                    <label for="infoType">Information Type</label>
-                    <select id="infoType" onchange="toggleDeathDate()">
-                        <option value="">Select information type</option>
-                        <option value="dateOfDeath">Date of Death</option>
-                        <option value="other">Other Update</option>
-                    </select>
-                    <div id="deathDateContainer" style="display:none;">
-                        <label for="deathDateSubmit">Date of Death</label>
-                        <input type="date" id="deathDateSubmit">
-                    </div>
-                    <h4 style="margin-top:20px;">Upload Supporting Document</h4>
-                    <div class="upload-area" id="submitUploadArea">
-                        <button onclick="document.getElementById('submitFileInput').click()">Browse Files</button>
-                        <input type="file" id="submitFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleSubmitFileUpload(event)">
-                    </div>
-                    <div class="document-list" id="submitDocumentList"></div>
-                    <button onclick="submitNewInformation()" style="background:#dc3545;">Submit New Information</button>
-                </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Verification Modal -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
@@ -465,7 +580,6 @@
         <button onclick="closeModal()" style="background:#721c24;">Cancel</button>
     </div>
 </div>
-
 <script>
 // Global variables
 let allProfiles = [];
@@ -475,8 +589,7 @@ let currentLoggedInEmail = null;
 let editVerificationCode = null;
 let isEditing = false;
 let propertyFields = [];
-let bankAccounts = [];   // NEW for bank accounts
-
+let bankAccounts = [];
 // Auth logic (unchanged)
 function handleRegister() {
     const email = document.getElementById("email").value.trim();
@@ -495,7 +608,6 @@ function handleRegister() {
     msg.style.color = "#155724";
     msg.textContent = "Account created successfully!";
 }
-
 function handleLogin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("password").value.trim();
@@ -514,36 +626,37 @@ function handleLogin() {
     loadAllProfiles();
     loadProfile();
 }
-
 function logout() {
     sessionStorage.clear();
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
     currentLoggedInEmail = null;
 }
-
-// Load / Save global profiles (unchanged)
+// Load / Save global profiles
 function loadAllProfiles() {
     const saved = localStorage.getItem("allUserProfiles");
     allProfiles = saved ? JSON.parse(saved) : [];
     if (allProfiles.length === 0) {
         allProfiles = [{
+            permanentID: "170320358",
             fullName: "John Doe",
             nationalID: "12345678",
             address: "Nairobi, Kenya",
             phone: "0712345678",
             email: "john@example.com",
             properties: ["LR No. 45678", "LR No. 78901"],
-            bankAccounts: ["Equity Bank - 1234567890"], // demo
+            bankAccounts: ["Equity Bank - 1234567890"],
+            nextOfKinName: "",
+            nextOfKinRelation: "",
             liabilities: "None",
             notes: "Demo",
+            consentGiven: true,
             documents: [],
             submissions: []
         }];
         localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
     }
 }
-
 function saveToAllProfiles(profileData) {
     const index = allProfiles.findIndex(p => p.email === currentLoggedInEmail);
     if (index > -1) {
@@ -553,14 +666,12 @@ function saveToAllProfiles(profileData) {
     }
     localStorage.setItem("allUserProfiles", JSON.stringify(allProfiles));
 }
-
-// Tab switching (unchanged)
+// Tab switching (updated to remove Liabilities page)
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    const pages = ['bankingPage','propertyPage','unclaimedPage','liabilitiesPage','guardianshipPage','administratorPage','profilePage'];
+    const pages = ['bankingPage','propertyPage','unclaimedPage','guardianshipPage','administratorPage','profilePage'];
     pages.forEach((id, i) => document.getElementById(id).classList.toggle('active', i === tabIndex));
 }
-
 // ==================== PROPERTY FIELDS (unchanged) ====================
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
@@ -575,7 +686,6 @@ function renderPropertyFields() {
         container.appendChild(div);
     });
 }
-
 function addPropertyField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -584,7 +694,6 @@ function addPropertyField() {
     propertyFields.push("");
     renderPropertyFields();
 }
-
 function getPropertyData() {
     const data = [];
     propertyFields.forEach((_, index) => {
@@ -593,8 +702,7 @@ function getPropertyData() {
     });
     return data;
 }
-
-// ==================== NEW: BANK ACCOUNTS FIELDS ====================
+// ==================== BANK ACCOUNTS FIELDS (unchanged) ====================
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
@@ -608,7 +716,6 @@ function renderBankAccounts() {
         container.appendChild(div);
     });
 }
-
 function addBankAccountField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -617,7 +724,6 @@ function addBankAccountField() {
     bankAccounts.push("");
     renderBankAccounts();
 }
-
 function getBankAccountsData() {
     const data = [];
     bankAccounts.forEach((_, index) => {
@@ -626,13 +732,17 @@ function getBankAccountsData() {
     });
     return data;
 }
-
-// Profile functions - updated only for bank accounts
+// Profile functions
 function loadProfile() {
     loadAllProfiles();
     const userProfile = allProfiles.find(p => p.email === currentLoggedInEmail);
-    
+  
     if (userProfile) {
+        if (!userProfile.permanentID) {
+            userProfile.permanentID = currentLoggedInEmail === "wambuguhkw@gmail.com" ? "170320358" : "1" + Math.floor(100000000 + Math.random() * 900000000).toString().slice(1);
+        }
+        document.getElementById("profilePermanentID").value = userProfile.permanentID;
+        document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
         document.getElementById("profileFullName").value = userProfile.fullName || "";
         document.getElementById("profileID").value = userProfile.nationalID || "";
         document.getElementById("profileAddress").value = userProfile.address || "";
@@ -640,38 +750,46 @@ function loadProfile() {
         document.getElementById("profileEmail").value = userProfile.email || "";
         document.getElementById("profileLiabilities").value = userProfile.liabilities || "";
         document.getElementById("profileNotes").value = userProfile.notes || "";
-
+        document.getElementById("nextOfKinName").value = userProfile.nextOfKinName || "";
+        document.getElementById("nextOfKinRelation").value = userProfile.nextOfKinRelation || "";
+        document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
-
-        bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : [""];
+        bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
     } else {
+        const newID = currentLoggedInEmail === "wambuguhkw@gmail.com" ? "170320358" : "1" + Math.floor(100000000 + Math.random() * 900000000).toString().slice(1);
+        document.getElementById("profilePermanentID").value = newID;
+        document.getElementById("profileStatusMessage").innerHTML = `<strong style="color:#dc3545;">Create profile below</strong>`;
+        document.getElementById("profileFullName").value = "";
+        document.getElementById("profileID").value = "";
+        document.getElementById("profileAddress").value = "";
+        document.getElementById("profilePhone").value = "";
+        document.getElementById("profileEmail").value = currentLoggedInEmail || "";
+        document.getElementById("nextOfKinName").value = "";
+        document.getElementById("nextOfKinRelation").value = "";
+        document.getElementById("consentCheckbox").checked = true;
         propertyFields = ["", ""];
-        bankAccounts = [""];
+        bankAccounts = ["", ""];
     }
     renderPropertyFields();
     renderBankAccounts();
     uploadedDocuments = userProfile ? (userProfile.documents || []) : [];
-    renderDocumentList();
 }
-
 function saveProfile() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' and verify first.");
         return;
     }
-
     const fullName = document.getElementById("profileFullName").value.trim();
     const nationalID = document.getElementById("profileID").value.trim();
     const phone = document.getElementById("profilePhone").value.trim();
     const email = document.getElementById("profileEmail").value.trim();
-
     if (!fullName || !nationalID || !phone || !email) {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
     }
-
     const profileData = {
+        permanentID: document.getElementById("profilePermanentID").value,
         fullName: fullName,
         nationalID: nationalID,
         address: document.getElementById("profileAddress").value.trim(),
@@ -679,32 +797,79 @@ function saveProfile() {
         email: currentLoggedInEmail,
         properties: getPropertyData(),
         bankAccounts: getBankAccountsData(),
+        nextOfKinName: document.getElementById("nextOfKinName").value.trim(),
+        nextOfKinRelation: document.getElementById("nextOfKinRelation").value.trim(),
         liabilities: document.getElementById("profileLiabilities").value.trim(),
         notes: document.getElementById("profileNotes").value.trim(),
+        consentGiven: document.getElementById("consentCheckbox").checked,
         documents: uploadedDocuments
     };
-
     saveToAllProfiles(profileData);
     alert("Profile saved successfully!");
     isEditing = false;
-    
-    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","profileLiabilities","profileNotes"];
+  
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation","profileLiabilities","profileNotes"];
     fields.forEach(id => document.getElementById(id).disabled = true);
-    document.getElementById("fileInput").disabled = true;
-    document.querySelector("#uploadArea button").disabled = true;
 }
-
-// Search Profiles - updated to include bank accounts info
+// ==================== BEST FUNCTIONALITY FOR BANKING PAGE ====================
+function analyze() {
+    const output = document.getElementById("output");
+    output.innerHTML = "";
+    const amount = parseFloat(document.getElementById("amount").value) || 0;
+    const balance = parseFloat(document.getElementById("balance").value) || 0;
+    const grant = document.getElementById("grant").value;
+    const deathCert = document.getElementById("deathCert").value;
+    const urgency = document.getElementById("urgency").value;
+    const purpose = document.getElementById("purpose").value;
+    const relationship = document.getElementById("relationship").value;
+    let riskScore = 0;
+    let riskLevel = "LOW";
+    let recommendations = [];
+    // Risk calculation logic
+    if (amount > balance * 0.5) riskScore += 30;
+    if (amount > 500000) riskScore += 25;
+    if (grant === "none") riskScore += 40;
+    if (deathCert === "no") riskScore += 20;
+    if (urgency === "yes") riskScore += 15;
+    if (purpose === "unknown" || purpose === "personal") riskScore += 20;
+    if (relationship === "unknown") riskScore += 15;
+    if (riskScore >= 70) {
+        riskLevel = "HIGH";
+        recommendations.push("High risk transaction. Require court order and full beneficiary verification.");
+        recommendations.push("Flag for senior management review.");
+    } else if (riskScore >= 40) {
+        riskLevel = "MEDIUM";
+        recommendations.push("Medium risk. Verify grant of representation and death certificate.");
+        recommendations.push("Limit withdrawal to 30% of balance until full documentation provided.");
+    } else {
+        riskLevel = "LOW";
+        recommendations.push("Low risk. Proceed with standard verification.");
+    }
+    let html = `
+        <h4>Risk Analysis Result</h4>
+        <p><strong>Risk Score:</strong> ${riskScore}/100</p>
+        <p><strong>Risk Level:</strong> <span style="color:${riskLevel==='HIGH'?'red':riskLevel==='MEDIUM'?'orange':'green'}">${riskLevel}</span></p>
+        <p><strong>Recommendations:</strong></p>
+        <ul>
+    `;
+    recommendations.forEach(rec => {
+        html += `<li>${rec}</li>`;
+    });
+    html += `</ul>`;
+    output.innerHTML = html;
+}
+function printReport() {
+    window.print();
+}
+// Search Profiles
 function searchProfiles() {
     const term = document.getElementById("searchTerm").value.trim().toLowerCase();
     const resultsContainer = document.getElementById("searchResults");
     resultsContainer.innerHTML = "";
-
     if (!term) {
         resultsContainer.innerHTML = '<p class="no-results">Please enter a search term (ID, name, address, phone or email)</p>';
         return;
     }
-
     loadAllProfiles();
     const matches = allProfiles.filter(profile => {
         return (
@@ -715,40 +880,38 @@ function searchProfiles() {
             (profile.email && profile.email.toLowerCase().includes(term))
         );
     });
-
     if (matches.length === 0) {
         resultsContainer.innerHTML = '<p class="no-results">No matching profiles found.</p>';
         return;
     }
-
     let html = `<h4>Found ${matches.length} matching profile(s)</h4>`;
-   
+ 
     matches.forEach(profile => {
+        const idLast5 = profile.nationalID ? profile.nationalID.slice(-5) : "N/A";
+        const phoneLast5 = profile.phone ? profile.phone.slice(-5) : "N/A";
         const numProperties = profile.properties ? profile.properties.length : 0;
         const numBanks = profile.bankAccounts ? profile.bankAccounts.length : 0;
-        const bankName = profile.bankAccounts && profile.bankAccounts.length > 0 ? profile.bankAccounts[0] : "N/A";
-        
+        // List all bank accounts
+        const allBanks = profile.bankAccounts ? profile.bankAccounts.join(", ") : "None";
         html += `
             <div class="profile-card">
                 <strong>Full Name:</strong> ${profile.fullName || "N/A"}<br>
-                <strong>National ID:</strong> <span class="masked">${maskValue(profile.nationalID)}</span><br>
-                <strong>Address:</strong> ${profile.address || "N/A"}<br>
-                <strong>Phone:</strong> <span class="masked">${maskValue(profile.phone)}</span><br>
-                <strong>Email:</strong> ${profile.email || "N/A"}<br>
-                <strong>Number of properties listed:</strong> ${numProperties}<br>
-                <strong>Number of bank accounts:</strong> ${numBanks}<br>
-                <strong>Bank name:</strong> <span class="masked">${maskValue(bankName)}</span>
+                <strong>Permanent Profile ID:</strong> <span style="font-family:monospace;">${profile.permanentID || "N/A"}</span><br>
+                <strong>National ID (last 5 digits):</strong> ${idLast5}<br>
+                <strong>Phone (last 5 digits):</strong> ${phoneLast5}<br>
+                <strong>Address:</strong> <span class="blurred">${profile.address || "N/A"}</span><br>
+                <strong>Email:</strong> <span class="blurred">${profile.email || "N/A"}</span><br>
+                <strong>Next of Kin:</strong> <span class="blurred">${profile.nextOfKinName || "N/A"} (${profile.nextOfKinRelation || "N/A"})</span><br>
+                <strong>Number of properties listed:</strong> <span class="blurred">${numProperties}</span><br>
+                <strong>Number of bank accounts:</strong> <span class="blurred">${numBanks}</span><br>
+                <strong>Bank name:</strong> <span class="blurred">${allBanks}</span><br>
+                <strong>Consent Given:</strong> ${profile.consentGiven ? "Yes" : "No"}<br><br>
+                To request a detailed copy of this profile send an email to trxinfosec@gmail.com with a copy of your national ID, Phone number, proof of relationship to profile owner and proof of payment of $100
             </div>
         `;
     });
     resultsContainer.innerHTML = html;
 }
-
-function maskValue(value) {
-    if (!value || value.length <= 5) return value || "N/A";
-    return "••••" + value.slice(-5);
-}
-
 // Edit Profile
 function editMyProfile() {
     if (!currentLoggedInEmail) {
@@ -759,7 +922,6 @@ function editMyProfile() {
     alert(`A 6-digit verification code has been sent to your email: ${currentLoggedInEmail}\n\nFor demo purposes the code is: ${editVerificationCode}`);
     document.getElementById("verificationModal").style.display = "flex";
 }
-
 function verifyCode() {
     const entered = document.getElementById("verificationCode").value.trim();
     if (entered === editVerificationCode) {
@@ -771,24 +933,19 @@ function verifyCode() {
         alert("Incorrect code. Please try again.");
     }
 }
-
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
     document.getElementById("verificationCode").value = "";
 }
-
 function enableEditing() {
-    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","profileLiabilities","profileNotes"];
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation","profileLiabilities","profileNotes"];
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = false;
     });
-    document.getElementById("fileInput").disabled = false;
-    document.querySelector("#uploadArea button").disabled = false;
     renderPropertyFields();
-    renderBankAccounts();   // enable bank fields
+    renderBankAccounts();
 }
-
 // File handling (unchanged)
 function handleFileUpload(e) {
     if (!isEditing) return;
@@ -802,37 +959,20 @@ function handleFileUpload(e) {
         reader.readAsDataURL(file);
     }
 }
-
-function renderDocumentList() {
-    const container = document.getElementById("documentList");
-    container.innerHTML = "";
-    uploadedDocuments.forEach((doc, i) => {
-        const div = document.createElement("div");
-        div.className = "document-item";
-        div.innerHTML = `<span><strong>${doc.name}</strong> (${doc.size})</span>
-            <button onclick="removeDocument(${i})" style="background:#dc3545;">Remove</button>`;
-        container.appendChild(div);
-    });
-}
-
-function removeDocument(i) { 
-    uploadedDocuments.splice(i,1); 
-    renderDocumentList(); 
-}
-
+function renderDocumentList() {}
+function removeDocument(i) {}
 // Placeholder functions (unchanged)
 function toggleFields(){}
 function toggleAnnualReporting(){}
 function toggleBeneficiariesSection(){}
 function generateBeneficiaryFields(){}
-function analyze(){}
 function printReport(){ window.print(); }
 function handleSubmitFileUpload(e){}
 function renderSubmitDocumentList(){}
 function removeSubmitDoc(i){}
 function toggleDeathDate(){}
 function submitNewInformation(){}
-
+function showMyProfileInNewWindow(){}
 // Auto-login
 window.onload = function() {
     if (sessionStorage.getItem("fd_logged_in") === "true") {
