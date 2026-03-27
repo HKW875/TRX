@@ -604,10 +604,18 @@ function handleRegister() {
       headers: {
         "Content-Type": "application/json"
       },
-      const data = await res.json();
-      alert(data.msg);      
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    const data = await res.json();
+
+    
     msg.style.color = "#155724";
     msg.textContent = "Account created successfully!";
+    }
 }
 function handleLogin() {
     const email = document.getElementById("email").value.trim();
@@ -627,10 +635,6 @@ function handleLogin() {
       alert("Login successful");
     } else {
       alert(data.msg);
-    }
-    if (!storedEmail || email !== storedEmail || pass !== storedPass) {
-        msg.textContent = "Incorrect email or password.";
-        return;
     }
     currentLoggedInEmail = email;
     sessionStorage.setItem("fd_logged_in", "true");
