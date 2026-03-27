@@ -599,12 +599,13 @@ function handleRegister() {
         msg.textContent = "Email and password are required.";
         return;
     }
-    if (localStorage.getItem("fd_user_email")) {
-        msg.textContent = "Account already exists. Please log in.";
-        return;
-    }
-    localStorage.setItem("fd_user_email", email);
-    localStorage.setItem("fd_user_pass", pass);
+    const res = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      const data = await res.json();
+      alert(data.msg);      
     msg.style.color = "#155724";
     msg.textContent = "Account created successfully!";
 }
@@ -612,8 +613,21 @@ function handleLogin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-    const storedEmail = localStorage.getItem("fd_user_email");
-    const storedPass = localStorage.getItem("fd_user_pass");
+
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem("token", data.token); // ✅ OK
+      alert("Login successful");
+    } else {
+      alert(data.msg);
+    }
     if (!storedEmail || email !== storedEmail || pass !== storedPass) {
         msg.textContent = "Incorrect email or password.";
         return;
