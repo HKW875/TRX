@@ -706,24 +706,47 @@ function getPropertyData() {
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
+
     bankAccounts.forEach((value, index) => {
         const div = document.createElement("div");
         div.className = "bank-item";
         div.innerHTML = `
-            <div class="bank-header">Bank Account ${index + 1}</div>
-            <input type="text" id="bank-${index}" value="${value || ''}" placeholder="Bank Name and Account Number" ${isEditing ? '' : 'disabled'}>
+            <div class="bank-header">
+                Bank Account ${index + 1}
+                <button type="button" onclick="removeBankAccount(${index})" 
+                        style="float:right; background:#dc3545; color:white; border:none; padding:2px 8px; border-radius:3px; cursor:pointer;">
+                    Remove
+                </button>
+            </div>
+            <input type="text" id="bank-${index}" value="${value || ''}" 
+                   placeholder="Bank Name and Account Number (e.g. Equity Bank - 1234567890)" 
+                   ${isEditing ? '' : 'disabled'}>
         `;
         container.appendChild(div);
     });
 }
+function removeBankAccount(index) {
+    if (confirm("Remove this bank account?")) {
+        bankAccounts.splice(index, 1);
+        renderBankAccounts();
+    }
+}
+    
 function addBankAccountField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
         return;
     }
+    
+    // Optional: Limit to reasonable number (e.g. max 10 accounts)
+    if (bankAccounts.length >= 10) {
+        alert("You have reached the maximum number of bank accounts (10).");
+        return;
+    }
+    
     bankAccounts.push("");
     renderBankAccounts();
-}
+}    
 function getBankAccountsData() {
     const data = [];
     bankAccounts.forEach((_, index) => {
