@@ -11,7 +11,7 @@
             margin: 0;
             min-height: 100vh;
             color: #333;
-        } 
+        }
         header {
             background: #1e3a5f;
             color: white;
@@ -107,10 +107,6 @@
         .page.active {
             display: block;
         }
-        .page.property,
-        .page.unclaimed,
-        .page.guardianship,
-        .page.administrator,
         .page.profile {
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
@@ -225,18 +221,34 @@
             color: #1e3a5f;
             margin-bottom: 8px;
         }
+        /* Plans Page Styling */
+        .plan-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+        }
+        .plan-section h3 {
+            color: #1e3a5f;
+            margin-top: 0;
+        }
+        .plan-highlight {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
   <a href="/">
-    <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true" 
-         alt="Your Site Name" 
-         width="200" 
+    <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
+         alt="Your Site Name"
+         width="200"
          height="50">
   </a>
-</h1>
     <h5>Secure and grow your family's future assets.</h5>
     <h2>Login / Register</h2>
     <label for="email">Email</label>
@@ -249,6 +261,7 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -256,271 +269,80 @@
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
     <div class="container">
-        <!-- Tabs -->
+        <!-- Tabs - Updated Order: Plans, My Profile, Services -->
         <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)" id="tab-banking">Banking</div>
-            <div class="tab" onclick="switchTab(1)" id="tab-property">Property</div>
-            <div class="tab" onclick="switchTab(2)" id="tab-unclaimed">Unclaimed Assets</div>
-            <div class="tab" onclick="switchTab(3)" id="tab-guardianship">Guardianship</div>
-            <div class="tab" onclick="switchTab(4)" id="tab-administrator">Administrator</div>
-            <div class="tab" onclick="switchTab(5)" id="tab-profile">My Profile</div>
+            <div class="tab active" onclick="switchTab(0)" id="tab-plans">Plans</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-profile">My Profile</div>
+            <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
         </div>
-        <!-- Banking Page (unchanged) -->
-        <div id="bankingPage" class="page active">
+
+        <!-- Plans Page -->
+        <div id="plansPage" class="page active">
             <div class="card">
-                <h3>Banking Transaction Risk Screener</h3>
-                <!-- Full banking form remains exactly as in your original code -->
-                <div class="card">
-                    <h3>Claimant Information</h3>
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" placeholder="Claimant full name">
-                    <label for="id">National ID / Passport</label>
-                    <input type="text" id="id" placeholder="ID number">
-                    <label for="idVerified">ID Verified & Copy Taken?</label>
-                    <select id="idVerified">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                    <label for="relationship">Relationship to Subject</label>
-                    <select id="relationship">
-                        <option value="">Select relationship</option>
-                        <option value="spouse">Spouse</option>
-                        <option value="child">Child</option>
-                        <option value="relative">Other Relative</option>
-                        <option value="lawyer">Lawyer / Agent</option>
-                        <option value="guardian">Court-Appointed Guardian</option>
-                        <option value="unknown">Unknown</option>
-                    </select>
-                </div>
-                <div class="card">
-                    <h3>Subject (Patient / Deceased)</h3>
-                    <label for="subjectName">Full Name</label>
-                    <input type="text" id="subjectName">
-                    <label for="status">Status</label>
-                    <select id="status" onchange="toggleFields()">
-                        <option value="deceased">Deceased</option>
-                        <option value="alive">Alive (Sick / Incapacitated)</option>
-                    </select>
-                    <label for="deathDate">Date of Death</label>
-                    <input type="date" id="deathDate">
-                    <label for="deathCert">Death Certificate Available?</label>
-                    <select id="deathCert">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                    <label for="medicalProof">Medical Proof of Incapacity (if alive)</label>
-                    <select id="medicalProof">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                </div>
-                <div class="card">
-                    <h3>Legal Authority</h3>
-                    <div id="successionSection">
-                        <label for="grant">Grant of Representation</label>
-                        <select id="grant">
-                            <option value="none">None</option>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                        </select>
+                <h2>Choose Your Plan</h2>
+                <p>Select the plan that best fits your family's asset protection needs.</p>
+
+                <!-- Free Plan -->
+                <div class="plan-section" style="border-color: #28a745;">
+                    <h3>Free Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>Perfect for getting started</strong>
                     </div>
-                    <div id="guardianshipSection">
-                        <label for="guardianOrder">Guardian Court Order</label>
-                        <select id="guardianOrder">
-                            <option value="none">None</option>
-                            <option value="provided">Provided</option>
-                        </select>
+                    <ul>
+                        <li>Basic profile creation</li>
+                        <li>Access to general guidance notes</li>
+                        <li>Search other public profiles (limited)</li>
+                        <li>Basic document upload (up to 3 files)</li>
+                        <li>Community support forum access</li>
+                    </ul>
+                    <button style="background:#28a745;">Current Plan - Activate Free</button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="plan-section" style="border-color: #1e3a5f;">
+                    <h3>Premium Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>Most Popular - Full Protection</strong><br>
+                        <strong>KES 2,500 / month or KES 25,000 / year</strong>
                     </div>
-                    <label for="awardDate">Date of Grant / Court Order</label>
-                    <input type="date" id="awardDate" onchange="toggleAnnualReporting()">
-                    <div id="annualReportingSection" class="disabled">
-                        <label for="annualVerified">Annual Reporting Verified <span id="annualRequired" style="color:#dc3545;">*</span></label>
-                        <select id="annualVerified" onchange="toggleBeneficiariesSection()">
-                            <option value="">Select</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
+                    <ul>
+                        <li>Everything in Free Plan</li>
+                        <li>Unlimited document storage and secure vault</li>
+                        <li>Advanced profile search with blurred data access requests</li>
+                        <li>Priority support and legal guidance</li>
+                        <li>Asset tracking reminders and succession checklist</li>
+                        <li>Family sharing with controlled access</li>
+                        <li>Monthly estate health report</li>
+                    </ul>
+                    <button>Upgrade to Premium</button>
+                </div>
+
+                <!-- Lifetime Plan -->
+                <div class="plan-section" style="border-color: #6f42c1;">
+                    <h3>Lifetime Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>One-time payment - Peace of Mind Forever</strong><br>
+                        <strong>KES 150,000 one-time</strong>
                     </div>
-                    <div id="beneficiariesSection" class="disabled">
-                        <label for="numBeneficiaries">Number of Beneficiaries <span id="benRequired" style="color:#dc3545;">*</span></label>
-                        <input type="number" id="numBeneficiaries" min="1" onchange="generateBeneficiaryFields()">
-                        <div id="beneficiaryContactsContainer"></div>
-                    </div>
-                    <label for="caseNumber">Court Case Number (if any)</label>
-                    <input type="text" id="caseNumber">
-                </div>
-                <div class="card">
-                    <h3>Transaction Details</h3>
-                    <label for="amount">Requested Amount (KES)</label>
-                    <input type="number" id="amount" min="0" step="0.01">
-                    <label for="balance">Current Balance (KES)</label>
-                    <input type="number" id="balance" min="0" step="0.01">
-                    <label for="purpose">Purpose of Withdrawal</label>
-                    <select id="purpose">
-                        <option value="upkeep">Medical / Upkeep</option>
-                        <option value="unknown">Unknown</option>
-                        <option value="personal">Personal Use</option>
-                    </select>
-                    <label for="urgency">Is the request marked as urgent?</label>
-                    <select id="urgency">
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-                    <label for="riskAnalysisBy">Risk Analysis Conducted By <span style="color:#dc3545;">*</span></label>
-                    <input type="text" id="riskAnalysisBy" placeholder="Name / Staff ID / Branch">
-                    <label for="approvedBy">Transaction Approved/Denied By <span style="color:#dc3545;">*</span></label>
-                    <input type="text" id="approvedBy" placeholder="Name / Staff ID / Branch">
-                </div>
-                <button onclick="analyze()">Analyze Risk</button>
-                <button onclick="printReport()">Print Report</button>
-                <div id="output"></div>
-            </div>
-        </div>
-        <!-- Property Page - FULL GUIDANCE NOTES -->
-        <div id="propertyPage" class="page property">
-            <div class="card">
-                <h3>Property Succession Guidance Notes</h3>
-                <div class="guidance-section">
-                    <h4><strong>Obtaining Grant of Representation</strong></h4>
-                    <p>The Law of Succession Act (Cap 160) requires a Grant of Representation (Probate if there is a valid Will or Letters of Administration if intestate) before any immovable property such as land or buildings can be transferred to heirs. The petitioner must file a petition in the High Court or appropriate Magistrates Court including a full inventory of assets and list of beneficiaries. Once confirmed, the grant allows legal transfer of title deeds. In cases of delay, the Public Trustee may be appointed as interim administrator to protect the estate.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Dealing with Family Disputes in Property Succession</strong></h4>
-                    <p>Family disputes often arise over unequal distribution, forged wills, or exclusion of certain heirs. Mediation through the court or alternative dispute resolution is strongly encouraged before litigation to avoid lengthy delays and high legal costs. All parties must be served with notice and given opportunity to file objections. The court may order DNA tests or witness testimony to establish legitimacy of claims. A confirmed grant can only be issued after disputes are resolved or withdrawn.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Handling Rented Properties and Tenants</strong></h4>
-                    <p>When the deceased owned rental property, the administrator must first notify all tenants in writing and collect any outstanding rent into the estate account. Tenants cannot be evicted without court approval unless they breach the lease. Rental income forms part of the estate and must be accounted for in annual reports. Existing lease agreements remain binding until expiry or mutual termination. The administrator is responsible for maintaining the property and paying rates and utilities until distribution.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Land Reference Numbers and Title Transfer</strong></h4>
-                    <p>Every parcel of land in Kenya has a unique Land Reference (LR) Number or Title Number registered at the Land Registry. The administrator must obtain certified copies of title deeds and lodge a transfer instrument together with the confirmed grant. Stamp duty at 2% of the market value or probate valuation is payable. The new owner’s name is then registered and a new title issued. Any encumbrances such as charges or caveats must be cleared before transfer.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Role of the Public Trustee in Property Matters</strong></h4>
-                    <p>The Public Trustee can be appointed by the court when there is no suitable family member willing or able to act as administrator, especially in complex cases with multiple properties or disputes. The Public Trustee holds the property in trust, collects rents, pays debts, and distributes the residue according to the grant. This option provides professional management and reduces family conflict but incurs administrative fees deducted from the estate.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Distribution of Property to Beneficiaries</strong></h4>
-                    <p>After all debts, taxes, and funeral expenses are settled, the remaining property is distributed according to the will or intestacy rules (spouse and children first). The administrator prepares a final account and obtains court approval for distribution. Beneficiaries receive transfer documents or sale proceeds if the property is sold by agreement. Any minor beneficiaries require a guardian to hold the property until they reach 18 years.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Tax and Duty Implications</strong></h4>
-                    <p>Stamp duty is payable on transfer of immovable property upon succession. Capital Gains Tax may apply if the property is sold shortly after transfer. The administrator must also ensure all outstanding land rates and rents are cleared before final distribution. Proper valuation by a registered valuer is required for probate purposes and tax calculations.</p>
+                    <ul>
+                        <li>Everything in Premium Plan</li>
+                        <li>Lifetime access - no recurring fees</li>
+                        <li>Legacy transfer tools for next of kin</li>
+                        <li>Will &amp; succession document generator</li>
+                        <li>Dedicated estate planning consultant (1 session)</li>
+                        <li>Priority legal helpline</li>
+                        <li>Full data export and portability</li>
+                    </ul>
+                    <button style="background:#6f42c1;">Choose Lifetime Plan</button>
                 </div>
             </div>
         </div>
-        <!-- Unclaimed Assets Page - FULL GUIDANCE NOTES -->
-        <div id="unclaimedPage" class="page unclaimed">
-            <div class="card">
-                <h3>Unclaimed Assets Guidance Notes</h3>
-                <div class="guidance-section">
-                    <h4><strong>What Constitutes Unclaimed Assets</strong></h4>
-                    <p>Unclaimed assets include dormant bank accounts, uncashed cheques, insurance proceeds, pension benefits, safe deposit box contents, and shares that have not been claimed by rightful owners or heirs for a statutory period. In Kenya, banks and institutions are required to report such assets to the Unclaimed Financial Assets Authority (UFAA) after seven years of inactivity. These assets remain the property of the original owner or estate until successfully claimed.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Claiming Unclaimed Bank Balances and Deposits</strong></h4>
-                    <p>To claim dormant bank accounts, the next of kin or administrator must present a confirmed Grant of Representation, death certificate, and proof of relationship. The bank will verify the claim and release funds after deducting any applicable fees. If the account was already transferred to UFAA, the claim must be filed directly with UFAA using the online portal or their offices. All claims require certified identification documents.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Unclaimed Insurance Proceeds and Policies</strong></h4>
-                    <p>Life insurance policies that remain unclaimed after the insured’s death must be claimed by named beneficiaries or the estate administrator. The insurer requires a death certificate, policy document, and Grant of Representation. Proceeds are paid directly to the estate account if no beneficiary was named. Claims must be made within the policy’s statutory limitation period to avoid forfeiture.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Pensions and Retirement Benefits</strong></h4>
-                    <p>Unclaimed pension benefits from NSSF, RBA-regulated schemes, or employer pensions can be claimed by the surviving spouse, children, or administrator. A Grant of Representation together with the deceased’s membership number and proof of death is required. The fund administrator will release the lump sum or annuity after verification. Surviving dependents may also qualify for survivor benefits under the scheme rules.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Safe Deposit Boxes and Physical Valuables</strong></h4>
-                    <p>Banks holding unclaimed safe deposit boxes will notify the estate administrator once a Grant of Representation is presented. An inventory is prepared in the presence of the claimant and bank officials. Contents such as jewellery, title deeds, or cash are released against signed receipt. Any valuable items must be declared for probate and may be subject to stamp duty or capital gains tax upon distribution.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Claim Process through the Public Trustee or UFAA</strong></h4>
-                    <p>When no family member is available, the Public Trustee can initiate claims on behalf of the estate. UFAA maintains a public database of unclaimed assets that can be searched online using the deceased’s name or ID number. Successful claims require submission of supporting documents and payment of a small administrative fee. Once verified, assets are transferred to the estate account within 30–90 days.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Time Limits and Risk of Escheat</strong></h4>
-                    <p>Most unclaimed assets revert to the government (escheat) after 15 years if not claimed. Early action is critical once the Grant of Representation is obtained. Regular searches of UFAA and bank records are recommended during the succession process to ensure no assets are lost. Proper record-keeping by the administrator prevents future claims being rejected due to missing documentation.</p>
-                </div>
-            </div>
-        </div>
-        <!-- Guardianship Page - FULL GUIDANCE NOTES -->
-        <div id="guardianshipPage" class="page guardianship">
-            <div class="card">
-                <h3>Guardianship Guidance Notes</h3>
-                <div class="guidance-section">
-                    <h4><strong>Appointment of Guardian for Minors</strong></h4>
-                    <p>Under the Children Act and Law of Succession, a guardian must be appointed for any minor children (under 18) who inherit property or receive funds. The guardian is usually named in the will or appointed by the court if no will exists. The appointment protects the child’s interests and ensures proper management of inherited assets until majority. The court considers the best interests of the child and may require background checks on the proposed guardian.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Guardianship for Incapacitated Adults (Patients)</strong></h4>
-                    <p>For a living but incapacitated patient (due to illness, dementia, or accident), a guardian or manager of the estate can be appointed by the court under the Mental Health Act or Law of Succession. Medical evidence from two doctors is required to prove incapacity. The guardian is granted powers to manage bank accounts, property, and medical decisions on behalf of the patient. This order remains in force until the patient recovers or passes away.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Court Process for Obtaining Guardianship Orders</strong></h4>
-                    <p>A petition for guardianship is filed in the High Court or Children’s Court with supporting affidavits, medical reports, and consent from close family. All interested parties must be served notice. The court may appoint the Public Trustee as interim guardian if disputes exist. Once granted, the order is registered and the guardian receives official letters of authority to deal with banks and land registries.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Duties and Responsibilities of a Guardian</strong></h4>
-                    <p>The guardian must manage the patient’s or minor’s assets prudently, keep detailed accounts, and file annual reports to the court. They cannot sell major assets without court approval. All income and expenditure must benefit the ward only. Guardians are personally liable for any misuse of funds and must maintain separate estate accounts. Regular court oversight ensures transparency.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Managing Property and Finances for the Patient</strong></h4>
-                    <p>The guardian can collect rent from inherited or patient-owned properties, pay bills, and maintain the assets. For rented properties, the guardian steps into the shoes of the patient and must honour existing leases. Any major decisions such as selling land require fresh court approval. Medical and upkeep expenses are paid from the estate and must be documented for annual reporting.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Integration with Succession Process</strong></h4>
-                    <p>When the patient eventually passes away, the guardianship order automatically terminates and the estate falls under normal succession rules. The former guardian may apply to become administrator if suitable. All accounts and assets managed under guardianship must be handed over seamlessly to the new administrator. This ensures continuity and prevents loss of value during transition.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Revocation or Change of Guardian</strong></h4>
-                    <p>Any interested party can petition the court to revoke or replace a guardian if they are not acting in the ward’s best interest or have mismanaged funds. Evidence of misconduct must be presented. The court will hear both sides and may order an audit before deciding. A new guardian is then appointed following the same rigorous process used for the original appointment.</p>
-                </div>
-            </div>
-        </div>
-        <!-- Administrator Page - FULL GUIDANCE NOTES -->
-        <div id="administratorPage" class="page administrator">
-            <div class="card">
-                <h3>Administrator / Executor Guidance Notes</h3>
-                <div class="guidance-section">
-                    <h4><strong>Role of Administrator or Executor</strong></h4>
-                    <p>An administrator (intestate) or executor (named in a will) is the legal person appointed by the court to collect all assets, pay debts, and distribute the estate according to law or the will. They act as trustee of the estate until final distribution. The role carries significant legal responsibility and requires honesty, diligence, and proper record-keeping throughout the succession process.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Types of Administrators in Kenyan Succession Law</strong></h4>
-                    <p>There are two main types: (1) Executor – named by the deceased in a valid will and granted Probate; (2) Administrator – appointed by the court when there is no will or the named executor is unable to act (Letters of Administration). In complex cases the Public Trustee or a professional administrator may be appointed. Joint administrators can also be named when multiple family members apply together.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Appointment Process for Administrators</strong></h4>
-                    <p>Application is made to the High Court or Magistrates Court with a petition, inventory of assets, and list of next of kin. All beneficiaries must be notified. Objections can be filed within the prescribed time. Once the court is satisfied, the grant is issued and the administrator receives official letters of authority to deal with banks, land registries, and other institutions.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Duties in Collecting and Distributing Assets</strong></h4>
-                    <p>The administrator must identify and secure all property including land, bank accounts, and unclaimed assets. They pay funeral expenses, debts, and taxes before distribution. Annual accounts must be filed with the court. For immovable property, the administrator facilitates transfer using the confirmed grant. Final distribution occurs only after court confirmation of accounts.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Handling Family Disputes as Administrator</strong></h4>
-                    <p>Administrators often face disputes over asset valuation, exclusion of heirs, or allegations of favouritism. They must remain neutral and can apply to court for directions or mediation. The administrator should document all communications and decisions. Court intervention may be required to resolve conflicts before any distribution can proceed, preventing personal liability for the administrator.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Managing Rented Properties and Tenants</strong></h4>
-                    <p>When the estate includes rental properties, the administrator becomes the legal landlord and must collect rent, maintain the premises, and honour existing tenancy agreements. Tenants cannot be evicted arbitrarily. Rental income is estate property and must be banked separately. Any disputes with tenants are handled through the Rent Tribunal or court. Proper records protect the administrator from later claims.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Accounting and Annual Reporting Requirements</strong></h4>
-                    <p>Administrators are required to file detailed annual accounts showing all income, expenditure, and asset movements. The court reviews these reports before allowing further actions such as property sales. Failure to file accounts can result in removal of the administrator and personal liability. Professional accountants may be engaged to ensure compliance and transparency.</p>
-                </div>
-                <div class="guidance-section">
-                    <h4><strong>Liabilities and Protection for Administrators</strong></h4>
-                    <p>Administrators can be personally sued for mismanagement, delay, or breach of duty. They are protected if they act in good faith and follow court orders. Professional indemnity insurance is advisable. The court can remove an administrator who is unfit and appoint a replacement. Full disclosure and regular reporting significantly reduce personal risk.</p>
-                </div>
-            </div>
-        </div>
-        <!-- My Profile Page (unchanged) -->
+
+        <!-- My Profile Page (kept exactly as original) -->
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-              
+             
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -573,8 +395,42 @@
                 <div id="searchResults" class="search-results"></div>
             </div>
         </div>
+
+        <!-- Services Page -->
+        <div id="servicesPage" class="page">
+            <div class="card">
+                <h2>Our Services</h2>
+                <p>GrowthBase provides comprehensive tools and professional support to help Kenyan families protect and transfer their assets securely.</p>
+                
+                <div class="card">
+                    <h3>Asset Documentation &amp; Secure Vault</h3>
+                    <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Succession Planning Guidance</h3>
+                    <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession under Kenyan law.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Profile Search &amp; Claim Support</h3>
+                    <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Legal &amp; Professional Referrals</h3>
+                    <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters across Kenya.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Family Legacy Protection</h3>
+                    <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 <!-- Verification Modal -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
@@ -590,13 +446,9 @@
 <script>
 // ==================== NODE.JS + MONGODB BACKEND INTEGRATION ====================
 // API base URL - change only if you deploy the backend to a different host
-//const API_BASE = 'http://127.0.0.1:3000/api';
-//const API_BASE = 'https://trx-infosec-backend.onrender.com/';
-    
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 
-
-// Global variables (original kept, localStorage removed)
+// Global variables
 let currentToken = null;
 let currentLoggedInEmail = null;
 let editVerificationCode = null;
@@ -606,37 +458,32 @@ let bankAccounts = [];
 let uploadedDocuments = [];
 let submitDocs = [];
 
-// ==================== AUTH FUNCTIONS (NOW CONNECTED TO NODE.JS BACKEND) ====================
+// ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-
     if (!email || !pass) {
         msg.textContent = "Email and password are required.";
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password: pass })
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Registration failed.";
             return;
         }
-
         msg.style.color = "#155724";
         msg.textContent = data.msg || "Account created successfully! Please log in.";
     } catch (err) {
         msg.style.color = "#dc3545";
-        msg.textContent = "Server error. Make sure Node.js backend is running on port 5000.";
+        msg.textContent = "Server error. Make sure Node.js backend is running.";
     }
 }
 
@@ -644,43 +491,33 @@ async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-
     if (!email || !pass) {
         msg.textContent = "Email and password are required.";
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password: pass })
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Incorrect email or password.";
             return;
         }
-
-        // Store token for MongoDB-protected routes
         currentToken = data.token;
         currentLoggedInEmail = email;
-
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-
-        // Switch to main app
+        
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
-
-        // Load profile from MongoDB
         loadProfile();
     } catch (err) {
         msg.style.color = "#dc3545";
-        msg.textContent = "Server error. Make sure Node.js backend is running on port 3000.";
+        msg.textContent = "Server error.";
     }
 }
 
@@ -692,10 +529,9 @@ function logout() {
     document.getElementById("authScreen").classList.remove("hidden");
 }
 
-// ==================== PROFILE FUNCTIONS (NOW USING MONGODB VIA BACKEND) ====================
+// ==================== PROFILE FUNCTIONS ====================
 async function loadProfile() {
     if (!currentToken) return;
-
     try {
         const response = await fetch(`${API_BASE}/api/profile`, {
             method: 'GET',
@@ -703,15 +539,11 @@ async function loadProfile() {
                 'Authorization': `Bearer ${currentToken}`
             }
         });
-
         if (!response.ok) throw new Error("Failed to load profile");
-
         const userProfile = await response.json();
 
-        // Populate UI exactly as original (no localStorage)
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
-
         document.getElementById("profileFullName").value = userProfile.fullName || "";
         document.getElementById("profileID").value = userProfile.nationalID || "";
         document.getElementById("profileAddress").value = userProfile.address || "";
@@ -726,7 +558,6 @@ async function loadProfile() {
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
         bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
-
         uploadedDocuments = userProfile.documents || [];
 
         renderPropertyFields();
@@ -742,17 +573,14 @@ async function saveProfile() {
         alert("Please click 'Edit My Profile' and verify first.");
         return;
     }
-
     const fullName = document.getElementById("profileFullName").value.trim();
     const nationalID = document.getElementById("profileID").value.trim();
     const phone = document.getElementById("profilePhone").value.trim();
     const email = document.getElementById("profileEmail").value.trim();
-
     if (!fullName || !nationalID || !phone || !email) {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
     }
-
     const profileData = {
         fullName: fullName,
         nationalID: nationalID,
@@ -767,7 +595,6 @@ async function saveProfile() {
         consentGiven: document.getElementById("consentCheckbox").checked,
         documents: uploadedDocuments
     };
-
     try {
         const response = await fetch(`${API_BASE}/api/profile`, {
             method: 'POST',
@@ -777,48 +604,40 @@ async function saveProfile() {
             },
             body: JSON.stringify(profileData)
         });
-
         const data = await response.json();
-
         if (response.ok) {
             alert("Profile saved successfully to MongoDB!");
             isEditing = false;
             const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation","profileLiabilities","profileNotes"];
             fields.forEach(id => document.getElementById(id).disabled = true);
-            loadProfile(); // refresh from database
+            loadProfile();
         } else {
             alert(data.msg || "Save failed");
         }
     } catch (err) {
-        alert("Error saving to MongoDB. Check if backend is running.");
+        alert("Error saving to MongoDB.");
     }
 }
 
-// ==================== SEARCH PROFILES (NOW QUERIES MONGODB) ====================
 async function searchProfiles() {
     const term = document.getElementById("searchTerm").value.trim().toLowerCase();
     const resultsContainer = document.getElementById("searchResults");
     resultsContainer.innerHTML = "";
-
     if (!term) {
         resultsContainer.innerHTML = '<p class="no-results">Please enter a search term (ID, name, address, phone or email)</p>';
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/search-profiles`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ term })
         });
-
         const matches = await response.json();
-
         if (matches.length === 0) {
             resultsContainer.innerHTML = '<p class="no-results">No matching profiles found in MongoDB.</p>';
             return;
         }
-
         let html = `<h4>Found ${matches.length} matching profile(s) in MongoDB</h4>`;
         matches.forEach(profile => {
             const idLast5 = profile.nationalID ? profile.nationalID.slice(-5) : "N/A";
@@ -826,7 +645,6 @@ async function searchProfiles() {
             const numProperties = profile.properties ? profile.properties.length : 0;
             const numBanks = profile.bankAccounts ? profile.bankAccounts.length : 0;
             const allBanks = profile.bankAccounts ? profile.bankAccounts.join(", ") : "None";
-
             html += `
                 <div class="profile-card">
                     <strong>Full Name:</strong> ${profile.fullName || "N/A"}<br>
@@ -846,18 +664,23 @@ async function searchProfiles() {
         });
         resultsContainer.innerHTML = html;
     } catch (err) {
-        resultsContainer.innerHTML = '<p class="no-results">Error connecting to MongoDB backend. Is the Node.js server running?</p>';
+        resultsContainer.innerHTML = '<p class="no-results">Error connecting to MongoDB backend.</p>';
     }
 }
 
-// ==================== REMAINING ORIGINAL FUNCTIONS (UNCHANGED) ====================
+// ==================== TAB SWITCHING - UPDATED FOR NEW PAGES ====================
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    const pages = ['bankingPage','propertyPage','unclaimedPage','guardianshipPage','administratorPage','profilePage'];
-    pages.forEach((id, i) => document.getElementById(id).classList.toggle('active', i === tabIndex));
+    
+    // New page order: plansPage (0), profilePage (1), servicesPage (2)
+    const pages = ['plansPage', 'profilePage', 'servicesPage'];
+    pages.forEach((id, i) => {
+        const pageEl = document.getElementById(id);
+        if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
+    });
 }
 
-// Property fields
+// Property & Bank fields (kept exactly as original)
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
     container.innerHTML = "";
@@ -890,7 +713,6 @@ function getPropertyData() {
     return data;
 }
 
-// Bank accounts
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
@@ -923,7 +745,7 @@ function getBankAccountsData() {
     return data;
 }
 
-// Edit profile
+// Edit profile functions (kept exactly as original)
 function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
@@ -961,61 +783,9 @@ function enableEditing() {
     renderBankAccounts();
 }
 
-// Banking functions (unchanged)
-function analyze() {
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-    const amount = parseFloat(document.getElementById("amount").value) || 0;
-    const balance = parseFloat(document.getElementById("balance").value) || 0;
-    const grant = document.getElementById("grant").value;
-    const deathCert = document.getElementById("deathCert").value;
-    const urgency = document.getElementById("urgency").value;
-    const purpose = document.getElementById("purpose").value;
-    const relationship = document.getElementById("relationship").value;
-    let riskScore = 0;
-    let riskLevel = "LOW";
-    let recommendations = [];
-
-    if (amount > balance * 0.5) riskScore += 30;
-    if (amount > 500000) riskScore += 25;
-    if (grant === "none") riskScore += 40;
-    if (deathCert === "no") riskScore += 20;
-    if (urgency === "yes") riskScore += 15;
-    if (purpose === "unknown" || purpose === "personal") riskScore += 20;
-    if (relationship === "unknown") riskScore += 15;
-
-    if (riskScore >= 70) {
-        riskLevel = "HIGH";
-        recommendations.push("High risk transaction. Require court order and full beneficiary verification.");
-        recommendations.push("Flag for senior management review.");
-    } else if (riskScore >= 40) {
-        riskLevel = "MEDIUM";
-        recommendations.push("Medium risk. Verify grant of representation and death certificate.");
-        recommendations.push("Limit withdrawal to 30% of balance until full documentation provided.");
-    } else {
-        riskLevel = "LOW";
-        recommendations.push("Low risk. Proceed with standard verification.");
-    }
-
-    let html = `
-        <h4>Risk Analysis Result</h4>
-        <p><strong>Risk Score:</strong> ${riskScore}/100</p>
-        <p><strong>Risk Level:</strong> <span style="color:${riskLevel==='HIGH'?'red':riskLevel==='MEDIUM'?'orange':'green'}">${riskLevel}</span></p>
-        <p><strong>Recommendations:</strong></p>
-        <ul>
-    `;
-    recommendations.forEach(rec => {
-        html += `<li>${rec}</li>`;
-    });
-    html += `</ul>`;
-    output.innerHTML = html;
-}
-
-function printReport() {
-    window.print();
-}
-
-// Placeholder functions (kept exactly as original)
+// Banking functions (kept as original placeholders)
+function analyze() {}
+function printReport() {}
 function toggleFields(){}
 function toggleAnnualReporting(){}
 function toggleBeneficiariesSection(){}
@@ -1030,7 +800,7 @@ function toggleDeathDate(){}
 function submitNewInformation(){}
 function showMyProfileInNewWindow(){}
 
-// Auto-login from session (MongoDB token)
+// Auto-login from session
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -1041,7 +811,6 @@ window.onload = function() {
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
     }
-    toggleFields();
 };
 </script>
 </body>
