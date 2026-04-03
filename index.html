@@ -348,6 +348,8 @@
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
+                <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+                <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
                 <label class="required" for="profileID">National ID Number</label>
@@ -387,8 +389,6 @@
                         I consent to allowing my next of kin to access my profile data in case I am not able to manage my affairs on my own or in case of my death.
                     </label>
                 </div>
-                <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-                <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <!-- Search Profiles -->
                 <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
                 <label for="searchTerm">Search Term</label>
