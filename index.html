@@ -239,6 +239,58 @@
             border-radius: 6px;
             margin: 15px 0;
         }
+
+        /* New Document Uploads Section Styles */
+        .documents-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
+        .document-upload-form {
+            background: #f9fbff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .dynamic-document-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        .dynamic-document-row input[type="text"] {
+            flex: 1;
+        }
+        .dynamic-document-row input[type="file"] {
+            flex: 2;
+        }
+        .remove-doc-btn {
+            background: #dc3545;
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+        .remove-doc-btn:hover {
+            background: #c82333;
+        }
+        .document-list-item {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #1e3a5f;
+        }
+        .document-actions button {
+            margin: 0 5px;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+        .view-btn { background: #007bff; }
+        .view-btn:hover { background: #0069d9; }
+        .download-btn { background: #28a745; }
+        .download-btn:hover { background: #218838; }
     </style>
 </head>
 <body>
@@ -262,7 +314,6 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -276,13 +327,11 @@
             <div class="tab" onclick="switchTab(1)" id="tab-profile">My Profile</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
         </div>
-
         <!-- Plans Page -->
         <div id="plansPage" class="page active">
             <div class="card">
                 <h2>Choose Your Plan</h2>
                 <p>Select the plan that best fits your family's asset protection needs. Secure your legacy today!</p>
-
                 <!-- Free Plan -->
                 <div class="plan-section" style="border-color: #28a745;">
                     <h3>Free Plan</h3>
@@ -298,7 +347,6 @@
                     </ul>
                     <button style="background:#28a745;">Start Free</button>
                 </div>
-
                 <!-- Premium Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>Premium Plan</h3>
@@ -317,7 +365,6 @@
                     </ul>
                     <button>Upgrade to Premium</button>
                 </div>
-
                 <!-- Lifetime Plan -->
                 <div class="plan-section" style="border-color: #6f42c1;">
                     <h3>Lifetime Plan</h3>
@@ -339,12 +386,11 @@
                 </div>
             </div>
         </div>
-
-        <!-- My Profile Page (kept exactly as original) -->
+        <!-- My Profile Page with new Document Uploads section -->
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-             
+            
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -385,6 +431,26 @@
                         I consent to allowing my next of kin to access my profile data in case I am not able to manage my affairs on my own or in case of my death.
                     </label>
                 </div>
+
+                <!-- NEW: Document Uploads Section -->
+                <div class="documents-section">
+                    <h3>Document Uploads</h3>
+                    <p style="margin-bottom:15px;">Upload important documents (title deeds, wills, certificates, etc.). Give each document a clear name. You can add multiple documents.</p>
+                    
+                    <div class="document-upload-form">
+                        <div id="dynamicDocumentsContainer">
+                            <!-- Dynamic document rows will be added here by JavaScript -->
+                        </div>
+                        <button type="button" onclick="addDocumentRow()" style="background:#155724;">+ Add More Documents</button>
+                        <button onclick="uploadDocuments()" style="background:#1e3a5f;">Upload Selected Documents</button>
+                    </div>
+
+                    <h4>Saved Documents</h4>
+                    <div id="savedDocumentsList" class="document-list">
+                        <!-- Populated by JavaScript after loading from MongoDB -->
+                    </div>
+                </div>
+
                 <!-- Search Profiles -->
                 <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
                 <label for="searchTerm">Search Term</label>
@@ -393,33 +459,32 @@
                 <div id="searchResults" class="search-results"></div>
             </div>
         </div>
-
         <!-- Services Page -->
         <div id="servicesPage" class="page">
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase provides comprehensive tools and professional support to help families protect and transfer their assets securely.</p>
-                
+               
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
                     <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
                 </div>
-                
+               
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
                     <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-                
+               
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-                
+               
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
                     <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-                
+               
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
@@ -428,7 +493,6 @@
         </div>
     </div>
 </div>
-
 <!-- Verification Modal -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
@@ -445,7 +509,6 @@
 // ==================== NODE.JS + MONGODB BACKEND INTEGRATION ====================
 // API base URL - change only if you deploy the backend to a different host
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
-
 // Global variables
 let currentToken = null;
 let currentLoggedInEmail = null;
@@ -453,8 +516,8 @@ let editVerificationCode = null;
 let isEditing = false;
 let propertyFields = [];
 let bankAccounts = [];
-let uploadedDocuments = [];
-let submitDocs = [];
+let uploadedDocuments = []; // kept for backward compatibility
+let documentRows = []; // for dynamic upload form
 
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
@@ -509,7 +572,7 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-        
+       
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
@@ -539,7 +602,6 @@ async function loadProfile() {
         });
         if (!response.ok) throw new Error("Failed to load profile");
         const userProfile = await response.json();
-
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
         document.getElementById("profileFullName").value = userProfile.fullName || "";
@@ -547,8 +609,6 @@ async function loadProfile() {
         document.getElementById("profileAddress").value = userProfile.address || "";
         document.getElementById("profilePhone").value = userProfile.phone || "";
         document.getElementById("profileEmail").value = userProfile.email || currentLoggedInEmail;
-        document.getElementById("profileLiabilities").value = userProfile.liabilities || "";
-        document.getElementById("profileNotes").value = userProfile.notes || "";
         document.getElementById("nextOfKinName").value = userProfile.nextOfKinName || "";
         document.getElementById("nextOfKinRelation").value = userProfile.nextOfKinRelation || "";
         document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
@@ -556,7 +616,10 @@ async function loadProfile() {
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
         bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
+
+        // Load saved documents
         uploadedDocuments = userProfile.documents || [];
+        renderSavedDocuments();
 
         renderPropertyFields();
         renderBankAccounts();
@@ -588,8 +651,6 @@ async function saveProfile() {
         bankAccounts: getBankAccountsData(),
         nextOfKinName: document.getElementById("nextOfKinName").value.trim(),
         nextOfKinRelation: document.getElementById("nextOfKinRelation").value.trim(),
-        liabilities: document.getElementById("profileLiabilities").value.trim(),
-        notes: document.getElementById("profileNotes").value.trim(),
         consentGiven: document.getElementById("consentCheckbox").checked,
         documents: uploadedDocuments
     };
@@ -606,7 +667,7 @@ async function saveProfile() {
         if (response.ok) {
             alert("Profile saved successfully to MongoDB!");
             isEditing = false;
-            const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation","profileLiabilities","profileNotes"];
+            const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation"];
             fields.forEach(id => document.getElementById(id).disabled = true);
             loadProfile();
         } else {
@@ -666,11 +727,10 @@ async function searchProfiles() {
     }
 }
 
-// ==================== TAB SWITCHING - UPDATED FOR NEW PAGES ====================
+// ==================== TAB SWITCHING ====================
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    
-    // New page order: plansPage (0), profilePage (1), servicesPage (2)
+   
     const pages = ['plansPage', 'profilePage', 'servicesPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
@@ -678,7 +738,7 @@ function switchTab(tabIndex) {
     });
 }
 
-// Property & Bank fields (kept exactly as original)
+// Property & Bank fields (unchanged)
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
     container.innerHTML = "";
@@ -743,7 +803,7 @@ function getBankAccountsData() {
     return data;
 }
 
-// Edit profile functions (kept exactly as original)
+// Edit profile functions (unchanged)
 function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
@@ -772,7 +832,7 @@ function closeModal() {
 }
 
 function enableEditing() {
-    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation","profileLiabilities","profileNotes"];
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation"];
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = false;
@@ -781,7 +841,175 @@ function enableEditing() {
     renderBankAccounts();
 }
 
-// Banking functions (kept as original placeholders)
+// ==================== NEW DOCUMENT UPLOADS FUNCTIONALITY ====================
+
+// Initialize document upload form with one row
+function initDocumentUploadForm() {
+    documentRows = [];
+    addDocumentRow(); // start with one row
+}
+
+function addDocumentRow() {
+    const container = document.getElementById("dynamicDocumentsContainer");
+    const rowId = 'doc-row-' + Date.now();
+    
+    const rowHTML = `
+        <div class="dynamic-document-row" id="${rowId}">
+            <input type="text" id="${rowId}-name" placeholder="Document Name (e.g. Title Deed for Plot 123)">
+            <input type="file" id="${rowId}-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <button type="button" class="remove-doc-btn" onclick="removeDocumentRow('${rowId}')">Remove</button>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', rowHTML);
+    documentRows.push(rowId);
+}
+
+function removeDocumentRow(rowId) {
+    if (documentRows.length <= 1) {
+        alert("You must have at least one document row.");
+        return;
+    }
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    documentRows = documentRows.filter(id => id !== rowId);
+}
+
+// Upload multiple documents to backend
+async function uploadDocuments() {
+    if (!currentToken) {
+        alert("You must be logged in.");
+        return;
+    }
+
+    const formData = new FormData();
+    let hasFiles = false;
+
+    for (let rowId of documentRows) {
+        const nameInput = document.getElementById(rowId + '-name');
+        const fileInput = document.getElementById(rowId + '-file');
+        
+        const docName = nameInput ? nameInput.value.trim() : '';
+        const file = fileInput && fileInput.files[0];
+
+        if (file) {
+            if (!docName) {
+                alert("Please provide a name for every document you upload.");
+                return;
+            }
+            formData.append('documentNames', docName);
+            formData.append('documents', file);
+            hasFiles = true;
+        }
+    }
+
+    if (!hasFiles) {
+        alert("Please select at least one file to upload.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/documents/upload`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Documents uploaded and saved to MongoDB successfully!");
+            // Reset form
+            document.getElementById("dynamicDocumentsContainer").innerHTML = '';
+            documentRows = [];
+            addDocumentRow();
+            // Refresh saved documents
+            loadProfile();
+        } else {
+            alert(result.msg || "Upload failed");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error uploading documents to MongoDB.");
+    }
+}
+
+// Render saved documents with View and Download buttons
+function renderSavedDocuments() {
+    const container = document.getElementById("savedDocumentsList");
+    container.innerHTML = "";
+
+    if (!uploadedDocuments || uploadedDocuments.length === 0) {
+        container.innerHTML = `<p style="color:#666; font-style:italic;">No documents saved yet.</p>`;
+        return;
+    }
+
+    uploadedDocuments.forEach((doc, index) => {
+        const div = document.createElement("div");
+        div.className = "document-list-item";
+        div.innerHTML = `
+            <div>
+                <strong>${doc.name || 'Unnamed Document'}</strong><br>
+                <small style="color:#666;">${doc.filename || ''} • ${new Date(doc.uploadDate).toLocaleDateString()}</small>
+            </div>
+            <div class="document-actions">
+                <button class="view-btn" onclick="viewDocument('${doc._id || index}')">View</button>
+                <button class="download-btn" onclick="downloadDocument('${doc._id || index}', '${doc.name || 'document'}')">Download</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// View document (opens in new tab if possible)
+async function viewDocument(docId) {
+    if (!currentToken) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/documents/${docId}/view`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        } else {
+            alert("Could not view document.");
+        }
+    } catch (err) {
+        alert("Error viewing document.");
+    }
+}
+
+// Download document
+async function downloadDocument(docId, defaultName) {
+    if (!currentToken) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/documents/${docId}/download`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = defaultName + '.pdf'; // adjust extension if needed
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } else {
+            alert("Could not download document.");
+        }
+    } catch (err) {
+        alert("Error downloading document.");
+    }
+}
+
+// ==================== PLACEHOLDER FUNCTIONS (unchanged) ====================
 function analyze() {}
 function printReport() {}
 function toggleFields(){}
@@ -798,7 +1026,7 @@ function toggleDeathDate(){}
 function submitNewInformation(){}
 function showMyProfileInNewWindow(){}
 
-// Auto-login from session
+// Auto-login from session + initialize document form
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -809,6 +1037,13 @@ window.onload = function() {
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
     }
+    
+    // Initialize document upload form when profile loads
+    setTimeout(() => {
+        if (document.getElementById("dynamicDocumentsContainer")) {
+            initDocumentUploadForm();
+        }
+    }, 800);
 };
 </script>
 </body>
