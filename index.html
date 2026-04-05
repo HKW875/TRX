@@ -239,7 +239,6 @@
             border-radius: 6px;
             margin: 15px 0;
         }
-
         /* New Document Uploads Section Styles */
         .documents-section {
             margin-top: 40px;
@@ -291,6 +290,28 @@
         .view-btn:hover { background: #0069d9; }
         .download-btn { background: #28a745; }
         .download-btn:hover { background: #218838; }
+
+        /* NEW: Disabled section styling */
+        .disabled-section {
+            opacity: 0.65;
+            pointer-events: none;
+            position: relative;
+        }
+        .disabled-section::after {
+            content: "Available after you Start Free or Upgrade";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 58, 95, 0.85);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -345,7 +366,7 @@
                         <li>Maximum two properties listed</li>
                         <li>Maximum one bank account listed</li>
                     </ul>
-                    <button style="background:#28a745;">Start Free</button>
+                    <button style="background:#28a745;" onclick="startFreePlan()">Start Free</button>
                 </div>
                 <!-- Premium Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
@@ -363,7 +384,7 @@
                         <li>Priority support and legal guidance</li>
                         <li>Priority support and legal guidance</li>
                     </ul>
-                    <button>Upgrade to Premium</button>
+                    <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
                 <!-- Lifetime Plan -->
                 <div class="plan-section" style="border-color: #6f42c1;">
@@ -382,7 +403,7 @@
                         <li>Priority legal helpline</li>
                         <li>Full data export and portability</li>
                     </ul>
-                    <button style="background:#6f42c1;">Choose Lifetime Plan</button>
+                    <button style="background:#6f42c1;" onclick="chooseLifetimePlan()">Choose Lifetime Plan</button>
                 </div>
             </div>
         </div>
@@ -390,7 +411,7 @@
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-            
+           
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -414,15 +435,17 @@
                 <label style="margin-top:25px;">Bank Accounts</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Bank Account</button>
-                <!-- Next of Kin -->
-                <label style="margin-top:25px;" class="required">Beneficiaries</label>
-                <div class="property-item">
-                    <label for="nextOfKinName">Beneficiary Full Name</label>
-                    <input type="text" id="nextOfKinName" disabled>
-                </div>
-                <div class="property-item">
-                    <label for="nextOfKinRelation">Relationship</label>
-                    <input type="text" id="nextOfKinRelation" disabled>
+                <!-- Next of Kin / Beneficiaries -->
+                <div id="beneficiariesSection" class="disabled-section">
+                    <label style="margin-top:25px;" class="required">Beneficiaries</label>
+                    <div class="property-item">
+                        <label for="nextOfKinName">Beneficiary Full Name</label>
+                        <input type="text" id="nextOfKinName" disabled>
+                    </div>
+                    <div class="property-item">
+                        <label for="nextOfKinRelation">Relationship</label>
+                        <input type="text" id="nextOfKinRelation" disabled>
+                    </div>
                 </div>
                 <!-- Consent section -->
                 <div style="margin:25px 0;">
@@ -431,12 +454,11 @@
                         I consent to allowing my next of kin to access my profile data in case I am not able to manage my affairs on my own or in case of my death.
                     </label>
                 </div>
-
                 <!-- NEW: Document Uploads Section -->
-                <div class="documents-section">
+                <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload important documents (title deeds, wills, certificates, etc.). Give each document a clear name. You can add multiple documents.</p>
-                    
+                   
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
                             <!-- Dynamic document rows will be added here by JavaScript -->
@@ -444,13 +466,11 @@
                         <button type="button" onclick="addDocumentRow()" style="background:#155724;">+ Add More Documents</button>
                         <button onclick="uploadDocuments()" style="background:#1e3a5f;">Upload Selected Documents</button>
                     </div>
-
                     <h4>Saved Documents</h4>
                     <div id="savedDocumentsList" class="document-list">
                         <!-- Populated by JavaScript after loading from MongoDB -->
                     </div>
                 </div>
-
                 <!-- Search Profiles -->
                 <h3 style="margin-top:40px; border-top:2px solid #ddd; padding-top:25px;">Search Profiles</h3>
                 <label for="searchTerm">Search Term</label>
@@ -464,27 +484,27 @@
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase provides comprehensive tools and professional support to help families protect and transfer their assets securely.</p>
-               
+              
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
                     <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
                 </div>
-               
+              
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
                     <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-               
+              
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-               
+              
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
                     <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-               
+              
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
@@ -504,7 +524,6 @@
         <button onclick="closeModal()" style="background:#721c24;">Cancel</button>
     </div>
 </div>
-
 <script>
 // ==================== NODE.JS + MONGODB BACKEND INTEGRATION ====================
 // API base URL - change only if you deploy the backend to a different host
@@ -518,6 +537,10 @@ let propertyFields = [];
 let bankAccounts = [];
 let uploadedDocuments = []; // kept for backward compatibility
 let documentRows = []; // for dynamic upload form
+
+// ==================== NEW: New User & Plan State ====================
+let isNewUser = false;           // Flag for newly registered users
+let hasStartedPlan = false;      // Becomes true after clicking "Start Free" or upgrading
 
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
@@ -542,6 +565,9 @@ async function handleRegister() {
         }
         msg.style.color = "#155724";
         msg.textContent = data.msg || "Account created successfully! Please log in.";
+
+        // Mark as new user for next login
+        isNewUser = true;
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error. Make sure Node.js backend is running.";
@@ -572,10 +598,17 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-       
+      
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
-        loadProfile();
+
+        // If this is a new registration, go directly to Plans and disable sections
+        if (isNewUser) {
+            switchTab(0); // Go to Plans
+            disableBeneficiariesAndDocuments();
+        } else {
+            loadProfile();
+        }
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error.";
@@ -585,9 +618,54 @@ async function handleLogin() {
 function logout() {
     currentToken = null;
     currentLoggedInEmail = null;
+    isNewUser = false;
+    hasStartedPlan = false;
     sessionStorage.clear();
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
+}
+
+// ==================== NEW: Disable / Enable Functions ====================
+function disableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.add("disabled-section");
+    if (documents) documents.classList.add("disabled-section");
+}
+
+function enableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.remove("disabled-section");
+    if (documents) documents.classList.remove("disabled-section");
+}
+
+// ==================== NEW: Start Free & Plan Functions ====================
+function startFreePlan() {
+    hasStartedPlan = true;
+    isNewUser = false; // User has now started using the system
+    switchTab(1); // Go to My Profile
+    disableBeneficiariesAndDocuments(); // Keep them disabled as per requirement for new email
+    loadProfile();
+    alert("Free Plan activated! You are now in My Profiles.\n\nBeneficiaries and Document Uploads remain disabled for this session.");
+}
+
+function upgradeToPremium() {
+    hasStartedPlan = true;
+    isNewUser = false;
+    enableBeneficiariesAndDocuments();
+    switchTab(1);
+    alert("Premium Plan activated! All sections are now available.");
+    loadProfile();
+}
+
+function chooseLifetimePlan() {
+    hasStartedPlan = true;
+    isNewUser = false;
+    enableBeneficiariesAndDocuments();
+    switchTab(1);
+    alert("Lifetime Plan activated! All sections are now available.");
+    loadProfile();
 }
 
 // ==================== PROFILE FUNCTIONS ====================
@@ -612,15 +690,12 @@ async function loadProfile() {
         document.getElementById("nextOfKinName").value = userProfile.nextOfKinName || "";
         document.getElementById("nextOfKinRelation").value = userProfile.nextOfKinRelation || "";
         document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
-
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
         bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
-
         // Load saved documents
         uploadedDocuments = userProfile.documents || [];
         renderSavedDocuments();
-
         renderPropertyFields();
         renderBankAccounts();
     } catch (err) {
@@ -730,7 +805,7 @@ async function searchProfiles() {
 // ==================== TAB SWITCHING ====================
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-   
+  
     const pages = ['plansPage', 'profilePage', 'servicesPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
@@ -752,7 +827,6 @@ function renderPropertyFields() {
         container.appendChild(div);
     });
 }
-
 function addPropertyField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -761,7 +835,6 @@ function addPropertyField() {
     propertyFields.push("");
     renderPropertyFields();
 }
-
 function getPropertyData() {
     const data = [];
     propertyFields.forEach((_, index) => {
@@ -770,7 +843,6 @@ function getPropertyData() {
     });
     return data;
 }
-
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
@@ -784,7 +856,6 @@ function renderBankAccounts() {
         container.appendChild(div);
     });
 }
-
 function addBankAccountField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -793,7 +864,6 @@ function addBankAccountField() {
     bankAccounts.push("");
     renderBankAccounts();
 }
-
 function getBankAccountsData() {
     const data = [];
     bankAccounts.forEach((_, index) => {
@@ -802,7 +872,6 @@ function getBankAccountsData() {
     });
     return data;
 }
-
 // Edit profile functions (unchanged)
 function editMyProfile() {
     if (!currentLoggedInEmail) {
@@ -813,7 +882,6 @@ function editMyProfile() {
     alert(`A 6-digit verification code has been sent to your email: ${currentLoggedInEmail}\n\nFor demo purposes the code is: ${editVerificationCode}`);
     document.getElementById("verificationModal").style.display = "flex";
 }
-
 function verifyCode() {
     const entered = document.getElementById("verificationCode").value.trim();
     if (entered === editVerificationCode) {
@@ -825,12 +893,10 @@ function verifyCode() {
         alert("Incorrect code. Please try again.");
     }
 }
-
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
     document.getElementById("verificationCode").value = "";
 }
-
 function enableEditing() {
     const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","nextOfKinName","nextOfKinRelation"];
     fields.forEach(id => {
@@ -840,19 +906,16 @@ function enableEditing() {
     renderPropertyFields();
     renderBankAccounts();
 }
-
 // ==================== NEW DOCUMENT UPLOADS FUNCTIONALITY ====================
-
 // Initialize document upload form with one row
 function initDocumentUploadForm() {
     documentRows = [];
     addDocumentRow(); // start with one row
 }
-
 function addDocumentRow() {
     const container = document.getElementById("dynamicDocumentsContainer");
     const rowId = 'doc-row-' + Date.now();
-    
+   
     const rowHTML = `
         <div class="dynamic-document-row" id="${rowId}">
             <input type="text" id="${rowId}-name" placeholder="Document Name (e.g. Title Deed for Plot 123)">
@@ -860,11 +923,10 @@ function addDocumentRow() {
             <button type="button" class="remove-doc-btn" onclick="removeDocumentRow('${rowId}')">Remove</button>
         </div>
     `;
-    
+   
     container.insertAdjacentHTML('beforeend', rowHTML);
     documentRows.push(rowId);
 }
-
 function removeDocumentRow(rowId) {
     if (documentRows.length <= 1) {
         alert("You must have at least one document row.");
@@ -874,24 +936,20 @@ function removeDocumentRow(rowId) {
     if (row) row.remove();
     documentRows = documentRows.filter(id => id !== rowId);
 }
-
 // Upload multiple documents to backend
 async function uploadDocuments() {
     if (!currentToken) {
         alert("You must be logged in.");
         return;
     }
-
     const formData = new FormData();
     let hasFiles = false;
-
     for (let rowId of documentRows) {
         const nameInput = document.getElementById(rowId + '-name');
         const fileInput = document.getElementById(rowId + '-file');
-        
+       
         const docName = nameInput ? nameInput.value.trim() : '';
         const file = fileInput && fileInput.files[0];
-
         if (file) {
             if (!docName) {
                 alert("Please provide a name for every document you upload.");
@@ -902,12 +960,10 @@ async function uploadDocuments() {
             hasFiles = true;
         }
     }
-
     if (!hasFiles) {
         alert("Please select at least one file to upload.");
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/documents/upload`, {
             method: 'POST',
@@ -916,9 +972,7 @@ async function uploadDocuments() {
             },
             body: formData
         });
-
         const result = await response.json();
-
         if (response.ok) {
             alert("Documents uploaded and saved to MongoDB successfully!");
             // Reset form
@@ -935,17 +989,14 @@ async function uploadDocuments() {
         alert("Error uploading documents to MongoDB.");
     }
 }
-
 // Render saved documents with View and Download buttons
 function renderSavedDocuments() {
     const container = document.getElementById("savedDocumentsList");
     container.innerHTML = "";
-
     if (!uploadedDocuments || uploadedDocuments.length === 0) {
         container.innerHTML = `<p style="color:#666; font-style:italic;">No documents saved yet.</p>`;
         return;
     }
-
     uploadedDocuments.forEach((doc, index) => {
         const div = document.createElement("div");
         div.className = "document-list-item";
@@ -962,7 +1013,6 @@ function renderSavedDocuments() {
         container.appendChild(div);
     });
 }
-
 // View document (opens in new tab if possible)
 async function viewDocument(docId) {
     if (!currentToken) return;
@@ -982,7 +1032,6 @@ async function viewDocument(docId) {
         alert("Error viewing document.");
     }
 }
-
 // Download document
 async function downloadDocument(docId, defaultName) {
     if (!currentToken) return;
@@ -1008,7 +1057,6 @@ async function downloadDocument(docId, defaultName) {
         alert("Error downloading document.");
     }
 }
-
 // ==================== PLACEHOLDER FUNCTIONS (unchanged) ====================
 function analyze() {}
 function printReport() {}
@@ -1037,7 +1085,7 @@ window.onload = function() {
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
     }
-    
+   
     // Initialize document upload form when profile loads
     setTimeout(() => {
         if (document.getElementById("dynamicDocumentsContainer")) {
