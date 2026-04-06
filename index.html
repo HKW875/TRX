@@ -290,6 +290,7 @@
         .view-btn:hover { background: #0069d9; }
         .download-btn { background: #28a745; }
         .download-btn:hover { background: #218838; }
+
         /* NEW: Disabled section styling */
         .disabled-section {
             opacity: 0.65;
@@ -311,30 +312,6 @@
             z-index: 10;
             white-space: nowrap;
         }
-
-        /* ==================== BLUE CIRCULAR LOGIN LOADING SPINNER ==================== */
-        .login-spinner {
-            width: 42px;
-            height: 42px;
-            border: 5px solid rgba(30, 58, 95, 0.2);
-            border-top: 5px solid #1e3a5f;
-            border-radius: 50%;
-            animation: loginSpin 0.85s linear infinite;
-            margin: 15px auto;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.1s ease;
-        }
-
-        .login-spinner.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        @keyframes loginSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -352,10 +329,6 @@
     <input type="email" id="email" placeholder="your@email.com">
     <label for="password">Password</label>
     <input type="password" id="password" placeholder="••••••••">
-    
-    <!-- Blue Circular Login Spinner -->
-    <div id="loginSpinner" class="login-spinner"></div>
-    
     <div style="margin-top: 25px;">
         <button onclick="handleLogin()">Login</button>
         <button onclick="handleRegister()">Create Account</button>
@@ -438,7 +411,7 @@
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-          
+           
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -485,7 +458,7 @@
                 <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload important documents (title deeds, wills, certificates, etc.). Give each document a clear name. You can add multiple documents.</p>
-                  
+                   
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
                             <!-- Dynamic document rows will be added here by JavaScript -->
@@ -511,7 +484,7 @@
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase platform provides comprehensive tools and professional support to help families protect, grow and transfer their assets securely.</p>
-            
+             
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
                     <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
@@ -520,22 +493,22 @@
                     <h3>Capital and Financial Solutions</h3>
                     <p>GrowthBase provides Premium and Lifetime Plan users access to capital and financial solutions to grow themselves or their business. Solutions such as loans, equipment, consulting, among other solutions to meet your personal or business growth targets .</p>
                 </div>
-            
+             
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
                     <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-            
+             
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-            
+             
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
                     <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-            
+             
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
@@ -572,9 +545,11 @@ let propertyFields = [];
 let bankAccounts = [];
 let uploadedDocuments = []; // kept for backward compatibility
 let documentRows = []; // for dynamic upload form
+
 // ==================== NEW: New User & Plan State ====================
-let isNewUser = false; // Flag for newly registered users
-let hasStartedPlan = false; // Becomes true after clicking "Start Free" or upgrading
+let isNewUser = false;           // Flag for newly registered users
+let hasStartedPlan = false;      // Becomes true after clicking "Start Free" or upgrading
+
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
@@ -598,6 +573,7 @@ async function handleRegister() {
         }
         msg.style.color = "#155724";
         msg.textContent = data.msg || "Account created successfully! Please log in.";
+
         // Mark as new user for next login
         isNewUser = true;
     } catch (err) {
@@ -610,25 +586,10 @@ async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
-    const spinner = document.getElementById("loginSpinner");
-    const loginBtn = document.querySelector("#authScreen button[onclick='handleLogin()']");
-
     if (!email || !pass) {
         msg.textContent = "Email and password are required.";
         return;
     }
-
-    // Show spinner reliably before fetch starts
-    spinner.classList.add("show");
-    // Small delay to force browser repaint
-    await new Promise(resolve => setTimeout(resolve, 10));
-
-    if (loginBtn) {
-        loginBtn.disabled = true;
-        loginBtn.style.opacity = "0.7";
-    }
-    msg.textContent = ""; // Clear previous message
-
     try {
         const response = await fetch(`${API_BASE}/api/login`, {
             method: 'POST',
@@ -645,9 +606,10 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-    
+     
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
+
         // If this is a new registration, go directly to Plans and disable sections
         if (isNewUser) {
             switchTab(0); // Go to Plans
@@ -658,13 +620,6 @@ async function handleLogin() {
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error.";
-    } finally {
-        // Hide spinner
-        spinner.classList.remove("show");
-        if (loginBtn) {
-            loginBtn.disabled = false;
-            loginBtn.style.opacity = "1";
-        }
     }
 }
 
@@ -677,6 +632,7 @@ function logout() {
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
 }
+
 // ==================== NEW: Disable / Enable Functions ====================
 function disableBeneficiariesAndDocuments() {
     const beneficiaries = document.getElementById("beneficiariesSection");
@@ -684,12 +640,14 @@ function disableBeneficiariesAndDocuments() {
     if (beneficiaries) beneficiaries.classList.add("disabled-section");
     if (documents) documents.classList.add("disabled-section");
 }
+
 function enableBeneficiariesAndDocuments() {
     const beneficiaries = document.getElementById("beneficiariesSection");
     const documents = document.getElementById("documentsSection");
     if (beneficiaries) beneficiaries.classList.remove("disabled-section");
     if (documents) documents.classList.remove("disabled-section");
 }
+
 // ==================== NEW: Start Free & Plan Functions ====================
 function startFreePlan() {
     hasStartedPlan = true;
@@ -697,8 +655,9 @@ function startFreePlan() {
     switchTab(1); // Go to My Profile
     disableBeneficiariesAndDocuments(); // Keep them disabled as per requirement for new email
     loadProfile();
-    alert("Free Plan activated! You will now be directed to "My Profile".\n\nBeneficiaries and Document Uploads will remain disabled until upgrade to Premium or Lifetime Plan".);
+    alert("Free Plan activated! You are now in My Profiles.\n\nBeneficiaries and Document Uploads remain disabled for this session.");
 }
+
 function upgradeToPremium() {
     hasStartedPlan = true;
     isNewUser = false;
@@ -707,6 +666,7 @@ function upgradeToPremium() {
     alert("Premium Plan activated! All sections are now available.");
     loadProfile();
 }
+
 function chooseLifetimePlan() {
     hasStartedPlan = true;
     isNewUser = false;
@@ -715,6 +675,7 @@ function chooseLifetimePlan() {
     alert("Lifetime Plan activated! All sections are now available.");
     loadProfile();
 }
+
 // ==================== PROFILE FUNCTIONS ====================
 async function loadProfile() {
     if (!currentToken) return;
@@ -750,6 +711,7 @@ async function loadProfile() {
         document.getElementById("profileStatusMessage").innerHTML = `<strong style="color:#dc3545;">Error loading profile from MongoDB</strong>`;
     }
 }
+
 async function saveProfile() {
     if (!isEditing || !currentToken) {
         alert("Please click 'Edit My Profile' and verify first.");
@@ -798,6 +760,7 @@ async function saveProfile() {
         alert("Error saving to MongoDB.");
     }
 }
+
 async function searchProfiles() {
     const term = document.getElementById("searchTerm").value.trim().toLowerCase();
     const resultsContainer = document.getElementById("searchResults");
@@ -846,15 +809,18 @@ async function searchProfiles() {
         resultsContainer.innerHTML = '<p class="no-results">Error connecting to MongoDB backend.</p>';
     }
 }
+
 // ==================== TAB SWITCHING ====================
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
+ 
     const pages = ['plansPage', 'profilePage', 'servicesPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
     });
 }
+
 // Property & Bank fields (unchanged)
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
@@ -957,7 +923,7 @@ function initDocumentUploadForm() {
 function addDocumentRow() {
     const container = document.getElementById("dynamicDocumentsContainer");
     const rowId = 'doc-row-' + Date.now();
-  
+   
     const rowHTML = `
         <div class="dynamic-document-row" id="${rowId}">
             <input type="text" id="${rowId}-name" placeholder="Document Name (e.g. Title Deed for Plot 123)">
@@ -965,7 +931,7 @@ function addDocumentRow() {
             <button type="button" class="remove-doc-btn" onclick="removeDocumentRow('${rowId}')">Remove</button>
         </div>
     `;
-  
+   
     container.insertAdjacentHTML('beforeend', rowHTML);
     documentRows.push(rowId);
 }
@@ -989,7 +955,7 @@ async function uploadDocuments() {
     for (let rowId of documentRows) {
         const nameInput = document.getElementById(rowId + '-name');
         const fileInput = document.getElementById(rowId + '-file');
-      
+       
         const docName = nameInput ? nameInput.value.trim() : '';
         const file = fileInput && fileInput.files[0];
         if (file) {
@@ -1115,6 +1081,7 @@ function removeSubmitDoc(i){}
 function toggleDeathDate(){}
 function submitNewInformation(){}
 function showMyProfileInNewWindow(){}
+
 // Auto-login from session + initialize document form
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
@@ -1126,7 +1093,7 @@ window.onload = function() {
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
     }
-  
+   
     // Initialize document upload form when profile loads
     setTimeout(() => {
         if (document.getElementById("dynamicDocumentsContainer")) {
