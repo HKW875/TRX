@@ -483,36 +483,31 @@
         <div id="servicesPage" class="page">
             <div class="card">
                 <h2>Our Services</h2>
-                <p>GrowthBase provides comprehensive tools and professional support to help families protect, grow and transfer their assets securely.</p>
-              
+                <p>GrowthBase provides comprehensive tools and professional support to help families protect and transfer their assets securely.</p>
+             
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
-                    <p>Store all your important documents (title deeds, log books, lease documents, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
+                    <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
                 </div>
-                
-                <div class="card">
-                    <h3>Capital and Financial Services</h3>
-                    <p>We connect premium and lifetime plan customers with the financial and capital resources to grow themselves or their businesses. Resources may include captal, low or zero interest loans, equipment or other resources aimed at accomplishing your growth objectives locally and internationally.</p>
-                </div>
-              
+             
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
-                    <p>Step-by-step guidance on obtaining Guardianship, Grant of Representation, appointing administrators, and handling property and financial succession.</p>
+                    <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-              
+             
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-              
+             
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
-                    <p>Connect with verified advocates, public trustees, and estate planners and other professionals specializing in succession matters.</p>
+                    <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-              
+             
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
-                    <p>Tools to ensure your assets are discovered and properly managed in case you are incapacitated or transferred to the right beneficiaries even if you are no longer around.</p>
+                    <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
                 </div>
             </div>
         </div>
@@ -603,7 +598,7 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-      
+     
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
 
@@ -652,7 +647,7 @@ function startFreePlan() {
     switchTab(1); // Go to My Profile
     disableBeneficiariesAndDocuments(); // Keep them disabled as per requirement for new email
     loadProfile();
-    alert("Free Plan activated! Directing to "My Profiles".\n\nBeneficiaries and Document Uploads are disabled for the Free Plan. Upgrade to Premium or Lifetime Plan to list beneficiaries and upload and store important documents.");
+    alert("Free Plan activated! You are now in My Profiles.\n\nBeneficiaries and Document Uploads remain disabled for this session.");
 }
 
 function upgradeToPremium() {
@@ -810,7 +805,7 @@ async function searchProfiles() {
 // ==================== TAB SWITCHING ====================
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-  
+ 
     const pages = ['plansPage', 'profilePage', 'servicesPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
