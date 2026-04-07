@@ -913,7 +913,7 @@ async function saveProfile() {
         });
         const data = await response.json();
         if (response.ok) {
-            alert("Profile saved successfully to MongoDB!");
+            alert("Profile saved successfully!");
             isEditing = false;
             loadProfile();
         } else {
