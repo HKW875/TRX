@@ -1067,9 +1067,7 @@ async function sendForgotPasswordCode() {
         const data = await response.json();
         if (response.ok) {
             msgEl.style.color = "#155724";
-            msgEl.textContent = "Reset code sent successfully. Check your email.";
-           
-            // Switch to step 2
+            msgEl.textContent = "Reset code sent successfully. Please check your email.";
             document.getElementById("forgotStep1").classList.add("hidden");
             document.getElementById("forgotStep2").classList.remove("hidden");
             document.getElementById("forgotOTP").focus();
