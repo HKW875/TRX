@@ -357,6 +357,23 @@
             color: #dc3545;
             margin: 15px 0;
         }
+
+        /* M-PESA MODAL STYLES */
+        .payment-option {
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-option:hover {
+            background: #f0f8ff;
+        }
+        .payment-option.selected {
+            border-color: #28a745;
+            background: #e6f4ea;
+        }
     </style>
 </head>
 <body>
@@ -381,13 +398,12 @@
         <button onclick="handleLogin()">Login</button>
         <button onclick="handleRegister()">Create Account</button>
     </div>
-    <!-- ==================== NEW: Forgot Password Link (added here) ==================== -->
     <div style="margin-top: 15px;">
         <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #1e3a5f; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
     </div>
-    <!-- ================================================================================= -->
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -401,11 +417,13 @@
             <div class="tab" onclick="switchTab(1)" id="tab-profile">My Profile</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
         </div>
+
         <!-- Plans Page -->
         <div id="plansPage" class="page active">
             <div class="card">
                 <h2>Choose Your Plan</h2>
                 <p>Select the plan that best fits your family's asset protection needs. Secure your legacy today!</p>
+                
                 <!-- Free Plan -->
                 <div class="plan-section" style="border-color: #28a745;">
                     <h3>Free Plan</h3>
@@ -421,6 +439,7 @@
                     </ul>
                     <button style="background:#28a745;" onclick="startFreePlan()">Start Free</button>
                 </div>
+
                 <!-- Premium Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>Premium Plan</h3>
@@ -439,8 +458,8 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-                
-                <!-- ====================== NEW: BodaGo Plan ====================== -->
+               
+                <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
                     <div class="plan-highlight">
@@ -453,11 +472,10 @@
                         <li>Access to low cost motorcycle parts and maintenance services</li>
                         <li>Must have motorcycle or TukTuk logbook, ID, ready.</li>
                         <li>Document storage and secure encrypted vault</li>
-                        <li>Priority support and  guidance</li>
+                        <li>Priority support and guidance</li>
                     </ul>
                     <button onclick="upgradeToBodaGo()">Choose BodaGo Plan</button>
                 </div>
-                <!-- ============================================================ -->
 
                 <!-- Lifetime Plan -->
                 <div class="plan-section" style="border-color: #6f42c1;">
@@ -480,11 +498,12 @@
                 </div>
             </div>
         </div>
+
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-      
+     
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -508,13 +527,12 @@
                 <label style="margin-top:25px;">Bank Accounts</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Bank Account</button>
-                <!-- ==================== BENEFICIARIES SECTION - UPDATED ==================== -->
+                <!-- Beneficiaries SECTION -->
                 <div id="beneficiariesSection" class="disabled-section">
                     <label style="margin-top:25px;" class="required">Beneficiaries</label>
                     <div id="beneficiariesContainer"></div>
                     <button type="button" class="add-beneficiary-btn" onclick="addBeneficiaryField()">+ Add Another Beneficiary</button>
                 </div>
-                <!-- ==================================================================== -->
                 <!-- Consent section -->
                 <div style="margin:25px 0;">
                     <input type="checkbox" id="consentCheckbox" checked style="width:auto;">
@@ -526,7 +544,7 @@
                 <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload important documents (title deeds, wills, certificates, etc.). Give each document a clear name. You can add multiple documents.</p>
-              
+             
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
                             <!-- Dynamic document rows will be added here by JavaScript -->
@@ -547,12 +565,13 @@
                 <div id="searchResults" class="search-results"></div>
             </div>
         </div>
+
         <!-- Services Page -->
         <div id="servicesPage" class="page">
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase platform provides comprehensive tools and professional support to help families protect, grow and transfer their assets securely.</p>
-        
+       
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
                     <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
@@ -561,22 +580,22 @@
                     <h3>Capital and Financial Solutions</h3>
                     <p>GrowthBase provides Premium and Lifetime Plan users access to capital and financial solutions to grow themselves or their business. Solutions such as loans, equipment, consulting, among other solutions to meet your personal or business growth targets .</p>
                 </div>
-        
+       
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
                     <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-        
+       
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-        
+       
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
                     <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-        
+       
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
@@ -589,43 +608,40 @@
         </div>
     </div>
 </div>
-<!-- Original Verification Modal (kept intact + small improvement) -->
+
+<!-- Original Verification Modal -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
         <h3>Verification Required</h3>
-        <!-- ==================== NEW: Dynamic message ==================== -->
         <p id="modalMessage">A 6-digit code has been sent to your registered email.</p>
-        <!-- ================================================================= -->
         <input type="text" id="verificationCode" placeholder="Enter 6-digit code" maxlength="6" style="font-size:1.4em; text-align:center;">
         <br><br>
         <button onclick="verifyCode()">Verify Code</button>
         <button onclick="closeModal()" style="background:#721c24;">Cancel</button>
     </div>
 </div>
-<!-- ==================== NEW: Forgot Password Modal (added) ==================== -->
+
+<!-- Forgot Password Modal -->
 <div id="forgotPasswordModal" class="modal">
     <div class="modal-content" style="max-width: 420px;">
         <h3 id="forgotStepTitle">Forgot Password</h3>
-      
         <div id="forgotStep1">
             <p>Enter your registered email to receive a reset code.</p>
             <input type="email" id="forgotEmail" placeholder="your@email.com" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;">
             <button onclick="sendForgotPasswordCode()" style="width:100%; margin-top:10px;">Send Reset Code</button>
         </div>
-      
         <div id="forgotStep2" class="hidden">
             <p>A 6-digit code has been sent to your email.</p>
             <input type="text" id="forgotOTP" placeholder="Enter 6-digit code" maxlength="6" style="font-size:1.4em; text-align:center; width:100%; margin:10px 0; box-sizing:border-box;">
             <input type="password" id="newPassword" placeholder="New Password" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;">
             <button onclick="resetPasswordWithOTP()" style="width:100%; margin-top:10px;">Reset Password</button>
         </div>
-      
         <br>
         <button onclick="closeForgotModal()" style="background:#721c24; width:100%;">Close</button>
         <p id="forgotMessage" style="margin-top:15px; min-height:24px; color:#dc3545;"></p>
     </div>
 </div>
-<!-- ====================================================================== -->
+
 <!-- Inactivity Warning Modal -->
 <div id="inactivityWarningModal">
     <div id="inactivityWarningContent">
@@ -634,6 +650,32 @@
         <p id="countdownTimer">60</p>
         <p>Logging out in <span id="countdownText">60</span> seconds...</p>
         <button onclick="resetInactivityTimer()" style="background:#28a745;">Stay Logged In</button>
+    </div>
+</div>
+
+<!-- ==================== NEW: M-PESA BodaGo PAYMENT MODAL ==================== -->
+<div id="bodaGoPaymentModal" class="modal">
+    <div class="modal-content" style="max-width: 460px;">
+        <h3>BodaGo Plan - M-Pesa Payment</h3>
+        <p id="paymentModalMessage" style="margin-bottom:20px;">Select payment option and enter your M-Pesa number</p>
+        
+        <div class="payment-option" id="monthlyOption" onclick="selectPaymentOption('monthly')">
+            <strong>KES 200 per month</strong><br>
+            <small>Billed cumulatively every end of month. Unpaid amounts carried forward.</small>
+        </div>
+        
+        <div class="payment-option" id="yearlyOption" onclick="selectPaymentOption('yearly')">
+            <strong>KES 1,200 for one year</strong><br>
+            <small>One-time payment covering 12 months</small>
+        </div>
+
+        <label for="mpesaPhone" style="text-align:left; display:block; margin-top:20px;">M-Pesa Phone Number</label>
+        <input type="tel" id="mpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
+
+        <button onclick="initiateMpesaSTKPush()" style="background:#28a745; width:100%; padding:14px;">Pay Now with M-Pesa</button>
+        <button onclick="closePaymentModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
+        
+        <p id="paymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
     </div>
 </div>
 
@@ -647,14 +689,17 @@ let editVerificationCode = null;
 let isEditing = false;
 let propertyFields = [];
 let bankAccounts = [];
-let beneficiaries = []; // New array for multiple beneficiaries
+let beneficiaries = [];
 let uploadedDocuments = [];
 let documentRows = [];
-// ==================== INACTIVITY TIMEOUT (5 minutes) ====================
+let selectedBodaGoPlan = null;
+
+// ==================== INACTIVITY TIMEOUT ====================
 let inactivityTimer;
 let warningTimer;
-const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes
-const WARNING_TIME = 60 * 1000; // Show warning 60 seconds before logout
+const INACTIVITY_LIMIT = 5 * 60 * 1000;
+const WARNING_TIME = 60 * 1000;
+
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
@@ -663,6 +708,7 @@ function resetInactivityTimer() {
         showInactivityWarning();
     }, INACTIVITY_LIMIT);
 }
+
 function showInactivityWarning() {
     let timeLeft = 60;
     const countdownTimerEl = document.getElementById("countdownTimer");
@@ -678,13 +724,14 @@ function showInactivityWarning() {
         }
     }, 1000);
 }
-// Reset timer on any user activity
+
 function setupInactivityListeners() {
     const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
     events.forEach(event => {
         document.addEventListener(event, resetInactivityTimer, { passive: true });
     });
 }
+
 // ==================== BENEFICIARY FUNCTIONS ====================
 function renderBeneficiaries() {
     const container = document.getElementById("beneficiariesContainer");
@@ -696,19 +743,17 @@ function renderBeneficiaries() {
             <div class="beneficiary-header">Beneficiary ${index + 1}</div>
             <label>Beneficiary Full Name</label>
             <input type="text" id="ben-name-${index}" value="${ben.fullName || ''}" ${isEditing ? '' : 'disabled'}>
-        
             <label>Beneficiary Email</label>
             <input type="email" id="ben-email-${index}" value="${ben.email || ''}" ${isEditing ? '' : 'disabled'}>
-        
             <label>Beneficiary Phone Number</label>
             <input type="tel" id="ben-phone-${index}" value="${ben.phone || ''}" ${isEditing ? '' : 'disabled'}>
-        
             <label>Relationship</label>
             <input type="text" id="ben-relation-${index}" value="${ben.relation || ''}" ${isEditing ? '' : 'disabled'}>
         `;
         container.appendChild(div);
     });
 }
+
 function addBeneficiaryField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -717,6 +762,7 @@ function addBeneficiaryField() {
     beneficiaries.push({ fullName: "", email: "", phone: "", relation: "" });
     renderBeneficiaries();
 }
+
 function getBeneficiariesData() {
     const data = [];
     beneficiaries.forEach((_, index) => {
@@ -735,6 +781,7 @@ function getBeneficiariesData() {
     });
     return data;
 }
+
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
@@ -764,6 +811,7 @@ async function handleRegister() {
         msg.textContent = "Server error.";
     }
 }
+
 async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
@@ -794,14 +842,13 @@ async function handleLogin() {
         sessionStorage.setItem("fd_logged_email", email);
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
-    
+   
         if (isNewUser) {
             switchTab(0);
             disableBeneficiariesAndDocuments();
         } else {
             loadProfile();
         }
-        // Start inactivity tracking after successful login
         resetInactivityTimer();
         setupInactivityListeners();
     } catch (err) {
@@ -812,6 +859,7 @@ async function handleLogin() {
         verifyingText.style.display = "none";
     }
 }
+
 function logout() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
@@ -824,21 +872,25 @@ function logout() {
     document.getElementById("authScreen").classList.remove("hidden");
     document.getElementById("inactivityWarningModal").style.display = "none";
 }
-// ==================== PLAN & DISABLE FUNCTIONS ====================
+
+// ==================== PLAN FUNCTIONS ====================
 let isNewUser = false;
 let hasStartedPlan = false;
+
 function disableBeneficiariesAndDocuments() {
     const beneficiaries = document.getElementById("beneficiariesSection");
     const documents = document.getElementById("documentsSection");
     if (beneficiaries) beneficiaries.classList.add("disabled-section");
     if (documents) documents.classList.add("disabled-section");
 }
+
 function enableBeneficiariesAndDocuments() {
     const beneficiaries = document.getElementById("beneficiariesSection");
     const documents = document.getElementById("documentsSection");
     if (beneficiaries) beneficiaries.classList.remove("disabled-section");
     if (documents) documents.classList.remove("disabled-section");
 }
+
 function startFreePlan() {
     hasStartedPlan = true;
     isNewUser = false;
@@ -847,6 +899,7 @@ function startFreePlan() {
     loadProfile();
     alert("Free Plan activated!");
 }
+
 function upgradeToPremium() {
     hasStartedPlan = true;
     isNewUser = false;
@@ -856,16 +909,14 @@ function upgradeToPremium() {
     loadProfile();
 }
 
-// ====================== NEW: BodaGo Plan Function ======================
 function upgradeToBodaGo() {
-    hasStartedPlan = true;
-    isNewUser = false;
-    enableBeneficiariesAndDocuments();
-    switchTab(1);
-    alert("BodaGo Plan activated! All sections are now available.");
-    loadProfile();
+    selectedBodaGoPlan = null;
+    document.getElementById("monthlyOption").classList.remove("selected");
+    document.getElementById("yearlyOption").classList.remove("selected");
+    document.getElementById("paymentStatus").textContent = "";
+    document.getElementById("mpesaPhone").value = "";
+    document.getElementById("bodaGoPaymentModal").style.display = "flex";
 }
-// =====================================================================
 
 function chooseLifetimePlan() {
     hasStartedPlan = true;
@@ -875,7 +926,77 @@ function chooseLifetimePlan() {
     alert("Lifetime Plan activated! All sections are now available.");
     loadProfile();
 }
-// ==================== PROFILE LOAD & SAVE ====================
+
+// ==================== M-PESA PAYMENT FUNCTIONS ====================
+function selectPaymentOption(option) {
+    selectedBodaGoPlan = option;
+    document.getElementById("monthlyOption").classList.toggle("selected", option === "monthly");
+    document.getElementById("yearlyOption").classList.toggle("selected", option === "yearly");
+}
+
+function closePaymentModal() {
+    document.getElementById("bodaGoPaymentModal").style.display = "none";
+}
+
+async function initiateMpesaSTKPush() {
+    const phone = document.getElementById("mpesaPhone").value.trim();
+    const statusEl = document.getElementById("paymentStatus");
+
+    if (!selectedBodaGoPlan) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please select Monthly or Yearly option.";
+        return;
+    }
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+
+    const amount = selectedBodaGoPlan === "monthly" ? 200 : 1200;
+    const planType = selectedBodaGoPlan === "monthly" ? "BodaGo Monthly" : "BodaGo Yearly";
+
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "BodaGoPlan"
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closePaymentModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
+
+// ==================== PROFILE FUNCTIONS ====================
 async function loadProfile() {
     if (!currentToken) return;
     try {
@@ -892,17 +1013,17 @@ async function loadProfile() {
         document.getElementById("profileAddress").value = userProfile.address || "";
         document.getElementById("profilePhone").value = userProfile.phone || "";
         document.getElementById("profileEmail").value = userProfile.email || currentLoggedInEmail;
-        // Load beneficiaries
+
         beneficiaries = userProfile.beneficiaries && userProfile.beneficiaries.length > 0
             ? [...userProfile.beneficiaries]
             : [{ fullName: "", email: "", phone: "", relation: "" }];
+
         document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
-    
         bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
-    
         uploadedDocuments = userProfile.documents || [];
+
         renderPropertyFields();
         renderBankAccounts();
         renderBeneficiaries();
@@ -911,6 +1032,7 @@ async function loadProfile() {
         console.error("Profile load error:", err);
     }
 }
+
 async function saveProfile() {
     if (!isEditing || !currentToken) {
         alert("Please click 'Edit My Profile' and verify first.");
@@ -956,7 +1078,7 @@ async function saveProfile() {
         alert("Error saving to MongoDB.");
     }
 }
-// Property, Bank, Document functions (kept exactly as original)
+
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
     container.innerHTML = "";
@@ -970,6 +1092,7 @@ function renderPropertyFields() {
         container.appendChild(div);
     });
 }
+
 function addPropertyField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -978,6 +1101,7 @@ function addPropertyField() {
     propertyFields.push("");
     renderPropertyFields();
 }
+
 function getPropertyData() {
     const data = [];
     propertyFields.forEach((_, index) => {
@@ -986,6 +1110,7 @@ function getPropertyData() {
     });
     return data;
 }
+
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
@@ -999,6 +1124,7 @@ function renderBankAccounts() {
         container.appendChild(div);
     });
 }
+
 function addBankAccountField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -1007,6 +1133,7 @@ function addBankAccountField() {
     bankAccounts.push("");
     renderBankAccounts();
 }
+
 function getBankAccountsData() {
     const data = [];
     bankAccounts.forEach((_, index) => {
@@ -1015,13 +1142,12 @@ function getBankAccountsData() {
     });
     return data;
 }
-// ==================== UPDATED: editMyProfile() - Now sends real OTP via backend ====================
+
 function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
         return;
     }
-    // Call backend to send real verification code to the user's email
     fetch(`${API_BASE}/api/send-profile-verification`, {
         method: 'POST',
         headers: {
@@ -1046,7 +1172,7 @@ function editMyProfile() {
         alert("Error connecting to server. Please try again.");
     });
 }
-// ==================== UPDATED: verifyCode() - Now works with real backend OTP ====================
+
 async function verifyCode() {
     const entered = document.getElementById("verificationCode").value.trim();
     if (!entered || entered.length !== 6) {
@@ -1078,29 +1204,26 @@ async function verifyCode() {
         alert("Verification failed. Please check the code and try again.");
     }
 }
+
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
     document.getElementById("verificationCode").value = "";
 }
-// ==================== NEW: Forgot Password Modal Functions ====================
+
 function showForgotPasswordModal() {
     const modal = document.getElementById("forgotPasswordModal");
     modal.style.display = "flex";
-  
-    // Reset to step 1
     document.getElementById("forgotStep1").classList.remove("hidden");
     document.getElementById("forgotStep2").classList.add("hidden");
     document.getElementById("forgotMessage").textContent = "";
-  
-    // Pre-fill email if available
     const currentEmail = document.getElementById("email").value.trim();
-    if (currentEmail) {
-        document.getElementById("forgotEmail").value = currentEmail;
-    }
+    if (currentEmail) document.getElementById("forgotEmail").value = currentEmail;
 }
+
 function closeForgotModal() {
     document.getElementById("forgotPasswordModal").style.display = "none";
 }
+
 async function sendForgotPasswordCode() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const msgEl = document.getElementById("forgotMessage");
@@ -1119,8 +1242,6 @@ async function sendForgotPasswordCode() {
         if (response.ok) {
             msgEl.style.color = "#155724";
             msgEl.textContent = "Reset code sent successfully. Check your email.";
-          
-            // Switch to step 2
             document.getElementById("forgotStep1").classList.add("hidden");
             document.getElementById("forgotStep2").classList.remove("hidden");
             document.getElementById("forgotOTP").focus();
@@ -1133,6 +1254,7 @@ async function sendForgotPasswordCode() {
         msgEl.textContent = "Network error. Please try again later.";
     }
 }
+
 async function resetPasswordWithOTP() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const otp = document.getElementById("forgotOTP").value.trim();
@@ -1153,10 +1275,7 @@ async function resetPasswordWithOTP() {
         if (response.ok) {
             msgEl.style.color = "#155724";
             msgEl.textContent = "Password reset successful! You can now login with the new password.";
-          
-            setTimeout(() => {
-                closeForgotModal();
-            }, 2500);
+            setTimeout(() => closeForgotModal(), 2500);
         } else {
             msgEl.style.color = "#dc3545";
             msgEl.textContent = data.msg || "Invalid or expired code.";
@@ -1166,7 +1285,7 @@ async function resetPasswordWithOTP() {
         msgEl.textContent = "Server error. Please try again.";
     }
 }
-// ==================== Original functions that were not changed ====================
+
 function enableEditing() {
     const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail"];
     fields.forEach(id => {
@@ -1177,6 +1296,7 @@ function enableEditing() {
     renderBankAccounts();
     renderBeneficiaries();
 }
+
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
     const pages = ['plansPage', 'profilePage', 'servicesPage'];
@@ -1185,11 +1305,12 @@ function switchTab(tabIndex) {
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
     });
 }
-// Document upload functions (unchanged)
+
 function initDocumentUploadForm() {
     documentRows = [];
     addDocumentRow();
 }
+
 function addDocumentRow() {
     const container = document.getElementById("dynamicDocumentsContainer");
     const rowId = 'doc-row-' + Date.now();
@@ -1203,6 +1324,7 @@ function addDocumentRow() {
     container.insertAdjacentHTML('beforeend', rowHTML);
     documentRows.push(rowId);
 }
+
 function removeDocumentRow(rowId) {
     if (documentRows.length <= 1) {
         alert("You must have at least one document row.");
@@ -1212,6 +1334,7 @@ function removeDocumentRow(rowId) {
     if (row) row.remove();
     documentRows = documentRows.filter(id => id !== rowId);
 }
+
 async function uploadDocuments() {
     if (!currentToken) {
         alert("You must be logged in.");
@@ -1258,6 +1381,7 @@ async function uploadDocuments() {
         alert("Error uploading documents.");
     }
 }
+
 function renderSavedDocuments() {
     const container = document.getElementById("savedDocumentsList");
     container.innerHTML = "";
@@ -1281,10 +1405,12 @@ function renderSavedDocuments() {
         container.appendChild(div);
     });
 }
-async function viewDocument(docId) { /* placeholder */ alert("View document functionality"); }
-async function downloadDocument(docId, defaultName) { /* placeholder */ alert("Download document functionality"); }
-// Placeholder functions
+
+async function viewDocument(docId) { alert("View document functionality"); }
+async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
+
 function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
+
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
