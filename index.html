@@ -862,7 +862,9 @@ async function handleLogin() {
         }
         resetInactivityTimer();
         setupInactivityListeners();
-    } 
+    } catch (err) {
+        msg.style.color = "";
+        msg.textContent = "";
     } finally {
         spinner.classList.remove("show");
         verifyingText.style.display = "none";
