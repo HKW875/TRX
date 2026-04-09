@@ -727,6 +727,19 @@ function resetInactivityTimer() {
         showInactivityWarning();
     }, INACTIVITY_LIMIT);
 }
+function safeFetch(url, options = {}) {
+    if (!currentToken || isLoggedOut) {
+        return Promise.reject(new Error("User logged out"));
+    }
+
+    options.headers = {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${currentToken}`
+    };
+
+    return fetch(url, options);
+}
+    
 function showInactivityWarning() {
     let timeLeft = 60;
     const countdownTimerEl = document.getElementById("countdownTimer");
@@ -1098,7 +1111,7 @@ async function initiateLifetimeSTKPush() {
 async function loadProfile() {
     if (!currentToken) return;
     try {
-        const response = await fetch(`${API_BASE}/api/profile`, {
+        const response = await safeFetch(`${API_BASE}/api/profile`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
