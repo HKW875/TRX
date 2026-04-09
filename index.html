@@ -411,17 +411,18 @@
         /* ==================== LAST LOGIN DISPLAY ==================== */
         .last-login {
             position: absolute;
-            top: 20px;
+            top: 18px;
             right: 25px;
-            font-size: 0.95em;
+            background: #e3f0ff;
             color: #1e3a5f;
-            background: #f0f4ff;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #d1e0ff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            z-index: 10;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #b3d4ff;
+            z-index: 20;
             white-space: nowrap;
+            font-size: 0.97em;
         }
     </style>
 </head>
@@ -544,9 +545,14 @@
         </div>
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
-            <div class="card" style="position: relative;">
+            <div class="card" style="position: relative; padding-top: 55px;">
                 <h3>My Personal Profile</h3>
-                <div id="lastLoginDisplay" class="last-login">Last Login: Loading...</div>
+                
+                <!-- Last Login Display - Made very visible -->
+                <div id="lastLoginDisplay" class="last-login" style="position: absolute; top: 18px; right: 25px; background: #e3f0ff; color: #1e3a5f; padding: 9px 16px; border-radius: 8px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #b3d4ff; z-index: 20;">
+                    Last Login: Loading...
+                </div>
+                
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -1138,13 +1144,16 @@ async function loadProfile() {
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
         
-        // Display Last Login
-        if (userProfile.lastLogin) {
-            const lastLoginDate = new Date(userProfile.lastLogin);
-            document.getElementById("lastLoginDisplay").textContent = 
-                `Last Login: ${lastLoginDate.toLocaleDateString('en-GB')} ${lastLoginDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
-        } else {
-            document.getElementById("lastLoginDisplay").textContent = "Last Login: First time";
+        // === LAST LOGIN DISPLAY (Strongly forced) ===
+        const lastLoginEl = document.getElementById("lastLoginDisplay");
+        if (lastLoginEl) {
+            if (userProfile.lastLogin) {
+                const lastLoginDate = new Date(userProfile.lastLogin);
+                lastLoginEl.textContent = `Last Login: ${lastLoginDate.toLocaleDateString('en-GB')} at ${lastLoginDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
+            } else {
+                lastLoginEl.textContent = "Last Login: First time";
+            }
+            lastLoginEl.style.display = "block";   // Force visibility
         }
 
         document.getElementById("profileFullName").value = userProfile.fullName || "";
