@@ -324,6 +324,29 @@
             opacity: 0;
             transition: opacity 0.1s ease;
         }
+        /* ==================== SAVING SPINNER ==================== */
+        .saving-spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #saveProfileStatus {
+             margin-top: 12px;
+             font-weight: 600;
+             min-height: 28px;
+        }
         .login-spinner.show {
             visibility: visible;
             opacity: 1;
@@ -501,6 +524,7 @@
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+                <div id="saveProfileStatus"></div>
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
@@ -1107,17 +1131,25 @@ async function loadProfile() {
 }
 async function saveProfile() {
     if (!isEditing || !currentToken) {
-        alert("Please click 'Edit My Profile' and verify first.");
+        alert("Please click 'Create/Edit Profile' first.");
         return;
     }
+
+    const statusEl = document.getElementById("saveProfileStatus");
     const fullName = document.getElementById("profileFullName").value.trim();
     const nationalID = document.getElementById("profileID").value.trim();
     const phone = document.getElementById("profilePhone").value.trim();
     const email = document.getElementById("profileEmail").value.trim();
+
     if (!fullName || !nationalID || !phone || !email) {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
     }
+
+    // Show spinner and text
+    statusEl.innerHTML = `<span class="saving-spinner"></span>Saving Changes...`;
+    statusEl.style.color = "#1e3a5f";
+
     const profileData = {
         fullName: fullName,
         nationalID: nationalID,
@@ -1129,6 +1161,7 @@ async function saveProfile() {
         consentGiven: document.getElementById("consentCheckbox").checked,
         documents: uploadedDocuments
     };
+
     try {
         const response = await fetch(`${API_BASE}/api/profile`, {
             method: 'POST',
@@ -1138,16 +1171,21 @@ async function saveProfile() {
             },
             body: JSON.stringify(profileData)
         });
+
         const data = await response.json();
+
         if (response.ok) {
-            alert("Profile saved successfully to MongoDB!");
+            statusEl.innerHTML = `✅ Profile saved successfully!`;
+            statusEl.style.color = "#155724";
             isEditing = false;
             loadProfile();
         } else {
-            alert(data.msg || "Save failed");
+            statusEl.innerHTML = `❌ ${data.msg || "Save failed"}`;
+            statusEl.style.color = "#dc3545";
         }
     } catch (err) {
-        alert("Error saving to MongoDB.");
+        statusEl.innerHTML = `❌ Error saving to server. Please try again.`;
+        statusEl.style.color = "#dc3545";
     }
 }
 function renderPropertyFields() {
