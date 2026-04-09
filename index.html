@@ -862,9 +862,7 @@ async function handleLogin() {
         }
         resetInactivityTimer();
         setupInactivityListeners();
-    } catch (err) {
-        msg.style.color = "#dc3545";
-        msg.textContent = "Server error.";
+    } 
     } finally {
         spinner.classList.remove("show");
         verifyingText.style.display = "none";
