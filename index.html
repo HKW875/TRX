@@ -332,6 +332,29 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* ==================== SAVE PROFILE SPINNER ==================== */
+        .save-spinner-container {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0 15px 0;
+            color: #155724;
+            font-weight: 600;
+        }
+        .save-spinner {
+            width: 28px;
+            height: 28px;
+            border: 4px solid rgba(21, 87, 36, 0.2);
+            border-top: 4px solid #155724;
+            border-radius: 50%;
+            animation: saveSpin 0.85s linear infinite;
+        }
+        @keyframes saveSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Inactivity Warning Modal */
         #inactivityWarningModal {
             position: fixed;
@@ -420,7 +443,7 @@
             <div class="card">
                 <h2>Choose Your Plan</h2>
                 <p>If something happens to you, will your family know what you own? Securely store, and grow your assets documents and your beneficiaries in one place. So your family is never in the dark. Select the plan that best fits your family's asset protection needs. Secure your legacy today!</p>
-               
+              
                 <!-- Free Plan -->
                 <div class="plan-section" style="border-color: #28a745;">
                     <h3>Free Plan</h3>
@@ -454,7 +477,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-             
+            
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -496,11 +519,19 @@
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-   
+  
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
+                
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+                
+                <!-- Save Profile Spinner -->
+                <div id="saveSpinnerContainer" class="save-spinner-container">
+                    <div class="save-spinner"></div>
+                    <span>Saving Changes...</span>
+                </div>
+
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
@@ -537,7 +568,7 @@
                 <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload important documents (title deeds, wills, certificates, etc.). Give each document a clear name. You can add multiple documents.</p>
-           
+          
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
                             <!-- Dynamic document rows will be added here by JavaScript -->
@@ -563,7 +594,7 @@
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase platform provides comprehensive tools and professional support to help families protect, grow and transfer their assets securely.</p>
-     
+    
                 <div class="card">
                     <h3>Asset Documentation &amp; Secure Vault</h3>
                     <p>Store all your important documents (title deeds, bank statements, wills, insurance policies) in a secure, encrypted digital vault accessible only to you and authorized next of kin.</p>
@@ -572,22 +603,22 @@
                     <h3>Capital and Financial Solutions</h3>
                     <p>GrowthBase provides Premium and Lifetime Plan users access to capital and financial solutions to grow themselves or their business. Solutions such as loans, equipment, consulting, among other solutions to meet your personal or business growth targets .</p>
                 </div>
-     
+    
                 <div class="card">
                     <h3>Succession Planning Guidance</h3>
                     <p>Step-by-step guidance on obtaining Grant of Representation, appointing administrators, and handling property and financial succession.</p>
                 </div>
-     
+    
                 <div class="card">
                     <h3>Profile Search &amp; Claim Support</h3>
                     <p>Search for unclaimed or deceased family members' profiles and initiate secure claim requests with proper verification.</p>
                 </div>
-     
+    
                 <div class="card">
                     <h3>Legal &amp; Professional Referrals</h3>
                     <p>Connect with verified advocates, public trustees, and estate planners specializing in succession matters.</p>
                 </div>
-     
+    
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure your assets are discovered and properly transferred to the right beneficiaries even if you are no longer around.</p>
@@ -602,18 +633,17 @@
 </div>
 
 <!-- ==================== M-PESA PAYMENT MODALS ==================== -->
-
-<!-- BodaGo Payment Modal (Your original - 100% intact) -->
+<!-- BodaGo Payment Modal -->
 <div id="bodaGoPaymentModal" class="modal">
     <div class="modal-content">
         <h3>BodaGo Plan - M-Pesa Payment</h3>
         <p id="paymentModalMessage" style="margin-bottom:20px;">Select payment option and enter your M-Pesa number</p>
-       
+      
         <div class="payment-option" id="monthlyOption" onclick="selectPaymentOption('monthly')">
             <strong>KES 200 per month</strong><br>
             <small>Billed cumulatively every end of month. Unpaid amounts carried forward.</small>
         </div>
-       
+      
         <div class="payment-option" id="yearlyOption" onclick="selectPaymentOption('yearly')">
             <strong>KES 1,200 for one year</strong><br>
             <small>One-time payment covering 12 months</small>
@@ -622,22 +652,21 @@
         <input type="tel" id="mpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
         <button onclick="initiateMpesaSTKPush()" style="background:#28a745; width:100%; padding:14px;">Pay Now with M-Pesa</button>
         <button onclick="closePaymentModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
-       
+      
         <p id="paymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
     </div>
 </div>
-
-<!-- Premium Payment Modal (NEW) -->
+<!-- Premium Payment Modal -->
 <div id="premiumPaymentModal" class="modal">
     <div class="modal-content">
         <h3>Premium Plan - M-Pesa Payment</h3>
         <p id="premiumModalMessage" style="margin-bottom:20px;">Select payment option and enter your M-Pesa number</p>
-       
+      
         <div class="payment-option" id="premiumMonthlyOption" onclick="selectPremiumOption('monthly')">
             <strong>KES 1,000 per month</strong><br>
             <small>Recurring monthly subscription</small>
         </div>
-       
+      
         <div class="payment-option" id="premiumYearlyOption" onclick="selectPremiumOption('yearly')">
             <strong>KES 10,000 for one year</strong><br>
             <small>Save KES 2,000 - One-time payment covering 12 months</small>
@@ -646,27 +675,26 @@
         <input type="tel" id="premiumMpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
         <button onclick="initiatePremiumSTKPush()" style="background:#28a745; width:100%; padding:14px;">Pay Now with M-Pesa</button>
         <button onclick="closePremiumModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
-       
+      
         <p id="premiumPaymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
     </div>
 </div>
-
-<!-- Lifetime Payment Modal (NEW) -->
+<!-- Lifetime Payment Modal -->
 <div id="lifetimePaymentModal" class="modal">
     <div class="modal-content">
         <h3>Lifetime Plan - M-Pesa Payment</h3>
         <p style="margin-bottom:20px;">One-time payment for lifetime access</p>
-       
+      
         <div class="payment-option" style="border-color:#6f42c1; background:#f8f0ff;">
             <strong>KES 100,000 one-time</strong><br>
             <small>Full lifetime access - No recurring fees</small>
         </div>
-       
+      
         <label for="lifetimeMpesaPhone" style="text-align:left; display:block; margin-top:20px;">M-Pesa Phone Number</label>
         <input type="tel" id="lifetimeMpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
         <button onclick="initiateLifetimeSTKPush()" style="background:#6f42c1; width:100%; padding:14px;">Pay Now with M-Pesa</button>
         <button onclick="closeLifetimeModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
-       
+      
         <p id="lifetimePaymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
     </div>
 </div>
@@ -826,7 +854,6 @@ async function handleLogin() {
         sessionStorage.setItem("fd_logged_email", email);
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
- 
         if (isNewUser) {
             switchTab(0);
             disableBeneficiariesAndDocuments();
@@ -900,7 +927,6 @@ function chooseLifetimePlan() {
     document.getElementById("lifetimePaymentModal").style.display = "flex";
 }
 // ==================== M-PESA PAYMENT FUNCTIONS ====================
-// BodaGo Functions (100% original)
 function selectPaymentOption(option) {
     selectedBodaGoPlan = option;
     document.getElementById("monthlyOption").classList.toggle("selected", option === "monthly");
@@ -960,8 +986,6 @@ async function initiateMpesaSTKPush() {
         statusEl.textContent = "Network error. Please try again.";
     }
 }
-
-// NEW: Premium Functions
 function selectPremiumOption(option) {
     selectedPremiumPlan = option;
     document.getElementById("premiumMonthlyOption").classList.toggle("selected", option === "monthly");
@@ -1021,8 +1045,6 @@ async function initiatePremiumSTKPush() {
         statusEl.textContent = "Network error. Please try again.";
     }
 }
-
-// NEW: Lifetime Functions
 function closeLifetimeModal() {
     document.getElementById("lifetimePaymentModal").style.display = "none";
 }
@@ -1105,6 +1127,7 @@ async function loadProfile() {
         console.error("Profile load error:", err);
     }
 }
+
 async function saveProfile() {
     if (!isEditing || !currentToken) {
         alert("Please click 'Edit My Profile' and verify first.");
@@ -1118,6 +1141,10 @@ async function saveProfile() {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
     }
+
+    // Show spinner
+    document.getElementById("saveSpinnerContainer").style.display = "flex";
+
     const profileData = {
         fullName: fullName,
         nationalID: nationalID,
@@ -1148,6 +1175,9 @@ async function saveProfile() {
         }
     } catch (err) {
         alert("Error saving to MongoDB.");
+    } finally {
+        // Hide spinner
+        document.getElementById("saveSpinnerContainer").style.display = "none";
     }
 }
 function renderPropertyFields() {
