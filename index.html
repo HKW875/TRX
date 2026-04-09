@@ -396,6 +396,18 @@
             border-color: #28a745;
             background: #e6f4ea;
         }
+        /* Last Login Styling */
+        .last-login {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 0.95em;
+            color: #1e3a5f;
+            background: #f0f4ff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #d1e0ff;
+        }
     </style>
 </head>
 <body>
@@ -519,7 +531,7 @@
         <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Personal Profile</h3>
-    
+                <div id="lastLoginDisplay" class="last-login">Last Login: Loading...</div>
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -1105,22 +1117,40 @@ async function loadProfile() {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         if (!response.ok) throw new Error("Failed to load profile");
+        
         const userProfile = await response.json();
+        
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
+        
+        // Display Last Login
+        if (userProfile.lastLogin) {
+            const lastLoginDate = new Date(userProfile.lastLogin);
+            document.getElementById("lastLoginDisplay").textContent = 
+                `Last Login: ${lastLoginDate.toLocaleDateString('en-GB')} ${lastLoginDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
+        } else {
+            document.getElementById("lastLoginDisplay").textContent = "Last Login: First time";
+        }
+
         document.getElementById("profileFullName").value = userProfile.fullName || "";
         document.getElementById("profileID").value = userProfile.nationalID || "";
         document.getElementById("profileAddress").value = userProfile.address || "";
         document.getElementById("profilePhone").value = userProfile.phone || "";
         document.getElementById("profileEmail").value = userProfile.email || currentLoggedInEmail;
+
         beneficiaries = userProfile.beneficiaries && userProfile.beneficiaries.length > 0
             ? [...userProfile.beneficiaries]
             : [{ fullName: "", email: "", phone: "", relation: "" }];
+        
         document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
+        
         propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
         if (propertyFields.length < 2) propertyFields = ["", ""];
+        
         bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
+        
         uploadedDocuments = userProfile.documents || [];
+        
         renderPropertyFields();
         renderBankAccounts();
         renderBeneficiaries();
