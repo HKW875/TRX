@@ -1248,41 +1248,7 @@ function editMyProfile() {
     enableEditing();
     alert("You can now edit your profile.");
 }
-async function verifyCode() {
-    const entered = document.getElementById("verificationCode").value.trim();
-    if (!entered || entered.length !== 6) {
-        alert("Please enter the 6-digit code sent to your email.");
-        return;
-    }
-    try {
-        const response = await fetch(`${API_BASE}/api/verify-profile-otp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                email: currentLoggedInEmail,
-                otp: entered
-            })
-        });
-        const data = await response.json();
-        if (response.ok) {
-            closeModal();
-            isEditing = true;
-            enableEditing();
-            alert("Verification successful! You can now edit your profile.");
-        } else {
-            alert(data.msg || "Incorrect code. Please try again.");
-        }
-    } catch (err) {
-        alert("Verification failed. Please check the code and try again.");
-    }
-}
-function closeModal() {
-    document.getElementById("verificationModal").style.display = "none";
-    document.getElementById("verificationCode").value = "";
-}
+
 function showForgotPasswordModal() {
     const modal = document.getElementById("forgotPasswordModal");
     modal.style.display = "flex";
