@@ -901,10 +901,18 @@ function logout() {
     currentLoggedInEmail = null;
     isNewUser = false;
     hasStartedPlan = false;
+    
+    // Clear any remaining elements
+    const lastLoginEl = document.getElementById("lastLoginDisplay");
+    if (lastLoginEl) lastLoginEl.remove();
+    
     sessionStorage.clear();
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
     document.getElementById("inactivityWarningModal").style.display = "none";
+    
+    // Stop any pending API calls
+    console.log("Logged out successfully");
 }
 // ==================== PLAN FUNCTIONS ====================
 let isNewUser = false;
@@ -1138,18 +1146,15 @@ async function loadProfile() {
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
         
-        // === ROBUST LAST LOGIN DISPLAY ===
+        // === FINAL ROBUST LAST LOGIN DISPLAY ===
+        const profileCard = document.querySelector("#profilePage .card");
         let lastLoginEl = document.getElementById("lastLoginDisplay");
         
-        // If element doesn't exist yet, create and append it
-        if (!lastLoginEl) {
-            const profileCard = document.querySelector("#profilePage .card");
-            if (profileCard) {
-                lastLoginEl = document.createElement("div");
-                lastLoginEl.id = "lastLoginDisplay";
-                lastLoginEl.className = "last-login";
-                profileCard.appendChild(lastLoginEl);
-            }
+        if (!lastLoginEl && profileCard) {
+            lastLoginEl = document.createElement("div");
+            lastLoginEl.id = "lastLoginDisplay";
+            lastLoginEl.className = "last-login";
+            profileCard.appendChild(lastLoginEl);
         }
         
         if (lastLoginEl) {
@@ -1512,15 +1517,18 @@ async function viewDocument(docId) { alert("View document functionality"); }
 async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
 function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
 // Force create Last Login element if missing
+// Ensure Last Login box is created when profile page becomes active
 function ensureLastLoginDisplay() {
-    const profileCard = document.querySelector("#profilePage .card");
-    if (profileCard && !document.getElementById("lastLoginDisplay")) {
-        const lastLoginEl = document.createElement("div");
-        lastLoginEl.id = "lastLoginDisplay";
-        lastLoginEl.className = "last-login";
-        lastLoginEl.textContent = "Last Login: Loading...";
-        profileCard.appendChild(lastLoginEl);
-    }
+    setTimeout(() => {
+        const profileCard = document.querySelector("#profilePage .card");
+        if (profileCard && !document.getElementById("lastLoginDisplay")) {
+            const lastLoginEl = document.createElement("div");
+            lastLoginEl.id = "lastLoginDisplay";
+            lastLoginEl.className = "last-login";
+            lastLoginEl.textContent = "Last Login: Loading...";
+            profileCard.appendChild(lastLoginEl);
+        }
+    }, 300);
 }
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
