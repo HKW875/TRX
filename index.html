@@ -420,7 +420,7 @@
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border: 1px solid #b3d4ff;
-            z-index: 20;
+            z-index: 30;
             white-space: nowrap;
             font-size: 0.97em;
         }
@@ -546,13 +546,7 @@
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
             <div class="card" style="position: relative; padding-top: 55px;">
-                <h3>My Personal Profile</h3>
-                
-                <!-- Last Login Display - Made very visible -->
-                <div id="lastLoginDisplay" class="last-login" style="position: absolute; top: 18px; right: 25px; background: #e3f0ff; color: #1e3a5f; padding: 9px 16px; border-radius: 8px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #b3d4ff; z-index: 20;">
-                    Last Login: Loading...
-                </div>
-                
+                <h3>My Personal Profile</h3>                
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
@@ -1144,8 +1138,20 @@ async function loadProfile() {
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
         
-        // === LAST LOGIN DISPLAY (Strongly forced) ===
-        const lastLoginEl = document.getElementById("lastLoginDisplay");
+        // === ROBUST LAST LOGIN DISPLAY ===
+        let lastLoginEl = document.getElementById("lastLoginDisplay");
+        
+        // If element doesn't exist yet, create and append it
+        if (!lastLoginEl) {
+            const profileCard = document.querySelector("#profilePage .card");
+            if (profileCard) {
+                lastLoginEl = document.createElement("div");
+                lastLoginEl.id = "lastLoginDisplay";
+                lastLoginEl.className = "last-login";
+                profileCard.appendChild(lastLoginEl);
+            }
+        }
+        
         if (lastLoginEl) {
             if (userProfile.lastLogin) {
                 const lastLoginDate = new Date(userProfile.lastLogin);
@@ -1153,7 +1159,6 @@ async function loadProfile() {
             } else {
                 lastLoginEl.textContent = "Last Login: First time";
             }
-            lastLoginEl.style.display = "block";   // Force visibility
         }
 
         document.getElementById("profileFullName").value = userProfile.fullName || "";
@@ -1506,6 +1511,17 @@ function renderSavedDocuments() {
 async function viewDocument(docId) { alert("View document functionality"); }
 async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
 function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
+// Force create Last Login element if missing
+function ensureLastLoginDisplay() {
+    const profileCard = document.querySelector("#profilePage .card");
+    if (profileCard && !document.getElementById("lastLoginDisplay")) {
+        const lastLoginEl = document.createElement("div");
+        lastLoginEl.id = "lastLoginDisplay";
+        lastLoginEl.className = "last-login";
+        lastLoginEl.textContent = "Last Login: Loading...";
+        profileCard.appendChild(lastLoginEl);
+    }
+}
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -1523,6 +1539,7 @@ window.onload = function() {
             initDocumentUploadForm();
         }
     }, 800);
+    ensureLastLoginDisplay();
 };
 </script>
 </body>
