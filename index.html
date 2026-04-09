@@ -1213,60 +1213,14 @@ function editMyProfile() {
         alert("You must be logged in to edit your profile.");
         return;
     }
-    fetch(`${API_BASE}/api/send-profile-verification`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-        },
-        body: JSON.stringify({ email: currentLoggedInEmail })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.msg && data.msg.toLowerCase().includes("sent")) {
-            document.getElementById("modalMessage").textContent = `A 6-digit verification code has been sent to ${currentLoggedInEmail}`;
-            document.getElementById("verificationModal").style.display = "flex";
-            document.getElementById("verificationCode").value = "";
-            document.getElementById("verificationCode").focus();
-        } else {
-            alert(data.msg || "Failed to send verification code.");
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error connecting to server. Please try again.");
-    });
+    
+    isEditing = true;
+    enableEditing();
+    alert("You can now edit your profile.");
 }
 async function verifyCode() {
-    const entered = document.getElementById("verificationCode").value.trim();
-    if (!entered || entered.length !== 6) {
-        alert("Please enter the 6-digit code sent to your email.");
-        return;
-    }
-    try {
-        const response = await fetch(`${API_BASE}/api/verify-profile-otp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                email: currentLoggedInEmail,
-                otp: entered
-            })
-        });
-        const data = await response.json();
-        if (response.ok) {
-            closeModal();
-            isEditing = true;
-            enableEditing();
-            alert("Verification successful! You can now edit your profile.");
-        } else {
-            alert(data.msg || "Incorrect code. Please try again.");
-        }
-    } catch (err) {
-        alert("Verification failed. Please check the code and try again.");
-    }
+    // Verification removed - this function is no longer needed
+    alert("Verification step has been removed.");
 }
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
