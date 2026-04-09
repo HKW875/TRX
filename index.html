@@ -1213,29 +1213,10 @@ function editMyProfile() {
         alert("You must be logged in to edit your profile.");
         return;
     }
-    fetch(`${API_BASE}/api/send-profile-verification`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-        },
-        body: JSON.stringify({ email: currentLoggedInEmail })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.msg && data.msg.toLowerCase().includes("sent")) {
-            document.getElementById("modalMessage").textContent = `A 6-digit verification code has been sent to ${currentLoggedInEmail}`;
-            document.getElementById("verificationModal").style.display = "flex";
-            document.getElementById("verificationCode").value = "";
-            document.getElementById("verificationCode").focus();
-        } else {
-            alert(data.msg || "Failed to send verification code.");
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Error connecting to server. Please try again.");
-    });
+    
+    isEditing = true;
+    enableEditing();
+    alert("You can now edit your profile.");
 }
 async function verifyCode() {
     const entered = document.getElementById("verificationCode").value.trim();
