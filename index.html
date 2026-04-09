@@ -324,27 +324,6 @@
             opacity: 0;
             transition: opacity 0.1s ease;
         }
-        /* ==================== SAVING SPINNER ==================== */
-        .saving-spinner {
-            width: 22px;
-            height: 22px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #saveProfileStatus {
-             margin-top: 12px;
-             font-weight: 600;
-             min-height: 28px;
-        }
         .login-spinner.show {
             visibility: visible;
             opacity: 1;
@@ -394,34 +373,6 @@
             border-color: #28a745;
             background: #e6f4ea;
         }
-        /* Last Login Styling */
-        .last-login {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 0.95em;
-            color: #1e3a5f;
-            background: #f0f4ff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid #d1e0ff;
-        }
-        /* ==================== LAST LOGIN DISPLAY ==================== */
-        .last-login {
-            position: absolute;
-            top: 18px;
-            right: 25px;
-            background: #e3f0ff;
-            color: #1e3a5f;
-            padding: 9px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #b3d4ff;
-            z-index: 30;
-            white-space: nowrap;
-            font-size: 0.97em;
-        }
     </style>
 </head>
 <body>
@@ -469,7 +420,7 @@
             <div class="card">
                 <h2>Choose Your Plan</h2>
                 <p>If something happens to you, will your family know what you own? Securely store, and grow your assets documents and your beneficiaries in one place. So your family is never in the dark. Select the plan that best fits your family's asset protection needs. Secure your legacy today!</p>
-              
+               
                 <!-- Free Plan -->
                 <div class="plan-section" style="border-color: #28a745;">
                     <h3>Free Plan</h3>
@@ -490,7 +441,7 @@
                     <h3>Premium Plan</h3>
                     <div class="plan-highlight">
                         <strong>Most Popular - Full Protection</strong><br>
-                        <strong>KES 500 / month or KES 5,000 / year</strong>
+                        <strong>KES 1,000 / month or KES 10,000 / year</strong>
                     </div>
                     <ul>
                         <li>Everything in Free Plan</li>
@@ -499,7 +450,7 @@
                         <li>Access to low interest loans for personal or business growth.</li>
                         <li>Document storage and secure encrypted vault</li>
                         <li>Priority support and legal guidance</li>
-                        <li>Notifications to your beneficiaries after 3 months of profile inactivity</li>
+                        <li>Priority support and legal guidance</li>
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
@@ -543,13 +494,13 @@
         </div>
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
-            <div class="card" style="position: relative; padding-top: 55px;">
+            <div class="card">
                 <h3>My Personal Profile</h3>
+   
                 <label class="required">Permanent Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-                <div id="saveProfileStatus"></div>
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
@@ -650,16 +601,80 @@
     </div>
 </div>
 
-<!-- M-PESA Payment Modals (kept 100% intact) -->
-<div id="bodaGoPaymentModal" class="modal"> ... (same as you provided) </div>
-<div id="premiumPaymentModal" class="modal"> ... (same as you provided) </div>
-<div id="lifetimePaymentModal" class="modal"> ... (same as you provided) </div>
+<!-- ==================== M-PESA PAYMENT MODALS ==================== -->
+
+<!-- BodaGo Payment Modal (Your original - 100% intact) -->
+<div id="bodaGoPaymentModal" class="modal">
+    <div class="modal-content">
+        <h3>BodaGo Plan - M-Pesa Payment</h3>
+        <p id="paymentModalMessage" style="margin-bottom:20px;">Select payment option and enter your M-Pesa number</p>
+       
+        <div class="payment-option" id="monthlyOption" onclick="selectPaymentOption('monthly')">
+            <strong>KES 200 per month</strong><br>
+            <small>Billed cumulatively every end of month. Unpaid amounts carried forward.</small>
+        </div>
+       
+        <div class="payment-option" id="yearlyOption" onclick="selectPaymentOption('yearly')">
+            <strong>KES 1,200 for one year</strong><br>
+            <small>One-time payment covering 12 months</small>
+        </div>
+        <label for="mpesaPhone" style="text-align:left; display:block; margin-top:20px;">M-Pesa Phone Number</label>
+        <input type="tel" id="mpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
+        <button onclick="initiateMpesaSTKPush()" style="background:#28a745; width:100%; padding:14px;">Pay Now with M-Pesa</button>
+        <button onclick="closePaymentModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
+       
+        <p id="paymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
+    </div>
+</div>
+
+<!-- Premium Payment Modal (NEW) -->
+<div id="premiumPaymentModal" class="modal">
+    <div class="modal-content">
+        <h3>Premium Plan - M-Pesa Payment</h3>
+        <p id="premiumModalMessage" style="margin-bottom:20px;">Select payment option and enter your M-Pesa number</p>
+       
+        <div class="payment-option" id="premiumMonthlyOption" onclick="selectPremiumOption('monthly')">
+            <strong>KES 1,000 per month</strong><br>
+            <small>Recurring monthly subscription</small>
+        </div>
+       
+        <div class="payment-option" id="premiumYearlyOption" onclick="selectPremiumOption('yearly')">
+            <strong>KES 10,000 for one year</strong><br>
+            <small>Save KES 2,000 - One-time payment covering 12 months</small>
+        </div>
+        <label for="premiumMpesaPhone" style="text-align:left; display:block; margin-top:20px;">M-Pesa Phone Number</label>
+        <input type="tel" id="premiumMpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
+        <button onclick="initiatePremiumSTKPush()" style="background:#28a745; width:100%; padding:14px;">Pay Now with M-Pesa</button>
+        <button onclick="closePremiumModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
+       
+        <p id="premiumPaymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
+    </div>
+</div>
+
+<!-- Lifetime Payment Modal (NEW) -->
+<div id="lifetimePaymentModal" class="modal">
+    <div class="modal-content">
+        <h3>Lifetime Plan - M-Pesa Payment</h3>
+        <p style="margin-bottom:20px;">One-time payment for lifetime access</p>
+       
+        <div class="payment-option" style="border-color:#6f42c1; background:#f8f0ff;">
+            <strong>KES 100,000 one-time</strong><br>
+            <small>Full lifetime access - No recurring fees</small>
+        </div>
+       
+        <label for="lifetimeMpesaPhone" style="text-align:left; display:block; margin-top:20px;">M-Pesa Phone Number</label>
+        <input type="tel" id="lifetimeMpesaPhone" placeholder="0712345678" maxlength="10" style="margin-bottom:20px;">
+        <button onclick="initiateLifetimeSTKPush()" style="background:#6f42c1; width:100%; padding:14px;">Pay Now with M-Pesa</button>
+        <button onclick="closeLifetimeModal()" style="background:#721c24; width:100%; margin-top:10px; padding:12px;">Cancel</button>
+       
+        <p id="lifetimePaymentStatus" style="margin-top:15px; min-height:28px; font-weight:500;"></p>
+    </div>
+</div>
 
 <script>
 // ==================== NODE.JS + MONGODB BACKEND INTEGRATION ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
-
-// === VARIABLE DECLARATIONS MOVED TO TOP (this fixes re-login issues) ===
+// Global variables
 let currentToken = null;
 let currentLoggedInEmail = null;
 let editVerificationCode = null;
@@ -671,15 +686,11 @@ let uploadedDocuments = [];
 let documentRows = [];
 let selectedBodaGoPlan = null;
 let selectedPremiumPlan = null;
-let isNewUser = false;
-let hasStartedPlan = false;
-
 // ==================== INACTIVITY TIMEOUT ====================
 let inactivityTimer;
 let warningTimer;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const WARNING_TIME = 60 * 1000;
-
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
@@ -688,29 +699,28 @@ function resetInactivityTimer() {
         showInactivityWarning();
     }, INACTIVITY_LIMIT);
 }
-
 function showInactivityWarning() {
     let timeLeft = 60;
     const countdownTimerEl = document.getElementById("countdownTimer");
+    const countdownTextEl = document.getElementById("countdownText");
     document.getElementById("inactivityWarningModal").style.display = "flex";
     warningTimer = setInterval(() => {
         timeLeft--;
         countdownTimerEl.textContent = timeLeft;
+        countdownTextEl.textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(warningTimer);
             logout();
         }
     }, 1000);
 }
-
 function setupInactivityListeners() {
     const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
     events.forEach(event => {
         document.addEventListener(event, resetInactivityTimer, { passive: true });
     });
 }
-
-// ==================== BENEFICIARY FUNCTIONS (unchanged) ====================
+// ==================== BENEFICIARY FUNCTIONS ====================
 function renderBeneficiaries() {
     const container = document.getElementById("beneficiariesContainer");
     container.innerHTML = "";
@@ -731,7 +741,6 @@ function renderBeneficiaries() {
         container.appendChild(div);
     });
 }
-
 function addBeneficiaryField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -740,7 +749,6 @@ function addBeneficiaryField() {
     beneficiaries.push({ fullName: "", email: "", phone: "", relation: "" });
     renderBeneficiaries();
 }
-
 function getBeneficiariesData() {
     const data = [];
     beneficiaries.forEach((_, index) => {
@@ -759,7 +767,6 @@ function getBeneficiariesData() {
     });
     return data;
 }
-
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
@@ -786,26 +793,21 @@ async function handleRegister() {
         isNewUser = true;
     } catch (err) {
         msg.style.color = "#dc3545";
-        msg.textContent = " ";
+        msg.textContent = "Server error.";
     }
 }
-
 async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
     const spinner = document.getElementById("loginSpinner");
     const verifyingText = document.getElementById("verifyingText");
-
     if (!email || !pass) {
         msg.textContent = "Email and password are required.";
         return;
     }
-
     spinner.classList.add("show");
     verifyingText.style.display = "block";
-    msg.textContent = "";
-
     try {
         const response = await fetch(`${API_BASE}/api/login`, {
             method: 'POST',
@@ -813,77 +815,651 @@ async function handleLogin() {
             body: JSON.stringify({ email, password: pass })
         });
         const data = await response.json();
-
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Incorrect email or password.";
             return;
         }
-
         currentToken = data.token;
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
-
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
-
+ 
         if (isNewUser) {
             switchTab(0);
             disableBeneficiariesAndDocuments();
         } else {
             loadProfile();
         }
-
         resetInactivityTimer();
         setupInactivityListeners();
-
     } catch (err) {
         msg.style.color = "#dc3545";
-        msg.textContent = "Server error. Please check your connection and try again.";
-        console.error("Login error:", err);
+        msg.textContent = "Server error.";
     } finally {
         spinner.classList.remove("show");
         verifyingText.style.display = "none";
     }
 }
-
 function logout() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
-    
-    // Full reset - this was the main source of the re-login "Server Error"
     currentToken = null;
     currentLoggedInEmail = null;
     isNewUser = false;
     hasStartedPlan = false;
-    isEditing = false;
-    
     sessionStorage.clear();
-    
-    // Reset auth form
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("authMessage").textContent = "";
-    
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
     document.getElementById("inactivityWarningModal").style.display = "none";
-    
-    console.log("Logged out successfully - state fully reset");
+}
+// ==================== PLAN FUNCTIONS ====================
+let isNewUser = false;
+let hasStartedPlan = false;
+function disableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.add("disabled-section");
+    if (documents) documents.classList.add("disabled-section");
+}
+function enableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.remove("disabled-section");
+    if (documents) documents.classList.remove("disabled-section");
+}
+function startFreePlan() {
+    hasStartedPlan = true;
+    isNewUser = false;
+    switchTab(1);
+    disableBeneficiariesAndDocuments();
+    loadProfile();
+    alert("Free Plan activated!");
+}
+function upgradeToPremium() {
+    selectedPremiumPlan = null;
+    document.getElementById("premiumMonthlyOption").classList.remove("selected");
+    document.getElementById("premiumYearlyOption").classList.remove("selected");
+    document.getElementById("premiumPaymentStatus").textContent = "";
+    document.getElementById("premiumMpesaPhone").value = "";
+    document.getElementById("premiumPaymentModal").style.display = "flex";
+}
+function upgradeToBodaGo() {
+    selectedBodaGoPlan = null;
+    document.getElementById("monthlyOption").classList.remove("selected");
+    document.getElementById("yearlyOption").classList.remove("selected");
+    document.getElementById("paymentStatus").textContent = "";
+    document.getElementById("mpesaPhone").value = "";
+    document.getElementById("bodaGoPaymentModal").style.display = "flex";
+}
+function chooseLifetimePlan() {
+    document.getElementById("lifetimeMpesaPhone").value = "";
+    document.getElementById("lifetimePaymentStatus").textContent = "";
+    document.getElementById("lifetimePaymentModal").style.display = "flex";
+}
+// ==================== M-PESA PAYMENT FUNCTIONS ====================
+// BodaGo Functions (100% original)
+function selectPaymentOption(option) {
+    selectedBodaGoPlan = option;
+    document.getElementById("monthlyOption").classList.toggle("selected", option === "monthly");
+    document.getElementById("yearlyOption").classList.toggle("selected", option === "yearly");
+}
+function closePaymentModal() {
+    document.getElementById("bodaGoPaymentModal").style.display = "none";
+}
+async function initiateMpesaSTKPush() {
+    const phone = document.getElementById("mpesaPhone").value.trim();
+    const statusEl = document.getElementById("paymentStatus");
+    if (!selectedBodaGoPlan) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please select Monthly or Yearly option.";
+        return;
+    }
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = selectedBodaGoPlan === "monthly" ? 200 : 1200;
+    const planType = selectedBodaGoPlan === "monthly" ? "BodaGo Monthly" : "BodaGo Yearly";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "BodaGoPlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closePaymentModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
 }
 
-// ==================== Rest of your functions (100% unchanged) ====================
-function disableBeneficiariesAndDocuments() { ... } // same as original
-function enableBeneficiariesAndDocuments() { ... } // same
-function startFreePlan() { ... } // same
-function upgradeToPremium() { ... } // same
-function upgradeToBodaGo() { ... } // same
-function chooseLifetimePlan() { ... } // same
+// NEW: Premium Functions
+function selectPremiumOption(option) {
+    selectedPremiumPlan = option;
+    document.getElementById("premiumMonthlyOption").classList.toggle("selected", option === "monthly");
+    document.getElementById("premiumYearlyOption").classList.toggle("selected", option === "yearly");
+}
+function closePremiumModal() {
+    document.getElementById("premiumPaymentModal").style.display = "none";
+}
+async function initiatePremiumSTKPush() {
+    const phone = document.getElementById("premiumMpesaPhone").value.trim();
+    const statusEl = document.getElementById("premiumPaymentStatus");
+    if (!selectedPremiumPlan) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please select Monthly or Yearly option.";
+        return;
+    }
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = selectedPremiumPlan === "monthly" ? 1000 : 10000;
+    const planType = selectedPremiumPlan === "monthly" ? "Premium Monthly" : "Premium Yearly";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "PremiumPlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closePremiumModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
 
-// All M-Pesa, profile, document, render functions remain exactly as you wrote them
-// (I kept every single line identical except the variable placement and logout reset)
-
+// NEW: Lifetime Functions
+function closeLifetimeModal() {
+    document.getElementById("lifetimePaymentModal").style.display = "none";
+}
+async function initiateLifetimeSTKPush() {
+    const phone = document.getElementById("lifetimeMpesaPhone").value.trim();
+    const statusEl = document.getElementById("lifetimePaymentStatus");
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = 100000;
+    const planType = "Lifetime Plan";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "LifetimePlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closeLifetimeModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
+// ==================== PROFILE FUNCTIONS ====================
+async function loadProfile() {
+    if (!currentToken) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/profile`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (!response.ok) throw new Error("Failed to load profile");
+        const userProfile = await response.json();
+        document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
+        document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
+        document.getElementById("profileFullName").value = userProfile.fullName || "";
+        document.getElementById("profileID").value = userProfile.nationalID || "";
+        document.getElementById("profileAddress").value = userProfile.address || "";
+        document.getElementById("profilePhone").value = userProfile.phone || "";
+        document.getElementById("profileEmail").value = userProfile.email || currentLoggedInEmail;
+        beneficiaries = userProfile.beneficiaries && userProfile.beneficiaries.length > 0
+            ? [...userProfile.beneficiaries]
+            : [{ fullName: "", email: "", phone: "", relation: "" }];
+        document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
+        propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
+        if (propertyFields.length < 2) propertyFields = ["", ""];
+        bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
+        uploadedDocuments = userProfile.documents || [];
+        renderPropertyFields();
+        renderBankAccounts();
+        renderBeneficiaries();
+        renderSavedDocuments();
+    } catch (err) {
+        console.error("Profile load error:", err);
+    }
+}
+async function saveProfile() {
+    if (!isEditing || !currentToken) {
+        alert("Please click 'Edit My Profile' and verify first.");
+        return;
+    }
+    const fullName = document.getElementById("profileFullName").value.trim();
+    const nationalID = document.getElementById("profileID").value.trim();
+    const phone = document.getElementById("profilePhone").value.trim();
+    const email = document.getElementById("profileEmail").value.trim();
+    if (!fullName || !nationalID || !phone || !email) {
+        alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
+        return;
+    }
+    const profileData = {
+        fullName: fullName,
+        nationalID: nationalID,
+        address: document.getElementById("profileAddress").value.trim(),
+        phone: phone,
+        properties: getPropertyData(),
+        bankAccounts: getBankAccountsData(),
+        beneficiaries: getBeneficiariesData(),
+        consentGiven: document.getElementById("consentCheckbox").checked,
+        documents: uploadedDocuments
+    };
+    try {
+        const response = await fetch(`${API_BASE}/api/profile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(profileData)
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert("Profile saved successfully to MongoDB!");
+            isEditing = false;
+            loadProfile();
+        } else {
+            alert(data.msg || "Save failed");
+        }
+    } catch (err) {
+        alert("Error saving to MongoDB.");
+    }
+}
+function renderPropertyFields() {
+    const container = document.getElementById("propertiesContainer");
+    container.innerHTML = "";
+    propertyFields.forEach((value, index) => {
+        const div = document.createElement("div");
+        div.className = "property-item";
+        div.innerHTML = `
+            <div class="property-header">Property ${index + 1}</div>
+            <input type="text" id="property-${index}" value="${value || ''}" placeholder="Land Reference Number / Title Number / Property Details" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+function addPropertyField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    propertyFields.push("");
+    renderPropertyFields();
+}
+function getPropertyData() {
+    const data = [];
+    propertyFields.forEach((_, index) => {
+        const input = document.getElementById(`property-${index}`);
+        if (input && input.value.trim()) data.push(input.value.trim());
+    });
+    return data;
+}
+function renderBankAccounts() {
+    const container = document.getElementById("bankAccountsContainer");
+    container.innerHTML = "";
+    bankAccounts.forEach((value, index) => {
+        const div = document.createElement("div");
+        div.className = "bank-item";
+        div.innerHTML = `
+            <div class="bank-header">Bank Account ${index + 1}</div>
+            <input type="text" id="bank-${index}" value="${value || ''}" placeholder="Bank Name and Account Number" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+function addBankAccountField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    bankAccounts.push("");
+    renderBankAccounts();
+}
+function getBankAccountsData() {
+    const data = [];
+    bankAccounts.forEach((_, index) => {
+        const input = document.getElementById(`bank-${index}`);
+        if (input && input.value.trim()) data.push(input.value.trim());
+    });
+    return data;
+}
+function editMyProfile() {
+    if (!currentLoggedInEmail) {
+        alert("You must be logged in to edit your profile.");
+        return;
+    }
+    fetch(`${API_BASE}/api/send-profile-verification`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ email: currentLoggedInEmail })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.msg && data.msg.toLowerCase().includes("sent")) {
+            document.getElementById("modalMessage").textContent = `A 6-digit verification code has been sent to ${currentLoggedInEmail}`;
+            document.getElementById("verificationModal").style.display = "flex";
+            document.getElementById("verificationCode").value = "";
+            document.getElementById("verificationCode").focus();
+        } else {
+            alert(data.msg || "Failed to send verification code.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error connecting to server. Please try again.");
+    });
+}
+async function verifyCode() {
+    const entered = document.getElementById("verificationCode").value.trim();
+    if (!entered || entered.length !== 6) {
+        alert("Please enter the 6-digit code sent to your email.");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/verify-profile-otp`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                email: currentLoggedInEmail,
+                otp: entered
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            closeModal();
+            isEditing = true;
+            enableEditing();
+            alert("Verification successful! You can now edit your profile.");
+        } else {
+            alert(data.msg || "Incorrect code. Please try again.");
+        }
+    } catch (err) {
+        alert("Verification failed. Please check the code and try again.");
+    }
+}
+function closeModal() {
+    document.getElementById("verificationModal").style.display = "none";
+    document.getElementById("verificationCode").value = "";
+}
+function showForgotPasswordModal() {
+    const modal = document.getElementById("forgotPasswordModal");
+    modal.style.display = "flex";
+    document.getElementById("forgotStep1").classList.remove("hidden");
+    document.getElementById("forgotStep2").classList.add("hidden");
+    document.getElementById("forgotMessage").textContent = "";
+    const currentEmail = document.getElementById("email").value.trim();
+    if (currentEmail) document.getElementById("forgotEmail").value = currentEmail;
+}
+function closeForgotModal() {
+    document.getElementById("forgotPasswordModal").style.display = "none";
+}
+async function sendForgotPasswordCode() {
+    const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+    const msgEl = document.getElementById("forgotMessage");
+    if (!email) {
+        msgEl.style.color = "#dc3545";
+        msgEl.textContent = "Please enter your email address.";
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            msgEl.style.color = "#155724";
+            msgEl.textContent = "Reset code sent successfully. Check your email.";
+            document.getElementById("forgotStep1").classList.add("hidden");
+            document.getElementById("forgotStep2").classList.remove("hidden");
+            document.getElementById("forgotOTP").focus();
+        } else {
+            msgEl.style.color = "#dc3545";
+            msgEl.textContent = data.msg || "Failed to send reset code.";
+        }
+    } catch (err) {
+        msgEl.style.color = "#dc3545";
+        msgEl.textContent = "Network error. Please try again later.";
+    }
+}
+async function resetPasswordWithOTP() {
+    const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+    const otp = document.getElementById("forgotOTP").value.trim();
+    const newPass = document.getElementById("newPassword").value.trim();
+    const msgEl = document.getElementById("forgotMessage");
+    if (!otp || otp.length !== 6 || !newPass) {
+        msgEl.style.color = "#dc3545";
+        msgEl.textContent = "Please enter the code and your new password.";
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, otp, newPassword: newPass })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            msgEl.style.color = "#155724";
+            msgEl.textContent = "Password reset successful! You can now login with the new password.";
+            setTimeout(() => closeForgotModal(), 2500);
+        } else {
+            msgEl.style.color = "#dc3545";
+            msgEl.textContent = data.msg || "Invalid or expired code.";
+        }
+    } catch (err) {
+        msgEl.style.color = "#dc3545";
+        msgEl.textContent = "Server error. Please try again.";
+    }
+}
+function enableEditing() {
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail"];
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = false;
+    });
+    renderPropertyFields();
+    renderBankAccounts();
+    renderBeneficiaries();
+}
+function switchTab(tabIndex) {
+    document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
+    const pages = ['plansPage', 'profilePage', 'servicesPage'];
+    pages.forEach((id, i) => {
+        const pageEl = document.getElementById(id);
+        if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
+    });
+}
+function initDocumentUploadForm() {
+    documentRows = [];
+    addDocumentRow();
+}
+function addDocumentRow() {
+    const container = document.getElementById("dynamicDocumentsContainer");
+    const rowId = 'doc-row-' + Date.now();
+    const rowHTML = `
+        <div class="dynamic-document-row" id="${rowId}">
+            <input type="text" id="${rowId}-name" placeholder="Document Name (e.g. Title Deed for Plot 123)">
+            <input type="file" id="${rowId}-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <button type="button" class="remove-doc-btn" onclick="removeDocumentRow('${rowId}')">Remove</button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', rowHTML);
+    documentRows.push(rowId);
+}
+function removeDocumentRow(rowId) {
+    if (documentRows.length <= 1) {
+        alert("You must have at least one document row.");
+        return;
+    }
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    documentRows = documentRows.filter(id => id !== rowId);
+}
+async function uploadDocuments() {
+    if (!currentToken) {
+        alert("You must be logged in.");
+        return;
+    }
+    const formData = new FormData();
+    let hasFiles = false;
+    for (let rowId of documentRows) {
+        const nameInput = document.getElementById(rowId + '-name');
+        const fileInput = document.getElementById(rowId + '-file');
+        const docName = nameInput ? nameInput.value.trim() : '';
+        const file = fileInput && fileInput.files[0];
+        if (file) {
+            if (!docName) {
+                alert("Please provide a name for every document you upload.");
+                return;
+            }
+            formData.append('documentNames', docName);
+            formData.append('documents', file);
+            hasFiles = true;
+        }
+    }
+    if (!hasFiles) {
+        alert("Please select at least one file to upload.");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/documents/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${currentToken}` },
+            body: formData
+        });
+        const result = await response.json();
+        if (response.ok) {
+            alert("Documents uploaded successfully!");
+            document.getElementById("dynamicDocumentsContainer").innerHTML = '';
+            documentRows = [];
+            addDocumentRow();
+            loadProfile();
+        } else {
+            alert(result.msg || "Upload failed");
+        }
+    } catch (err) {
+        alert("Error uploading documents.");
+    }
+}
+function renderSavedDocuments() {
+    const container = document.getElementById("savedDocumentsList");
+    container.innerHTML = "";
+    if (!uploadedDocuments || uploadedDocuments.length === 0) {
+        container.innerHTML = `<p style="color:#666; font-style:italic;">No documents saved yet.</p>`;
+        return;
+    }
+    uploadedDocuments.forEach((doc, index) => {
+        const div = document.createElement("div");
+        div.className = "document-list-item";
+        div.innerHTML = `
+            <div>
+                <strong>${doc.name || 'Unnamed Document'}</strong><br>
+                <small style="color:#666;">${doc.filename || ''} • ${new Date(doc.uploadDate).toLocaleDateString()}</small>
+            </div>
+            <div class="document-actions">
+                <button class="view-btn" onclick="viewDocument('${doc._id || index}')">View</button>
+                <button class="download-btn" onclick="downloadDocument('${doc._id || index}', '${doc.name || 'document'}')">Download</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+async function viewDocument(docId) { alert("View document functionality"); }
+async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
+function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -901,7 +1477,6 @@ window.onload = function() {
             initDocumentUploadForm();
         }
     }, 800);
-    ensureLastLoginDisplay();
 };
 </script>
 </body>
