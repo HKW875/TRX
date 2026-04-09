@@ -324,29 +324,6 @@
             opacity: 0;
             transition: opacity 0.1s ease;
         }
-                /* ==================== SAVING SPINNER ==================== */
-        .saving-spinner {
-            width: 22px;
-            height: 22px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #saveProfileStatus {
-            margin-top: 12px;
-            font-weight: 600;
-            min-height: 28px;
-        }
         .login-spinner.show {
             visibility: visible;
             opacity: 1;
@@ -524,7 +501,6 @@
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-                <div id="saveProfileStatus"></div>
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
@@ -1131,62 +1107,16 @@ async function loadProfile() {
 }
 async function saveProfile() {
     if (!isEditing || !currentToken) {
-        alert("Please click 'Create/Edit Profile' first.");
+        alert("Please click 'Edit My Profile' and verify first.");
         return;
     }
-
-    const statusEl = document.getElementById("saveProfileStatus");
     const fullName = document.getElementById("profileFullName").value.trim();
     const nationalID = document.getElementById("profileID").value.trim();
     const phone = document.getElementById("profilePhone").value.trim();
     const email = document.getElementById("profileEmail").value.trim();
-
     if (!fullName || !nationalID || !phone || !email) {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
-    }
-
-    // Show spinner and text
-    statusEl.innerHTML = `<span class="saving-spinner"></span>Saving Changes...`;
-    statusEl.style.color = "#1e3a5f";
-
-    const profileData = {
-        fullName: fullName,
-        nationalID: nationalID,
-        address: document.getElementById("profileAddress").value.trim(),
-        phone: phone,
-        properties: getPropertyData(),
-        bankAccounts: getBankAccountsData(),
-        beneficiaries: getBeneficiariesData(),
-        consentGiven: document.getElementById("consentCheckbox").checked,
-        documents: uploadedDocuments
-    };
-
-    try {
-        const response = await fetch(`${API_BASE}/api/profile`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify(profileData)
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            statusEl.innerHTML = `✅ Profile saved successfully!`;
-            statusEl.style.color = "#155724";
-            isEditing = false;
-            loadProfile();
-        } else {
-            statusEl.innerHTML = `❌ ${data.msg || "Save failed"}`;
-            statusEl.style.color = "#dc3545";
-        }
-    } catch (err) {
-        statusEl.innerHTML = `❌ Error saving to server. Please try again.`;
-        statusEl.style.color = "#dc3545";
-}
     }
     const profileData = {
         fullName: fullName,
@@ -1283,14 +1213,60 @@ function editMyProfile() {
         alert("You must be logged in to edit your profile.");
         return;
     }
-    
-    isEditing = true;
-    enableEditing();
-    alert("You can now edit your profile.");
+    fetch(`${API_BASE}/api/send-profile-verification`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ email: currentLoggedInEmail })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.msg && data.msg.toLowerCase().includes("sent")) {
+            document.getElementById("modalMessage").textContent = `A 6-digit verification code has been sent to ${currentLoggedInEmail}`;
+            document.getElementById("verificationModal").style.display = "flex";
+            document.getElementById("verificationCode").value = "";
+            document.getElementById("verificationCode").focus();
+        } else {
+            alert(data.msg || "Failed to send verification code.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error connecting to server. Please try again.");
+    });
 }
 async function verifyCode() {
-    // Verification removed - this function is no longer needed
-    alert("Verification step has been removed.");
+    const entered = document.getElementById("verificationCode").value.trim();
+    if (!entered || entered.length !== 6) {
+        alert("Please enter the 6-digit code sent to your email.");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/verify-profile-otp`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                email: currentLoggedInEmail,
+                otp: entered
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            closeModal();
+            isEditing = true;
+            enableEditing();
+            alert("Verification successful! You can now edit your profile.");
+        } else {
+            alert(data.msg || "Incorrect code. Please try again.");
+        }
+    } catch (err) {
+        alert("Verification failed. Please check the code and try again.");
+    }
 }
 function closeModal() {
     document.getElementById("verificationModal").style.display = "none";
