@@ -408,6 +408,21 @@
             border-radius: 6px;
             border: 1px solid #d1e0ff;
         }
+        /* ==================== LAST LOGIN DISPLAY ==================== */
+        .last-login {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 0.95em;
+            color: #1e3a5f;
+            background: #f0f4ff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #d1e0ff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 10;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -529,7 +544,7 @@
         </div>
         <!-- My Profile Page -->
         <div id="profilePage" class="page profile">
-            <div class="card">
+            <div class="card" style="position: relative;">
                 <h3>My Personal Profile</h3>
                 <div id="lastLoginDisplay" class="last-login">Last Login: Loading...</div>
                 <label class="required">Permanent Profile ID</label>
