@@ -538,6 +538,21 @@
                 <input type="text" id="profileFullName" disabled>
                 <label class="required" for="profileID">Last 5 Digits National ID Number</label>
                 <input type="text" id="profileID" disabled>
+                <!-- ====================== INSERT BELOW NATIONAL ID FIELD ====================== -->
+
+                <label class="required" for="profileID">Last 5 Digits National ID Number</label>
+                <input type="text" id="profileID" disabled>
+
+                <!-- ===== NEW: SECRET CODE SECTION ===== -->
+                <p style="margin-top:15px; font-weight:600; color:#721c24;">
+                This secret code must not be shared and must be entered to save your profile changes
+                </p>
+
+                <label class="required">Secret Code</label>
+                <input type="password" id="secretCodeInput" placeholder="Enter or create secret code" disabled>
+
+                <label style="margin-top:15px;">Referred By</label>
+                <input type="text" id="referredBy" placeholder="Full names of person who referred you" disabled
                 <label for="profileAddress">Residential Address</label>
                 <textarea id="profileAddress" disabled></textarea>
                 <label class="required" for="profilePhone">Phone Number</label>
@@ -1096,6 +1111,57 @@ async function initiateLifetimeSTKPush() {
     }
 }
 // ==================== PROFILE FUNCTIONS ====================
+async function searchProfiles() {
+    const term = document.getElementById("searchTerm").value.trim();
+    const resultsDiv = document.getElementById("searchResults");
+
+    if (!term) {
+        resultsDiv.innerHTML = "<p class='no-results'>Please enter a search term.</p>";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/search?term=${encodeURIComponent(term)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.length) {
+            resultsDiv.innerHTML = "<p class='no-results'>No matching profiles found.</p>";
+            return;
+        }
+
+        resultsDiv.innerHTML = "";
+
+        data.forEach(profile => {
+            const div = document.createElement("div");
+            div.className = "profile-card";
+            div.innerHTML = `
+                <strong>Name:</strong> ${profile.fullName || 'N/A'}<br>
+                <strong>ID:</strong> <span class="masked">${profile.nationalID || 'N/A'}</span><br>
+                <strong>Email:</strong> <span class="masked">${profile.email || 'N/A'}</span>
+                ${profile.referredBy ? `<p><strong>Referred By:</strong> ${profile.referredBy}</p>` : ""}
+
+                ${profile.secretCodeLogs && profile.secretCodeLogs.length > 0 ? `
+                <p><strong>Secret Code Usage:</strong></p>
+                <ul>
+                ${profile.secretCodeLogs.map(log => `<li>${new Date(log.date).toLocaleString()}</li>`).join("")}
+                </ul>
+`                 : ""}
+            `;
+            resultsDiv.appendChild(div);
+        });
+
+    } catch (err) {
+        resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
+    }
+}
+
+    
 async function loadProfile() {
     if (!currentToken) return;
     try {
@@ -1124,6 +1190,18 @@ async function loadProfile() {
         renderBankAccounts();
         renderBeneficiaries();
         renderSavedDocuments();
+        // ===== NEW: SECRET CODE DISPLAY =====
+        const secretInput = document.getElementById("secretCodeInput");
+        if (userProfile.secretCode) {
+            secretInput.value = "••••••••";
+            secretInput.classList.add("blurred");
+        } else {
+            secretInput.value = "";
+            secretInput.classList.remove("blurred");
+        }
+
+        // ===== NEW: REFERRED BY =====
+        document.getElementById("referredBy").value = userProfile.referredBy || "";
     } catch (err) {
         console.error("Profile load error:", err);
     }
@@ -1155,7 +1233,11 @@ async function saveProfile() {
         bankAccounts: getBankAccountsData(),
         beneficiaries: getBeneficiariesData(),
         consentGiven: document.getElementById("consentCheckbox").checked,
-        documents: uploadedDocuments
+        documents: uploadedDocuments,
+
+        // ===== NEW FIELDS =====
+        secretCodeInput: document.getElementById("secretCodeInput").value.trim(),
+        referredBy: document.getElementById("referredBy").value.trim()
     };
     try {
         const response = await fetch(`${API_BASE}/api/profile`, {
@@ -1323,7 +1405,7 @@ async function resetPasswordWithOTP() {
     }
 }
 function enableEditing() {
-    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail"];
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","secretCodeInput","referredBy"];
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = false;
