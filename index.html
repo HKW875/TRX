@@ -428,7 +428,7 @@
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
-        <h4>Contact:info@growthbase.net</h4>
+        <h4>Contact: info@growthbase.net</h4>
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
     <div class="container">
@@ -514,7 +514,7 @@
             <div class="card">
                 <h3>My Personal Profile</h3>
  
-                <label class="required">Permanent Profile ID</label>
+                <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                
@@ -543,21 +543,26 @@
                 <label style="margin-top:15px;">Referred By</label>
                 <input type="text" id="referredBy" placeholder="Full names of person who referred you" disabled
                 <br>    
-                <label for="profileAddress">Residential Address</label>
+                <label for="profileAddress">Business or Residential Location</label>
                 <textarea id="profileAddress" disabled></textarea>
                 
                 <label class="required" for="profilePhone">Phone Number</label>
                 <input type="tel" id="profilePhone" disabled>
+                
                 <label class="required" for="profileEmail">Email Address</label>
                 <input type="email" id="profileEmail" disabled>
+                
                 <!-- Property Numbers -->
-                <label style="margin-top:25px;">Assets and Securities</label>
+                <label style="margin-top:25px;">Assets and Security for capital application</label>
                 <div id="propertiesContainer"></div>
+                
                 <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
+                
                 <!-- Banking Section -->
                 <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
+                
                 <!-- Beneficiaries SECTION -->
                 <div id="beneficiariesSection" class="disabled-section">
                     <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
