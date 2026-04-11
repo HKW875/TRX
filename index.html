@@ -514,8 +514,8 @@
             <div class="card">
                 <h3>My Profile</h3>
  
-                <label class="required">Profile ID</label>
-                <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
+                //<label class="required">Profile ID</label>
+                //<input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
                
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
@@ -1168,7 +1168,7 @@ async function loadProfile() {
         if (!response.ok) throw new Error("Failed to load profile");
         const userProfile = await response.json();
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
-        document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Permanent Profile ID: <strong>${userProfile.permanentID}</strong>`;
+        document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Profile ID: <strong>${userProfile.permanentID}</strong>`;
         document.getElementById("profileFullName").value = userProfile.fullName || "";
         document.getElementById("profileID").value = userProfile.nationalID || "";
         document.getElementById("profileAddress").value = userProfile.address || "";
