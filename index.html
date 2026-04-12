@@ -111,6 +111,8 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
+        
+        /* LOGIN CARD - 35% SMALLER */
         .auth-container {
             max-width: 420px;
             margin: 80px auto;
@@ -119,7 +121,30 @@
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             text-align: center;
+            transform: scale(0.65);
+            transform-origin: center top;
         }
+        
+        /* Password Eye Toggle Styles */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-container input {
+            padding-right: 45px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
+            user-select: none;
+            z-index: 10;
+        }
+        
         .hidden { display: none !important; }
         .upload-area {
             border: 2px dashed #1e3a5f;
@@ -193,7 +218,6 @@
             text-align: center;
             padding: 20px;
         }
-        /* Styles for dynamic fields */
         .property-item, .bank-item, .beneficiary-item {
             background: #f9fbff;
             padding: 12px;
@@ -221,7 +245,6 @@
             color: #1e3a5f;
             margin-bottom: 8px;
         }
-        /* Plans Page Styling */
         .plan-section {
             margin-bottom: 40px;
             padding: 25px;
@@ -238,7 +261,6 @@
             border-radius: 6px;
             margin: 15px 0;
         }
-        /* New Document Uploads Section Styles */
         .documents-section {
             margin-top: 40px;
             border-top: 2px solid #ddd;
@@ -289,7 +311,6 @@
         .view-btn:hover { background: #0069d9; }
         .download-btn { background: #28a745; }
         .download-btn:hover { background: #218838; }
-        /* NEW: Disabled section styling */
         .disabled-section {
             opacity: 0.65;
             pointer-events: none;
@@ -310,7 +331,6 @@
             z-index: 10;
             white-space: nowrap;
         }
-        /* ==================== BLUE CIRCULAR LOGIN LOADING SPINNER ==================== */
         .login-spinner {
             width: 42px;
             height: 42px;
@@ -331,7 +351,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* ==================== SAVE PROFILE SPINNER ==================== */
         .save-spinner-container {
             display: none;
             align-items: center;
@@ -352,7 +371,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Inactivity Warning Modal */
         #inactivityWarningModal {
             position: fixed;
             top: 0; left: 0;
@@ -363,21 +381,6 @@
             justify-content: center;
             z-index: 2000;
         }
-        #inactivityWarningContent {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 380px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        #countdownTimer {
-            font-size: 2.2em;
-            font-weight: bold;
-            color: #dc3545;
-            margin: 15px 0;
-        }
-        /* M-PESA MODAL STYLES */
         .payment-option {
             border: 2px solid #1e3a5f;
             border-radius: 8px;
@@ -411,8 +414,13 @@
     <h2>Login / Register</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
+    
     <label for="password">Password</label>
-    <input type="password" id="password" placeholder="••••••••">
+    <div class="password-container">
+        <input type="password" id="password" placeholder="••••••••">
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
+    
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -425,6 +433,7 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -527,7 +536,6 @@
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
-                <!-- NEW FIELDS ADDED HERE -->
                 <label class="required" for="businessType">Business Type</label>
                 <input type="text" id="businessType" placeholder="e.g. Retail, Agriculture, Manufacturing, Services" disabled>
                 <label class="required" for="totalCapitalRequired">Total Capital Required (KES)</label>
@@ -536,7 +544,6 @@
                 <textarea id="purposeOfCapital" placeholder="Describe how you intend to use the capital" disabled></textarea>
                 <label class="required" for="profileID">National ID Number</label>
                 <input type="text" id="profileID" disabled>
-                <!-- ===== NEW: SECRET CODE SECTION ===== -->
                 <p style="margin-top:15px; font-weight:600; color:#721c24;">
                 Secret code must not be shared. Must be entered to save your profile changes. Type it now to save.
                 </p>
@@ -554,48 +561,40 @@
                 <label class="required" for="profileEmail">Email Address</label>
                 <input type="email" id="profileEmail" disabled>
               
-                <!-- Property Numbers -->
                 <label style="margin-top:25px;">Assets and Security for capital application</label>
                 <div id="propertiesContainer"></div>
               
                 <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
               
-                <!-- Banking Section -->
                 <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
               
-                <!-- Beneficiaries SECTION -->
                 <div id="beneficiariesSection" class="disabled-section">
                     <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
                     <div id="beneficiariesContainer"></div>
                     <button type="button" class="add-beneficiary-btn" onclick="addBeneficiaryField()">+ Add Another Next of kin</button>
                 </div>
-                <!-- Consent section -->
                 <div style="margin:25px 0;">
                     <input type="checkbox" id="consentCheckbox" checked style="width:auto;">
                     <label for="consentCheckbox" class="required" style="font-weight:normal; color:#444;">
                         I consent to save my information make it available for raising business capital and other business services provided here.
                     </label>
                 </div>
-                <!-- Document Uploads Section -->
                 <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
        
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
-                            <!-- Dynamic document rows will be added here by JavaScript -->
                         </div>
                         <button type="button" onclick="addDocumentRow()" style="background:#155724;">+ Add More Documents</button>
                         <button onclick="uploadDocuments()" style="background:#1e3a5f;">Upload Selected Documents</button>
                     </div>
                     <h4>Saved Documents</h4>
                     <div id="savedDocumentsList" class="document-list">
-                        <!-- Populated by JavaScript -->
                     </div>
                 </div>
-                <!-- Search Profiles or services removed until further -->
             </div>
         </div>
         <!-- Services Page -->
@@ -705,12 +704,10 @@ function connectParticles() {
 function animateBackground() {
     ctx.fillStyle = 'rgba(10, 10, 31, 0.12)';
     ctx.fillRect(0, 0, width, height);
-    
     particles.forEach(p => {
         p.update();
         p.draw();
     });
-    
     connectParticles();
     requestAnimationFrame(animateBackground);
 }
@@ -732,12 +729,25 @@ window.addEventListener('resize', () => {
     });
 });
 
-// Mouse interaction
 let mouseX = 0, mouseY = 0;
 window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 });
+
+// ==================== PASSWORD TOGGLE FUNCTION ====================
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const toggleIcon = document.querySelector(".toggle-password");
+    
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.textContent = "🙈";
+    } else {
+        passwordField.type = "password";
+        toggleIcon.textContent = "👁";
+    }
+}
 
 // ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
@@ -1188,8 +1198,6 @@ async function loadProfile() {
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Profile ID: <strong>${userProfile.permanentID}</strong>`;
         document.getElementById("profileFullName").value = userProfile.fullName || "";
-       
-        // New Fields Load
         document.getElementById("businessType").value = userProfile.businessType || "";
         document.getElementById("totalCapitalRequired").value = userProfile.totalCapitalRequired || "";
         document.getElementById("purposeOfCapital").value = userProfile.purposeOfCapital || "";
@@ -1209,7 +1217,6 @@ async function loadProfile() {
         renderBankAccounts();
         renderBeneficiaries();
         renderSavedDocuments();
-        // ===== NEW: SECRET CODE DISPLAY =====
         const secretInput = document.getElementById("secretCodeInput");
         if (userProfile.secretCode) {
             secretInput.value = "••••••••";
@@ -1218,7 +1225,6 @@ async function loadProfile() {
             secretInput.value = "";
             secretInput.classList.remove("blurred");
         }
-        // ===== NEW: REFERRED BY =====
         document.getElementById("referredBy").value = userProfile.referredBy || "";
     } catch (err) {
         console.error("Profile load error:", err);
@@ -1237,7 +1243,6 @@ async function saveProfile() {
         alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
         return;
     }
-    // Show spinner
     document.getElementById("saveSpinnerContainer").style.display = "flex";
     const profileData = {
         fullName: fullName,
@@ -1249,11 +1254,9 @@ async function saveProfile() {
         beneficiaries: getBeneficiariesData(),
         consentGiven: document.getElementById("consentCheckbox").checked,
         documents: uploadedDocuments,
-        // ===== NEW FIELDS ADDED =====
         businessType: document.getElementById("businessType").value.trim(),
         totalCapitalRequired: document.getElementById("totalCapitalRequired").value.trim(),
         purposeOfCapital: document.getElementById("purposeOfCapital").value.trim(),
-        // ===== EXISTING NEW FIELDS =====
         secretCodeInput: document.getElementById("secretCodeInput").value.trim(),
         referredBy: document.getElementById("referredBy").value.trim()
     };
@@ -1277,7 +1280,6 @@ async function saveProfile() {
     } catch (err) {
         alert("Error saving to MongoDB.");
     } finally {
-        // Hide spinner
         document.getElementById("saveSpinnerContainer").style.display = "none";
     }
 }
@@ -1344,7 +1346,6 @@ function editMyProfile() {
         alert("You must be logged in to edit your profile.");
         return;
     }
- 
     isEditing = true;
     enableEditing();
     alert("You can now edit your profile.");
@@ -1537,6 +1538,7 @@ function renderSavedDocuments() {
 async function viewDocument(docId) { alert("View document functionality"); }
 async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
 function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
+
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -1555,7 +1557,6 @@ window.onload = function() {
         }
     }, 800);
 
-    // Initialize background
     initBackground();
 };
 </script>
