@@ -7,8 +7,7 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-image: url('https://github.com/HKW875/TRX/blob/main/background.jpg?raw=true');
-            background-size: 100%;
+            background-image: none;
             margin: 0;
             min-height: 100vh;
             color: #333;
@@ -397,6 +396,9 @@
     </style>
 </head>
 <body>
+
+<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
+
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
   <a href="/">
@@ -473,7 +475,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-          
+         
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -514,9 +516,9 @@
                 <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
-              
+             
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-              
+             
                 <!-- Save Profile Spinner -->
                 <div id="saveSpinnerContainer" class="save-spinner-container">
                     <div class="save-spinner"></div>
@@ -525,17 +527,13 @@
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
                 <label class="required" for="profileFullName">Full Names</label>
                 <input type="text" id="profileFullName" disabled>
-
                 <!-- NEW FIELDS ADDED HERE -->
                 <label class="required" for="businessType">Business Type</label>
                 <input type="text" id="businessType" placeholder="e.g. Retail, Agriculture, Manufacturing, Services" disabled>
-
                 <label class="required" for="totalCapitalRequired">Total Capital Required (KES)</label>
                 <input type="number" id="totalCapitalRequired" placeholder="Enter amount in Kenyan Shillings" disabled>
-
                 <label class="required" for="purposeOfCapital">Purpose or Use of Capital</label>
                 <textarea id="purposeOfCapital" placeholder="Describe how you intend to use the capital" disabled></textarea>
-
                 <label class="required" for="profileID">National ID Number</label>
                 <input type="text" id="profileID" disabled>
                 <!-- ===== NEW: SECRET CODE SECTION ===== -->
@@ -549,24 +547,24 @@
                 <br>
                 <label for="profileAddress">Business or Residential Location</label>
                 <textarea id="profileAddress" disabled></textarea>
-               
+              
                 <label class="required" for="profilePhone">Phone Number</label>
                 <input type="tel" id="profilePhone" disabled>
-               
+              
                 <label class="required" for="profileEmail">Email Address</label>
                 <input type="email" id="profileEmail" disabled>
-               
+              
                 <!-- Property Numbers -->
                 <label style="margin-top:25px;">Assets and Security for capital application</label>
                 <div id="propertiesContainer"></div>
-               
+              
                 <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
-               
+              
                 <!-- Banking Section -->
                 <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                 <div id="bankAccountsContainer"></div>
                 <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
-               
+              
                 <!-- Beneficiaries SECTION -->
                 <div id="beneficiariesSection" class="disabled-section">
                     <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
@@ -584,7 +582,7 @@
                 <div id="documentsSection" class="documents-section disabled-section">
                     <h3>Document Uploads</h3>
                     <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
-        
+       
                     <div class="document-upload-form">
                         <div id="dynamicDocumentsContainer">
                             <!-- Dynamic document rows will be added here by JavaScript -->
@@ -598,7 +596,6 @@
                     </div>
                 </div>
                 <!-- Search Profiles or services removed until further -->
-
             </div>
         </div>
         <!-- Services Page -->
@@ -606,7 +603,7 @@
             <div class="card">
                 <h2>Our Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
-  
+ 
                 <div class="card">
                     <h3>Capital and Financial Solutions</h3>
                     <p>GrowthBase provides users access to capital and financial solutions to grow themselves or their business.</p>
@@ -615,12 +612,12 @@
                     <h3>Asset Documentation &amp; Secure Storage</h3>
                     <p>Users can store documents in a secure environment where access can be shared with those they wish to share access with. Only the owner of the profile is able to change any information in the profile or documents making it the oerfect place to secure documents which can be altered or lost in the long term.</p>
                 </div>
-  
+ 
                 <div class="card">
                     <h3>Professional Service eferrals</h3>
                     <p>Connect with verified professionals such as finance, advocates and real estate professionals specializing in business and professional growth.</p>
                 </div>
-  
+ 
                 <div class="card">
                     <h3>Family Legacy Protection</h3>
                     <p>Tools to ensure information and documents are securely stored to prevent long term loss or alteration, while still accessible to those who need them.</p>
@@ -634,12 +631,115 @@
     </div>
 </div>
 
-<!-- All modals and rest of the HTML remain unchanged -->
-<!-- ==================== M-PESA PAYMENT MODALS ==================== -->
-<!-- (All payment modals and other HTML code remain exactly the same as you provided) -->
-
 <script>
-// ==================== NODE.JS + MONGODB BACKEND INTEGRATION ====================
+// ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
+const canvas = document.getElementById('background-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, particles = [];
+const numParticles = 80;
+const connectionDistance = 150;
+const maxSpeed = 0.8;
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * maxSpeed;
+        this.vy = (Math.random() - 0.5) * maxSpeed;
+        this.radius = Math.random() * 3.5 + 2.5;
+        this.hue = 200 + Math.random() * 60;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -0.95;
+        if (this.y < 0 || this.y > height) this.vy *= -0.95;
+        this.vx += (Math.random() - 0.5) * 0.05;
+        this.vy += (Math.random() - 0.5) * 0.05;
+        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        if (speed > maxSpeed) {
+            this.vx = (this.vx / speed) * maxSpeed;
+            this.vy = (this.vy / speed) * maxSpeed;
+        }
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 90%, 85%, 0.95)`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 70%, 0.8)`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+    }
+}
+
+function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+}
+
+function connectParticles() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < connectionDistance) {
+                const opacity = (1 - distance / connectionDistance) * 0.6;
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(140, 220, 255, ${opacity})`;
+                ctx.lineWidth = 1.2;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+function animateBackground() {
+    ctx.fillStyle = 'rgba(10, 10, 31, 0.12)';
+    ctx.fillRect(0, 0, width, height);
+    
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+    
+    connectParticles();
+    requestAnimationFrame(animateBackground);
+}
+
+function initBackground() {
+    resizeCanvas();
+    particles = [];
+    for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+    }
+    animateBackground();
+}
+
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    particles.forEach(p => {
+        p.x = Math.random() * width;
+        p.y = Math.random() * height;
+    });
+});
+
+// Mouse interaction
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 // Global variables
 let currentToken = null;
@@ -1075,7 +1175,7 @@ async function searchProfiles() {
         resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
     }
 }
-   
+  
 async function loadProfile() {
     if (!currentToken) return;
     try {
@@ -1088,12 +1188,11 @@ async function loadProfile() {
         document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
         document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Profile ID: <strong>${userProfile.permanentID}</strong>`;
         document.getElementById("profileFullName").value = userProfile.fullName || "";
-        
+       
         // New Fields Load
         document.getElementById("businessType").value = userProfile.businessType || "";
         document.getElementById("totalCapitalRequired").value = userProfile.totalCapitalRequired || "";
         document.getElementById("purposeOfCapital").value = userProfile.purposeOfCapital || "";
-
         document.getElementById("profileID").value = userProfile.nationalID || "";
         document.getElementById("profileAddress").value = userProfile.address || "";
         document.getElementById("profilePhone").value = userProfile.phone || "";
@@ -1245,7 +1344,7 @@ function editMyProfile() {
         alert("You must be logged in to edit your profile.");
         return;
     }
-  
+ 
     isEditing = true;
     enableEditing();
     alert("You can now edit your profile.");
@@ -1455,6 +1554,9 @@ window.onload = function() {
             initDocumentUploadForm();
         }
     }, 800);
+
+    // Initialize background
+    initBackground();
 };
 </script>
 </body>
