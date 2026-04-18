@@ -426,6 +426,27 @@
         <input type="password" id="password" placeholder="••••••••">
         <span class="toggle-password" onclick="togglePassword()">👁</span>
     </div>
+    <!-- ===== NEW CODE START: REGISTER EXTRA FIELDS ===== -->
+<div id="registerFields" style="display:none; text-align:left; margin-top:15px;">
+
+    <label for="registerEmail">Email</label>
+    <input type="email" id="registerEmail" placeholder="your@email.com">
+
+    <label for="mobileNumber">Mobile Number</label>
+    <input type="tel" id="mobileNumber" placeholder="e.g. 0712345678">
+
+    <label for="registerPassword">Password</label>
+    <input type="password" id="registerPassword">
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword">
+
+    <label for="registerSecretCode">Secret Code</label>
+    <input type="password" id="registerSecretCode" placeholder="Create secret code">
+
+    <button onclick="submitNewRegister()" style="margin-top:15px;">Submit Registration</button>
+</div>
+<!-- ===== NEW CODE END ===== -->
    
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
@@ -678,6 +699,57 @@ class Particle {
         ctx.fill();
     }
 }
+// ===== NEW CODE START: FULL REGISTRATION WITH VALIDATION =====
+async function submitNewRegister() {
+    const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+    const mobile = document.getElementById("mobileNumber").value.trim();
+    const password = document.getElementById("registerPassword").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    const secretCode = document.getElementById("registerSecretCode").value.trim();
+    const msg = document.getElementById("authMessage");
+
+    if (!email || !mobile || !password || !confirmPassword || !secretCode) {
+        msg.textContent = "All fields are required.";
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        msg.textContent = "Passwords do not match.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email,
+                password,
+                mobileNumber: mobile,
+                secretCode
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Registration failed.";
+            return;
+        }
+
+        msg.style.color = "#155724";
+        msg.textContent = "Account created successfully! Please login.";
+
+        document.getElementById("registerFields").style.display = "none";
+
+    } catch (err) {
+        msg.textContent = "Server error.";
+    }
+}
+// ===== NEW CODE END =====
+
+    
 function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
@@ -842,6 +914,11 @@ function getBeneficiariesData() {
 }
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
+    async function handleRegister() {
+    showRegisterFields();
+    return;
+
+    // ORIGINAL CODE CONTINUES UNCHANGED BELOW
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const msg = document.getElementById("authMessage");
@@ -869,6 +946,12 @@ async function handleRegister() {
         msg.textContent = "Server error.";
     }
 }
+// ===== NEW CODE START: SHOW REGISTER FORM =====
+function showRegisterFields() {
+    document.getElementById("registerFields").style.display = "block";
+}
+// ===== NEW CODE END =====
+    
 async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
