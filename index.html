@@ -1,330 +1,1510 @@
-// ====================== TRX InfoSec Backend - FINAL FIXED VERSION ======================
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
-const axios = require('axios');
-const app = express();
-const PORT = process.env.PORT || 10000;
-const JWT_SECRET = 'trx-infosec-secure-jwt-key-2026-change-in-production';
-const FRONTEND_URL = process.env.FRONTEND_URL || "https://trxinfosec.hkw875.workers.dev";
-const MONGO_URI = process.env.MONGO_URI;
-const CALLBACK_URL = process.env.MPESA_CALLBACK_URL || "https://trx-infosec-backend-vvrq.onrender.com/api/mpesa/callback";
-// ========================== MIDDLEWARE ==========================
-const corsOptions = {
-  origin: ['https://growthbase.net', 'https://trxinfosec.hkw875.workers.dev'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  maxAge: 86400
-};
-app.use(cors(corsOptions));
-app.use(express.json({ limit: '10mb' }));
-// ========================== MONGODB CONNECTION ==========================
-mongoose.connect(MONGO_URI)
-    .then(() => console.log('✅ MongoDB Atlas Connected Successfully'))
-    .catch(err => console.error('❌ MongoDB Connection Error:', err.message));
-// ========================== USER MODEL ==========================
-const userSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true },
-    permanentID: {
-        type: String,
-        unique: true,
-        default: () => '1' + Math.floor(100000000 + Math.random() * 900000000).toString().slice(1)
-    },
-    fullName: { type: String, trim: true },
-    nationalID: { type: String, trim: true },
-    address: { type: String, trim: true },
-    phone: { type: String, trim: true },
-    properties: [{ type: String, trim: true }],
-    bankAccounts: [{ type: String, trim: true }],
-    nextOfKinName: { type: String, trim: true },
-    nextOfKinRelation: { type: String, trim: true },
-    liabilities: String,
-    notes: String,
-    consentGiven: { type: Boolean, default: true },
-    documents: [{
-        name: String,
-        filename: String,
-        contentType: String,
-        data: Buffer,
-        uploadDate: { type: Date, default: Date.now }
-    }],
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
-    plan: { type: String, default: 'free' },
-    secretCode: { type: String },
-    secretCodeLogs: [
-        {
-            date: { type: Date, default: Date.now }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Platform for individuals, business owners and entrepreneurs raise capital, store documents and grow.</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: none;
+            margin: 0;
+            min-height: 100vh;
+            color: #333;
         }
-    ],
-    referredBy: { type: String, trim: true },
-    businessType: { type: String, trim: true },
-    totalCapitalRequired: { type: String, trim: true },
-    purposeOfCapital: { type: String, trim: true }
-});
-const User = mongoose.model('User', userSchema);
-// ========================== AUTH MIDDLEWARE ==========================
-const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ msg: 'No token provided' });
-    }
-    try {
-        const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.status(401).json({ msg: 'Invalid token' });
-    }
-};
-// ========================== NEW ENDPOINT (added only here) ==========================
-app.post('/api/verify-secret', authMiddleware, async (req, res) => {
-    try {
-        const { secretCode } = req.body;
-        if (!secretCode) return res.status(400).json({ msg: 'Secret code is required' });
-        const user = await User.findOne({ email: req.user.email });
-        if (!user || !user.secretCode) return res.status(400).json({ msg: 'No secret code set' });
-        const isMatch = await bcrypt.compare(secretCode, user.secretCode);
-        if (!isMatch) return res.status(400).json({ msg: 'Incorrect secret code.' });
-        user.secretCodeLogs.push({ date: new Date() });
-        await user.save();
-        res.json({ msg: 'Secret code verified successfully' });
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
-});
-// ========================== ALL ORIGINAL ROUTES (100% UNCHANGED) ==========================
-app.post('/api/register', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        console.log('Register attempt for email:', email);
-        if (!email || !password) {
-            return res.status(400).json({ msg: 'Email and password are required' });
+        header {
+            background: #1e3a5f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
         }
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ msg: 'User already exists' });
+        .container {
+            padding: 20px;
+            max-width: 980px;
+            margin: 0 auto;
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = new User({
-            email,
-            password: hashedPassword,
-            consentGiven: true
-        });
-        if (email === 'wambuguhkw@gmail.com') {
-            user.permanentID = '170320358';
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        await user.save();
-        console.log('User registered successfully:', email);
-        res.status(201).json({ msg: 'Account created successfully! You can now login.' });
-    } catch (err) {
-        console.error('Register error details:', err.message);
-        res.status(500).json({ msg: 'Registration failed. Please try again.' });
-    }
-});
-app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-        const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '24h' });
-        res.json({ token, msg: 'Login successful' });
-    } catch (err) {
-        console.error('Login error:', err);
-        res.status(500).json({ msg: 'Login failed' });
-    }
-});
-app.get('/api/profile', authMiddleware, async (req, res) => {
-    try {
-        const user = await User.findOne({ email: req.user.email }).select('-password');
-        if (!user) return res.status(404).json({ msg: 'Profile not found' });
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ msg: 'Failed to load profile' });
-    }
-});
-app.post('/api/profile', authMiddleware, async (req, res) => {
-    try {
-        const { secretCodeInput, referredBy, businessType, totalCapitalRequired, purposeOfCapital, ...updateData } = req.body;
-        const user = await User.findOne({ email: req.user.email });
-        if (!user) return res.status(404).json({ msg: 'User not found' });
-        if (user.secretCode) {
-            if (!secretCodeInput) {
-                return res.status(400).json({ msg: 'Secret code required to save changes.' });
-            }
-            const isMatch = await bcrypt.compare(secretCodeInput, user.secretCode);
-            if (!isMatch) {
-                return res.status(400).json({ msg: 'Incorrect secret code.' });
-            }
-            user.secretCodeLogs.push({ date: new Date() });
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: 600;
         }
-        if (!user.secretCode && secretCodeInput) {
-            const regex = /^(?=(?:.*\d){4,})(?=(?:.*[A-Za-z]){2,}).+$/;
-            if (!regex.test(secretCodeInput)) {
-                return res.status(400).json({ msg: 'Secret code must contain at least 4 numbers and 2 letters.' });
-            }
-            const salt = await bcrypt.genSalt(10);
-            user.secretCode = await bcrypt.hash(secretCodeInput, salt);
+        .required::after {
+            content: " *";
+            color: #dc3545;
         }
-        delete updateData.email;
-        Object.assign(user, updateData);
-        if (referredBy !== undefined) user.referredBy = referredBy;
-        if (businessType !== undefined) user.businessType = businessType;
-        if (totalCapitalRequired !== undefined) user.totalCapitalRequired = totalCapitalRequired;
-        if (purposeOfCapital !== undefined) user.purposeOfCapital = purposeOfCapital;
-        await user.save();
-        res.json({ msg: 'Profile saved successfully', user });
-    } catch (err) {
-        console.error('Profile save error:', err);
-        res.status(500).json({ msg: 'Failed to save profile' });
-    }
-});
-app.post('/api/search-profiles', async (req, res) => {
-    const { term } = req.body;
-    if (!term || term.trim().length < 2) return res.json([]);
-    try {
-        const results = await User.find({
-            $or: [
-                { fullName: { $regex: term, $options: 'i' } },
-                { nationalID: { $regex: term, $options: 'i' } },
-                { phone: { $regex: term, $options: 'i' } },
-                { email: { $regex: term, $options: 'i' } }
-            ]
-        }).select('-password -documents -secretCode -secretCodeLogs');
-        res.json(results);
-    } catch (err) {
-        res.status(500).json([]);
-    }
-});
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
-app.post('/api/documents/upload', authMiddleware, upload.array('documents'), async (req, res) => {
-  try {
-    const documentNames = req.body.documentNames;
-    const files = req.files;
-    if (!files || files.length === 0) {
-      return res.status(400).json({ msg: "No files received" });
-    }
-    const user = await User.findOne({ email: req.user.email });
-    if (!user) return res.status(404).json({ msg: "User not found" });
-    for (let i = 0; i < files.length; i++) {
-      user.documents.push({
-        name: Array.isArray(documentNames) ? documentNames[i] : documentNames,
-        filename: files[i].originalname,
-        contentType: files[i].mimetype,
-        data: files[i].buffer
-      });
-    }
-    await user.save();
-    res.json({ msg: "Documents saved successfully" });
-  } catch (err) {
-    res.status(500).json({ msg: err.message });
-  }
-});
-app.get('/api/documents/:docId/view', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.user.email });
-    const doc = user.documents.id(req.params.docId);
-    if (!doc) return res.status(404).send("Document not found");
-    res.set('Content-Type', doc.contentType);
-    res.send(doc.data);
-  } catch (err) {
-    res.status(500).send("Error");
-  }
-});
-app.get('/api/documents/:docId/download', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.user.email });
-    const doc = user.documents.id(req.params.docId);
-    if (!doc) return res.status(404).send("Document not found");
-    res.set('Content-Type', doc.contentType);
-    res.set('Content-Disposition', `attachment; filename="${doc.filename}"`);
-    res.send(doc.data);
-  } catch (err) {
-    res.status(500).send("Error");
-  }
-});
-// M-PESA routes (full original code kept)
-app.post('/api/mpesa/stkpush', authMiddleware, async (req, res) => {
-    try {
-        const { phone, amount, planType, accountReference } = req.body;
-        if (!phone || !amount || !planType) {
-            return res.status(400).json({ msg: "Phone, amount and planType are required" });
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
         }
-        const accessToken = await getMpesaAccessToken();
-        const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
-        const password = Buffer.from(`${MPESA_SHORTCODE}${MPESA_PASSKEY}${timestamp}`).toString('base64');
-        const payload = {
-            BusinessShortCode: MPESA_SHORTCODE,
-            Password: password,
-            Timestamp: timestamp,
-            TransactionType: "CustomerPayBillOnline",
-            Amount: amount,
-            PartyA: phone.replace(/^0/, '254'),
-            PartyB: MPESA_SHORTCODE,
-            PhoneNumber: phone.replace(/^0/, '254'),
-            CallBackURL: CALLBACK_URL,
-            AccountReference: accountReference || "BodaGoPlan",
-            TransactionDesc: planType
-        };
-        const response = await axios.post(
-            `${MPESA_BASE_URL}/mpesa/stkpush/v1/processrequest`,
-            payload,
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        console.log("M-Pesa STK Push Response:", response.data);
-        if (response.data.ResponseCode === "0") {
-            res.json({
-                success: true,
-                msg: "STK Push initiated successfully. Check your phone.",
-                checkoutRequestID: response.data.CheckoutRequestID
-            });
-        } else {
-            res.status(400).json({ msg: response.data.ResponseDescription || "Failed to initiate payment" });
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
-    } catch (err) {
-        console.error("M-Pesa STK Error:", err.response?.data || err.message);
-        res.status(500).json({ msg: "Failed to connect to M-Pesa. Please try again." });
-    }
-});
-app.post('/api/mpesa/callback', async (req, res) => {
-    try {
-        const callbackData = req.body;
-        console.log("M-Pesa Callback Received:", JSON.stringify(callbackData, null, 2));
-        if (callbackData.Body?.stkCallback?.ResultCode === 0) {
-            console.log(`✅ Payment successful!`);
+        button {
+            padding: 11px 24px;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 12px 10px 0;
         }
-        res.json({ ResultCode: 0, ResultDesc: "Accepted" });
-    } catch (err) {
-        console.error("Callback error:", err);
-        res.json({ ResultCode: 0, ResultDesc: "Accepted" });
+        button:hover { background: #2c5282; }
+        #logoutBtn {
+            position: absolute;
+            top: 18px;
+            right: 25px;
+            background: #721c24;
+        }
+        #logoutBtn:hover { background: #9b2c2c; }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #f1f1f1;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: white;
+            border: 2px solid #1e3a5f;
+            border-bottom: none;
+            color: #1e3a5f;
+            z-index: 2;
+            position: relative;
+        }
+        /* Pages */
+        .page {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            position: relative;
+        }
+        .page.active {
+            display: block;
+        }
+        .page.profile {
+            margin-top: -18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+        }
+       
+        /* LOGIN CARD - 35% SMALLER */
+        .auth-container {
+            max-width: 420px;
+            margin: 80px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            transform: scale(0.65);
+            transform-origin: center top;
+        }
+       
+        /* Password Eye Toggle Styles */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-container input {
+            padding-right: 45px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
+            user-select: none;
+            z-index: 10;
+        }
+       
+        .hidden { display: none !important; }
+        .upload-area {
+            border: 2px dashed #1e3a5f;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 15px 0;
+            background: #f9fbff;
+        }
+        .document-list {
+            margin-top: 15px;
+        }
+        .document-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .save-btn { background: #155724; }
+        .save-btn:hover { background: #1e7e34; }
+        .search-results {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .submit-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+        }
+        .profile-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .masked {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #495057;
+        }
+        .no-results {
+            color: #dc3545;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        .property-item, .bank-item, .beneficiary-item {
+            background: #f9fbff;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .property-header, .bank-header, .beneficiary-header {
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+        }
+        .add-property-btn, .add-bank-btn, .add-beneficiary-btn {
+            background: #155724;
+        }
+        .add-property-btn:hover, .add-bank-btn:hover, .add-beneficiary-btn:hover { background: #1e7e34; }
+        .blurred {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+        }
+        .guidance-section {
+            margin-bottom: 25px;
+        }
+        .guidance-section h4 {
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+        .plan-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+        }
+        .plan-section h3 {
+            color: #1e3a5f;
+            margin-top: 0;
+        }
+        .plan-highlight {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .documents-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
+        .document-upload-form {
+            background: #f9fbff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .dynamic-document-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        .dynamic-document-row input[type="text"] {
+            flex: 1;
+        }
+        .dynamic-document-row input[type="file"] {
+            flex: 2;
+        }
+        .remove-doc-btn {
+            background: #dc3545;
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+        .remove-doc-btn:hover {
+            background: #c82333;
+        }
+        .document-list-item {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #1e3a5f;
+        }
+        .document-actions button {
+            margin: 0 5px;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+        .view-btn { background: #007bff; }
+        .view-btn:hover { background: #0069d9; }
+        .download-btn { background: #28a745; }
+        .download-btn:hover { background: #218838; }
+        .disabled-section {
+            opacity: 0.65;
+            pointer-events: none;
+            position: relative;
+        }
+        .disabled-section::after {
+            content: "Available after Upgrade";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 58, 95, 0.85);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .login-spinner {
+            width: 42px;
+            height: 42px;
+            border: 5px solid rgba(30, 58, 95, 0.2);
+            border-top: 5px solid #1e3a5f;
+            border-radius: 50%;
+            animation: loginSpin 0.85s linear infinite;
+            margin: 15px auto;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+        }
+        .login-spinner.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        @keyframes loginSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .save-spinner-container {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0 15px 0;
+            color: #155724;
+            font-weight: 600;
+        }
+        .save-spinner {
+            width: 28px;
+            height: 28px;
+            border: 4px solid rgba(21, 87, 36, 0.2);
+            border-top: 4px solid #155724;
+            border-radius: 50%;
+            animation: saveSpin 0.85s linear infinite;
+        }
+        @keyframes saveSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #inactivityWarningModal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .payment-option {
+            border: 2px solid #1e3a5f;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-option:hover {
+            background: #f0f8ff;
+        }
+        .payment-option.selected {
+            border-color: #28a745;
+            background: #e6f4ea;
+        }
+
+        /* Added ONLY for your blurring requirement - no other changes */
+        #profileContentArea.blurred {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
+<!-- Auth Screen -->
+<div id="authScreen" class="auth-container">
+  <a href="/">
+    <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
+         alt="Your Site Name"
+         width="250"
+         height="50">
+  </a>
+    <h5>Business Capital, Document Storage & Controlled Access, Business Growth Consulting.</h5>
+    <h2>Login / Register</h2>
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="your@email.com">
+   
+    <label for="password">Password</label>
+    <div class="password-container">
+        <input type="password" id="password" placeholder="••••••••">
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
+   
+    <!-- Blue Circular Login Spinner -->
+    <div id="loginSpinner" class="login-spinner"></div>
+    <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
+    <div style="margin-top: 25px;">
+        <button onclick="handleLogin()">Login</button>
+        <button onclick="handleRegister()">Create Account</button>
+    </div>
+    <div style="margin-top: 15px;">
+        <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #1e3a5f; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
+    </div>
+    <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
+</div>
+<!-- Main Application -->
+<div id="mainApp" class="hidden">
+    <header>
+        <h4>Contact: info@growthbase.net</h4>
+        <button id="logoutBtn" onclick="logout()">Log Out</button>
+    </header>
+    <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)" id="tab-plans">Plans</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-profile">Apply Now</div>
+            <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
+        </div>
+        <!-- Plans Page -->
+        <div id="plansPage" class="page active">
+            <div class="card">
+                <h2>Choose A Strategy Plan</h2>
+                <!-- Free Plan -->
+                <div class="plan-section" style="border-color: #28a745;">
+                    <h3>Free Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>Perfect for getting started</strong>
+                    </div>
+                    <ul>
+                        <li>Free profile creation</li>
+                        <li>Access to revolving capital for business growth. Max Kes 10,000/= based on business factors.</li>
+                        <li>No limit to number or type of assets or securities that can be listed.</li>
+                        <li>Profile login can be securely shared with other partners, groups, family and beneficiaries.</li>
+                        <li>Only profile owner or administrator can change, update information in profile even if login shared with others.</li>
+                    </ul>
+                    <button style="background:#28a745;" onclick="startFreePlan()">Start Free</button>
+                </div>
+                <!-- Premium Plan -->
+                <div class="plan-section" style="border-color: #1e3a5f;">
+                    <h3>Premium Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>Most Popular</strong><br>
+                        <strong>KES 500 / month or KES 5,000 / year</strong>
+                    </div>
+                    <ul>
+                        <li>Everything in Free Plan</li>
+                        <li>Priority support and consultation.</li>
+                        <li>Access to revolving capital for business growth up to Kes 50,000/= based on business factors..</li>
+                        <li>Account conveniently shared between you, group or family without risking access to other information eg in computer or cloud.</li>
+                        <li>Only profile owner or administrator can change, update information in the profile even when shared.</li>
+                        <li>Automatic notification of listed group members, family, or next of kin in case profile dormant for 3 months</li>
+                    </ul>
+                    <button onclick="upgradeToPremium()">Upgrade to Premium</button>
+                </div>
+        
+                <!-- BodaGo Plan -->
+                <div class="plan-section" style="border-color: #1e3a5f;">
+                    <h3>BodaGo Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>For Farmers, Bodaboda and Uber investors.</strong><br>
+                        <strong>KES 200 / month or KES 1,200 / year</strong>
+                    </div>
+                    <ul>
+                        <li>Everything in Premium Plan.</li>
+                        <li>Access to revolving capital for business growth.Up to Kes 10,000/= based on business factors..</li>
+                        <li>Account conveniently shared between you, group or family without risking access to other information eg in computer or cloud.</li>
+                        <li>Only profile owner or administrator can change, update information in the profile even when shared.</li>
+                    </ul>
+                    <button onclick="upgradeToBodaGo()">Choose BodaGo Plan</button>
+                </div>
+                <!-- Lifetime Plan -->
+                <div class="plan-section" style="border-color: #6f42c1;">
+                    <h3>Lifetime Plan</h3>
+                    <div class="plan-highlight">
+                        <strong>One-time payment - Peace of Mind Forever</strong><br>
+                        <strong>KES 50,000 one-time</strong>
+                    </div>
+                    <ul>
+                        <li>Everything in Premium Plan</li>
+                        <li>Access to revolving capital for business growth up to Kes 500,000/=.</li>
+                        <li>Lifetime access to shareable document and ingormation storage without recurring fees</li>
+                        <li>Account conveniently shared between you, group or family without risking access to other information eg in computer or cloud.</li>
+                        <li>Only profile owner or administrator can change, update information in the profile even when shared.</li>
+                    </ul>
+                    <button style="background:#6f42c1;" onclick="chooseLifetimePlan()">Choose Lifetime Plan</button>
+                </div>
+            </div>
+        </div>
+        <!-- My Profile Page -->
+        <div id="profilePage" class="page profile">
+            <div class="card">
+                <h3>My Profile</h3>
+                <label class="required">Profile ID</label>
+                <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
+                <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
+            
+                <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+            
+                <!-- Save Profile Spinner -->
+                <div id="saveSpinnerContainer" class="save-spinner-container">
+                    <div class="save-spinner"></div>
+                    <span>Saving Changes...</span>
+                </div>
+                <button onclick="editMyProfile()">Create/Edit Profile</button>
+
+                <!-- ALL PROFILE FIELDS WRAPPED HERE (100% original fields kept) - this is the ONLY added wrapper for blurring -->
+                <div id="profileContentArea" class="blurred">
+                    <label class="required" for="profileFullName">Full Names</label>
+                    <input type="text" id="profileFullName" disabled>
+                    <label class="required" for="businessType">Business Type</label>
+                    <input type="text" id="businessType" placeholder="e.g. Retail, Agriculture, Manufacturing, Services" disabled>
+                    <label class="required" for="totalCapitalRequired">Total Capital Required (KES)</label>
+                    <input type="number" id="totalCapitalRequired" placeholder="Enter amount in Kenyan Shillings" disabled>
+                    <label class="required" for="purposeOfCapital">Purpose or Use of Capital</label>
+                    <textarea id="purposeOfCapital" placeholder="Describe how you intend to use the capital" disabled></textarea>
+                    <label class="required" for="profileID">National ID Number</label>
+                    <input type="text" id="profileID" disabled>
+                    <p style="margin-top:15px; font-weight:600; color:#721c24;">
+                    Secret code must not be shared. Must be entered to save your profile changes. Type it now to save.
+                    </p>
+                    <label class="required">Enter Secret Code</label>
+                    <input type="password" id="secretCodeInput" placeholder="Enter or create secret code" disabled>
+                    <label style="margin-top:15px;">Referred By</label>
+                    <input type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
+                    <br>
+                    <label for="profileAddress">Business or Residential Location</label>
+                    <textarea id="profileAddress" disabled></textarea>
+             
+                    <label class="required" for="profilePhone">Phone Number</label>
+                    <input type="tel" id="profilePhone" disabled>
+             
+                    <label class="required" for="profileEmail">Email Address</label>
+                    <input type="email" id="profileEmail" disabled>
+             
+                    <label style="margin-top:25px;">Assets and Security for capital application</label>
+                    <div id="propertiesContainer"></div>
+             
+                    <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
+             
+                    <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
+                    <div id="bankAccountsContainer"></div>
+                    <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
+             
+                    <div id="beneficiariesSection" class="disabled-section">
+                        <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
+                        <div id="beneficiariesContainer"></div>
+                        <button type="button" class="add-beneficiary-btn" onclick="addBeneficiaryField()">+ Add Another Next of kin</button>
+                    </div>
+                    <div style="margin:25px 0;">
+                        <input type="checkbox" id="consentCheckbox" checked style="width:auto;">
+                        <label for="consentCheckbox" class="required" style="font-weight:normal; color:#444;">
+                            I consent to save my information make it available for raising business capital and other business services provided here.
+                        </label>
+                    </div>
+                    <div id="documentsSection" class="documents-section disabled-section">
+                        <h3>Document Uploads</h3>
+                        <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
+      
+                        <div class="document-upload-form">
+                            <div id="dynamicDocumentsContainer">
+                            </div>
+                            <button type="button" onclick="addDocumentRow()" style="background:#155724;">+ Add More Documents</button>
+                            <button onclick="uploadDocuments()" style="background:#1e3a5f;">Upload Selected Documents</button>
+                        </div>
+                        <h4>Saved Documents</h4>
+                        <div id="savedDocumentsList" class="document-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Services Page -->
+        <div id="servicesPage" class="page">
+            <div class="card">
+                <h2>Our Services</h2>
+                <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
+                <div class="card">
+                    <h3>Capital and Financial Solutions</h3>
+                    <p>GrowthBase provides users access to capital and financial solutions to grow themselves or their business.</p>
+                </div>
+                <div class="card">
+                    <h3>Asset Documentation &amp; Secure Storage</h3>
+                    <p>Users can store documents in a secure environment where access can be shared with those they wish to share access with. Only the owner of the profile is able to change any information in the profile or documents making it the oerfect place to secure documents which can be altered or lost in the long term.</p>
+                </div>
+                <div class="card">
+                    <h3>Professional Service eferrals</h3>
+                    <p>Connect with verified professionals such as finance, advocates and real estate professionals specializing in business and professional growth.</p>
+                </div>
+                <div class="card">
+                    <h3>Family Legacy Protection</h3>
+                    <p>Tools to ensure information and documents are securely stored to prevent long term loss or alteration, while still accessible to those who need them.</p>
+                </div>
+                <div class="card">
+                    <h3>Contact Us</h3>
+                    <p>info@growthbase.net</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
+const canvas = document.getElementById('background-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, particles = [];
+const numParticles = 80;
+const connectionDistance = 150;
+const maxSpeed = 0.8;
+class Particle {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * maxSpeed;
+        this.vy = (Math.random() - 0.5) * maxSpeed;
+        this.radius = Math.random() * 3.5 + 2.5;
+        this.hue = 200 + Math.random() * 60;
     }
-});
-const MPESA_CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY;
-const MPESA_CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET;
-const MPESA_SHORTCODE = process.env.MPESA_SHORTCODE;
-const MPESA_PASSKEY = process.env.MPESA_PASSKEY;
-const MPESA_BASE_URL = 'https://sandbox.safaricom.co.ke';
-async function getMpesaAccessToken() {
-    const auth = Buffer.from(`${MPESA_CONSUMER_KEY}:${MPESA_CONSUMER_SECRET}`).toString('base64');
-    const response = await axios.get(`${MPESA_BASE_URL}/oauth/v1/generate?grant_type=client_credentials`, {
-        headers: { Authorization: `Basic ${auth}` }
-    });
-    return response.data.access_token;
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -0.95;
+        if (this.y < 0 || this.y > height) this.vy *= -0.95;
+        this.vx += (Math.random() - 0.5) * 0.05;
+        this.vy += (Math.random() - 0.5) * 0.05;
+        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        if (speed > maxSpeed) {
+            this.vx = (this.vx / speed) * maxSpeed;
+            this.vy = (this.vy / speed) * maxSpeed;
+        }
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 90%, 85%, 0.95)`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 70%, 0.8)`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+    }
 }
-// ========================== START SERVER ==========================
-app.listen(PORT, () => {
-    console.log(`\n🚀 TRX InfoSec Backend running on http://localhost:${PORT}`);
-    console.log('M-Pesa STK Push route is now active.\n');
+function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+}
+function connectParticles() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < connectionDistance) {
+                const opacity = (1 - distance / connectionDistance) * 0.6;
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(140, 220, 255, ${opacity})`;
+                ctx.lineWidth = 1.2;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+function animateBackground() {
+    ctx.fillStyle = 'rgba(10, 10, 31, 0.12)';
+    ctx.fillRect(0, 0, width, height);
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+    connectParticles();
+    requestAnimationFrame(animateBackground);
+}
+function initBackground() {
+    resizeCanvas();
+    particles = [];
+    for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+    }
+    animateBackground();
+}
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    particles.forEach(p => {
+        p.x = Math.random() * width;
+        p.y = Math.random() * height;
+    });
 });
-app.get("/", (req, res) => {
-  res.send("Server is running - M-Pesa integration active");
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
 });
+// ==================== PASSWORD TOGGLE FUNCTION ====================
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const toggleIcon = document.querySelector(".toggle-password");
+   
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.textContent = "🙈";
+    } else {
+        passwordField.type = "password";
+        toggleIcon.textContent = "👁";
+    }
+}
+// ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
+const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
+// Global variables
+let currentToken = null;
+let currentLoggedInEmail = null;
+let editVerificationCode = null;
+let isEditing = false;
+let propertyFields = [];
+let bankAccounts = [];
+let beneficiaries = [];
+let uploadedDocuments = [];
+let documentRows = [];
+let selectedBodaGoPlan = null;
+let selectedPremiumPlan = null;
+// ==================== INACTIVITY TIMEOUT ====================
+let inactivityTimer;
+let warningTimer;
+const INACTIVITY_LIMIT = 5 * 60 * 1000;
+const WARNING_TIME = 60 * 1000;
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    clearTimeout(warningTimer);
+    document.getElementById("inactivityWarningModal").style.display = "none";
+    inactivityTimer = setTimeout(() => {
+        showInactivityWarning();
+    }, INACTIVITY_LIMIT);
+}
+function showInactivityWarning() {
+    let timeLeft = 60;
+    const countdownTimerEl = document.getElementById("countdownTimer");
+    const countdownTextEl = document.getElementById("countdownText");
+    document.getElementById("inactivityWarningModal").style.display = "flex";
+    warningTimer = setInterval(() => {
+        timeLeft--;
+        countdownTimerEl.textContent = timeLeft;
+        countdownTextEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(warningTimer);
+            logout();
+        }
+    }, 1000);
+}
+function setupInactivityListeners() {
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+    events.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, { passive: true });
+    });
+}
+// ==================== BENEFICIARY FUNCTIONS ====================
+function renderBeneficiaries() {
+    const container = document.getElementById("beneficiariesContainer");
+    container.innerHTML = "";
+    beneficiaries.forEach((ben, index) => {
+        const div = document.createElement("div");
+        div.className = "beneficiary-item";
+        div.innerHTML = `
+            <div class="beneficiary-header">Beneficiary ${index + 1}</div>
+            <label>Beneficiary Full Name</label>
+            <input type="text" id="ben-name-${index}" value="${ben.fullName || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Beneficiary Email</label>
+            <input type="email" id="ben-email-${index}" value="${ben.email || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Beneficiary Phone Number</label>
+            <input type="tel" id="ben-phone-${index}" value="${ben.phone || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Relationship</label>
+            <input type="text" id="ben-relation-${index}" value="${ben.relation || ''}" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+function addBeneficiaryField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    beneficiaries.push({ fullName: "", email: "", phone: "", relation: "" });
+    renderBeneficiaries();
+}
+function getBeneficiariesData() {
+    const data = [];
+    beneficiaries.forEach((_, index) => {
+        const nameInput = document.getElementById(`ben-name-${index}`);
+        const emailInput = document.getElementById(`ben-email-${index}`);
+        const phoneInput = document.getElementById(`ben-phone-${index}`);
+        const relationInput = document.getElementById(`ben-relation-${index}`);
+        if (nameInput && nameInput.value.trim()) {
+            data.push({
+                fullName: nameInput.value.trim(),
+                email: emailInput ? emailInput.value.trim() : "",
+                phone: phoneInput ? phoneInput.value.trim() : "",
+                relation: relationInput ? relationInput.value.trim() : ""
+            });
+        }
+    });
+    return data;
+}
+// ==================== AUTH FUNCTIONS ====================
+async function handleRegister() {
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const pass = document.getElementById("password").value.trim();
+    const msg = document.getElementById("authMessage");
+    if (!email || !pass) {
+        msg.textContent = "Email and password are required.";
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Registration failed.";
+            return;
+        }
+        msg.style.color = "#155724";
+        msg.textContent = data.msg || "Account created successfully! Please log in.";
+        isNewUser = true;
+    } catch (err) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Server error.";
+    }
+}
+async function handleLogin() {
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const pass = document.getElementById("password").value.trim();
+    const msg = document.getElementById("authMessage");
+    const spinner = document.getElementById("loginSpinner");
+    const verifyingText = document.getElementById("verifyingText");
+    if (!email || !pass) {
+        msg.textContent = "Email and password are required.";
+        return;
+    }
+    spinner.classList.add("show");
+    verifyingText.style.display = "block";
+    try {
+        const response = await fetch(`${API_BASE}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Incorrect email or password.";
+            return;
+        }
+        currentToken = data.token;
+        currentLoggedInEmail = email;
+        sessionStorage.setItem("fd_token", currentToken);
+        sessionStorage.setItem("fd_logged_email", email);
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        if (isNewUser) {
+            switchTab(0);
+            disableBeneficiariesAndDocuments();
+        } else {
+            loadProfile();
+        }
+        resetInactivityTimer();
+        setupInactivityListeners();
+    } catch (err) {
+        msg.style.color = "";
+        msg.textContent = "";
+    } finally {
+        spinner.classList.remove("show");
+        verifyingText.style.display = "none";
+    }
+}
+function logout() {
+    clearTimeout(inactivityTimer);
+    clearTimeout(warningTimer);
+    currentToken = null;
+    currentLoggedInEmail = null;
+    isNewUser = false;
+    hasStartedPlan = false;
+    sessionStorage.clear();
+    document.getElementById("mainApp").classList.add("hidden");
+    document.getElementById("authScreen").classList.remove("hidden");
+    document.getElementById("inactivityWarningModal").style.display = "none";
+}
+// ==================== PLAN FUNCTIONS ====================
+let isNewUser = false;
+let hasStartedPlan = false;
+function disableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.add("disabled-section");
+    if (documents) documents.classList.add("disabled-section");
+}
+function enableBeneficiariesAndDocuments() {
+    const beneficiaries = document.getElementById("beneficiariesSection");
+    const documents = document.getElementById("documentsSection");
+    if (beneficiaries) beneficiaries.classList.remove("disabled-section");
+    if (documents) documents.classList.remove("disabled-section");
+}
+function startFreePlan() {
+    hasStartedPlan = true;
+    isNewUser = false;
+    switchTab(1);
+    disableBeneficiariesAndDocuments();
+    loadProfile();
+    alert("Free Plan activated!");
+}
+function upgradeToPremium() {
+    selectedPremiumPlan = null;
+    document.getElementById("premiumMonthlyOption").classList.remove("selected");
+    document.getElementById("premiumYearlyOption").classList.remove("selected");
+    document.getElementById("premiumPaymentStatus").textContent = "";
+    document.getElementById("premiumMpesaPhone").value = "";
+    document.getElementById("premiumPaymentModal").style.display = "flex";
+}
+function upgradeToBodaGo() {
+    selectedBodaGoPlan = null;
+    document.getElementById("monthlyOption").classList.remove("selected");
+    document.getElementById("yearlyOption").classList.remove("selected");
+    document.getElementById("paymentStatus").textContent = "";
+    document.getElementById("mpesaPhone").value = "";
+    document.getElementById("bodaGoPaymentModal").style.display = "flex";
+}
+function chooseLifetimePlan() {
+    document.getElementById("lifetimeMpesaPhone").value = "";
+    document.getElementById("lifetimePaymentStatus").textContent = "";
+    document.getElementById("lifetimePaymentModal").style.display = "flex";
+}
+// ==================== M-PESA PAYMENT FUNCTIONS ====================
+function selectPaymentOption(option) {
+    selectedBodaGoPlan = option;
+    document.getElementById("monthlyOption").classList.toggle("selected", option === "monthly");
+    document.getElementById("yearlyOption").classList.toggle("selected", option === "yearly");
+}
+function closePaymentModal() {
+    document.getElementById("bodaGoPaymentModal").style.display = "none";
+}
+async function initiateMpesaSTKPush() {
+    const phone = document.getElementById("mpesaPhone").value.trim();
+    const statusEl = document.getElementById("paymentStatus");
+    if (!selectedBodaGoPlan) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please select Monthly or Yearly option.";
+        return;
+    }
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = selectedBodaGoPlan === "monthly" ? 200 : 1200;
+    const planType = selectedBodaGoPlan === "monthly" ? "BodaGo Monthly" : "BodaGo Yearly";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "BodaGoPlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closePaymentModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
+function selectPremiumOption(option) {
+    selectedPremiumPlan = option;
+    document.getElementById("premiumMonthlyOption").classList.toggle("selected", option === "monthly");
+    document.getElementById("premiumYearlyOption").classList.toggle("selected", option === "yearly");
+}
+function closePremiumModal() {
+    document.getElementById("premiumPaymentModal").style.display = "none";
+}
+async function initiatePremiumSTKPush() {
+    const phone = document.getElementById("premiumMpesaPhone").value.trim();
+    const statusEl = document.getElementById("premiumPaymentStatus");
+    if (!selectedPremiumPlan) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please select Monthly or Yearly option.";
+        return;
+    }
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = selectedPremiumPlan === "monthly" ? 500 : 5000;
+    const planType = selectedPremiumPlan === "monthly" ? "Premium Monthly" : "Premium Yearly";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "PremiumPlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closePremiumModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
+function closeLifetimeModal() {
+    document.getElementById("lifetimePaymentModal").style.display = "none";
+}
+async function initiateLifetimeSTKPush() {
+    const phone = document.getElementById("lifetimeMpesaPhone").value.trim();
+    const statusEl = document.getElementById("lifetimePaymentStatus");
+    if (!phone || phone.length < 9) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Please enter a valid M-Pesa phone number.";
+        return;
+    }
+    const amount = 50000;
+    const planType = "Lifetime Plan";
+    statusEl.style.color = "#1e3a5f";
+    statusEl.textContent = "Requesting M-Pesa prompt... Please wait.";
+    try {
+        const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                phone: phone,
+                amount: amount,
+                planType: planType,
+                accountReference: "LifetimePlan"
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            statusEl.style.color = "green";
+            statusEl.textContent = "✅ M-Pesa prompt sent! Check your phone.";
+            setTimeout(() => {
+                closeLifetimeModal();
+                alert("Payment request sent successfully. After paying, you will be redirected to My Profile.");
+                switchTab(1);
+                enableBeneficiariesAndDocuments();
+                loadProfile();
+            }, 10000);
+        } else {
+            statusEl.style.color = "#dc3545";
+            statusEl.textContent = data.msg || "Failed to initiate payment.";
+        }
+    } catch (err) {
+        statusEl.style.color = "#dc3545";
+        statusEl.textContent = "Network error. Please try again.";
+    }
+}
+// ==================== PROFILE FUNCTIONS ====================
+async function searchProfiles() {
+    const term = document.getElementById("searchTerm").value.trim();
+    const resultsDiv = document.getElementById("searchResults");
+    if (!term) {
+        resultsDiv.innerHTML = "<p class='no-results'>Please enter a search term.</p>";
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/search?term=${encodeURIComponent(term)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+        const data = await response.json();
+        if (!response.ok || !data.length) {
+            resultsDiv.innerHTML = "<p class='no-results'>No matching profiles found.</p>";
+            return;
+        }
+        resultsDiv.innerHTML = "";
+        data.forEach(profile => {
+            const div = document.createElement("div");
+            div.className = "profile-card";
+            div.innerHTML = `
+                <strong>Name:</strong> ${profile.fullName || 'N/A'}<br>
+                <strong>ID:</strong> <span class="masked">${profile.nationalID || 'N/A'}</span><br>
+                <strong>Email:</strong> <span class="masked">${profile.email || 'N/A'}</span>
+                ${profile.referredBy ? `<p><strong>Referred By:</strong> ${profile.referredBy}</p>` : ""}
+                ${profile.secretCodeLogs && profile.secretCodeLogs.length > 0 ? `
+                <p><strong>Secret Code Usage:</strong></p>
+                <ul>
+                ${profile.secretCodeLogs.map(log => `<li>${new Date(log.date).toLocaleString()}</li>`).join("")}
+                </ul>
+` : ""}
+            `;
+            resultsDiv.appendChild(div);
+        });
+    } catch (err) {
+        resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
+    }
+}
+ 
+// MODIFIED loadProfile - ONLY this function changed (original logic kept 100%, blur added at the end)
+async function loadProfile() {
+    if (!currentToken) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/profile`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (!response.ok) throw new Error("Failed to load profile");
+        const userProfile = await response.json();
+        document.getElementById("profilePermanentID").value = userProfile.permanentID || "N/A";
+        document.getElementById("profileStatusMessage").innerHTML = `Logged in as: <strong>${currentLoggedInEmail}</strong><br>Profile ID: <strong>${userProfile.permanentID}</strong>`;
+        document.getElementById("profileFullName").value = userProfile.fullName || "";
+        document.getElementById("businessType").value = userProfile.businessType || "";
+        document.getElementById("totalCapitalRequired").value = userProfile.totalCapitalRequired || "";
+        document.getElementById("purposeOfCapital").value = userProfile.purposeOfCapital || "";
+        document.getElementById("profileID").value = userProfile.nationalID || "";
+        document.getElementById("profileAddress").value = userProfile.address || "";
+        document.getElementById("profilePhone").value = userProfile.phone || "";
+        document.getElementById("profileEmail").value = userProfile.email || currentLoggedInEmail;
+        beneficiaries = userProfile.beneficiaries && userProfile.beneficiaries.length > 0
+            ? [...userProfile.beneficiaries]
+            : [{ fullName: "", email: "", phone: "", relation: "" }];
+        document.getElementById("consentCheckbox").checked = !!userProfile.consentGiven;
+        propertyFields = userProfile.properties ? [...userProfile.properties] : ["", ""];
+        if (propertyFields.length < 2) propertyFields = ["", ""];
+        bankAccounts = userProfile.bankAccounts ? [...userProfile.bankAccounts] : ["", ""];
+        uploadedDocuments = userProfile.documents || [];
+        renderPropertyFields();
+        renderBankAccounts();
+        renderBeneficiaries();
+        renderSavedDocuments();
+        const secretInput = document.getElementById("secretCodeInput");
+        if (userProfile.secretCode && userProfile.secretCode.length > 4) {
+            const code = userProfile.secretCode;
+            secretInput.value = code[0] + "••••••" + code[code.length-1];
+        } else {
+            secretInput.value = "";
+        }
+        document.getElementById("referredBy").value = userProfile.referredBy || "";
+        // Apply blur after loading (this is the only addition)
+        document.getElementById("profileContentArea").classList.add("blurred");
+        isEditing = false;
+    } catch (err) {
+        console.error("Profile load error:", err);
+    }
+}
+async function saveProfile() {
+    if (!isEditing || !currentToken) {
+        alert("Please click 'Edit My Profile' and verify first.");
+        return;
+    }
+    const fullName = document.getElementById("profileFullName").value.trim();
+    const nationalID = document.getElementById("profileID").value.trim();
+    const phone = document.getElementById("profilePhone").value.trim();
+    const email = document.getElementById("profileEmail").value.trim();
+    if (!fullName || !nationalID || !phone || !email) {
+        alert("Full Names, National ID, Phone Number, and Email Address are mandatory.");
+        return;
+    }
+    document.getElementById("saveSpinnerContainer").style.display = "flex";
+    const profileData = {
+        fullName: fullName,
+        nationalID: nationalID,
+        address: document.getElementById("profileAddress").value.trim(),
+        phone: phone,
+        properties: getPropertyData(),
+        bankAccounts: getBankAccountsData(),
+        beneficiaries: getBeneficiariesData(),
+        consentGiven: document.getElementById("consentCheckbox").checked,
+        documents: uploadedDocuments,
+        businessType: document.getElementById("businessType").value.trim(),
+        totalCapitalRequired: document.getElementById("totalCapitalRequired").value.trim(),
+        purposeOfCapital: document.getElementById("purposeOfCapital").value.trim(),
+        secretCodeInput: document.getElementById("secretCodeInput").value.trim(),
+        referredBy: document.getElementById("referredBy").value.trim()
+    };
+    try {
+        const response = await fetch(`${API_BASE}/api/profile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(profileData)
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert("Profile saved successfully!");
+            isEditing = false;
+            loadProfile();
+        } else {
+            alert(data.msg || "Save failed");
+        }
+    } catch (err) {
+        alert("Error saving to MongoDB.");
+    } finally {
+        document.getElementById("saveSpinnerContainer").style.display = "none";
+    }
+}
+function renderPropertyFields() {
+    const container = document.getElementById("propertiesContainer");
+    container.innerHTML = "";
+    propertyFields.forEach((value, index) => {
+        const div = document.createElement("div");
+        div.className = "property-item";
+        div.innerHTML = `
+            <div class="property-header">Property ${index + 1}</div>
+            <input type="text" id="property-${index}" value="${value || ''}" placeholder="Land Reference Number / Title Number / Property Details" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+function addPropertyField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    propertyFields.push("");
+    renderPropertyFields();
+}
+function getPropertyData() {
+    const data = [];
+    propertyFields.forEach((_, index) => {
+        const input = document.getElementById(`property-${index}`);
+        if (input && input.value.trim()) data.push(input.value.trim());
+    });
+    return data;
+}
+function renderBankAccounts() {
+    const container = document.getElementById("bankAccountsContainer");
+    container.innerHTML = "";
+    bankAccounts.forEach((value, index) => {
+        const div = document.createElement("div");
+        div.className = "bank-item";
+        div.innerHTML = `
+            <div class="bank-header">Bank Account ${index + 1}</div>
+            <input type="text" id="bank-${index}" value="${value || ''}" placeholder="Bank Name and Account Number" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+function addBankAccountField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    bankAccounts.push("");
+    renderBankAccounts();
+}
+function getBankAccountsData() {
+    const data = [];
+    bankAccounts.forEach((_, index) => {
+        const input = document.getElementById(`bank-${index}`);
+        if (input && input.value.trim()) data.push(input.value.trim());
+    });
+    return data;
+}
+
+// MODIFIED editMyProfile - ONLY this function changed (original logic kept 100%, secret verification added)
+function editMyProfile() {
+    if (!currentLoggedInEmail) {
+        alert("You must be logged in to edit your profile.");
+        return;
+    }
+    const secret = prompt("Enter your secret code to unlock profile editing:");
+    if (!secret) return;
+    fetch(`${API_BASE}/api/verify-secret`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ secretCode: secret })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.msg === 'Secret code verified successfully' || response.ok) {
+            isEditing = true;
+            document.getElementById("profileContentArea").classList.remove("blurred");
+            enableEditing();
+            alert("Verification successful. You can now edit your profile.");
+        } else {
+            alert(data.msg || "Incorrect secret code.");
+        }
+    })
+    .catch(() => alert("Verification failed. Please try again."));
+}
+function enableEditing() {
+    const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","secretCodeInput","referredBy","businessType","totalCapitalRequired","purposeOfCapital"];
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = false;
+    });
+    renderPropertyFields();
+    renderBankAccounts();
+    renderBeneficiaries();
+}
+function switchTab(tabIndex) {
+    document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
+    const pages = ['plansPage', 'profilePage', 'servicesPage'];
+    pages.forEach((id, i) => {
+        const pageEl = document.getElementById(id);
+        if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
+    });
+}
+function initDocumentUploadForm() {
+    documentRows = [];
+    addDocumentRow();
+}
+function addDocumentRow() {
+    const container = document.getElementById("dynamicDocumentsContainer");
+    const rowId = 'doc-row-' + Date.now();
+    const rowHTML = `
+        <div class="dynamic-document-row" id="${rowId}">
+            <input type="text" id="${rowId}-name" placeholder="Document Name (e.g. Title Deed for Plot 123)">
+            <input type="file" id="${rowId}-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <button type="button" class="remove-doc-btn" onclick="removeDocumentRow('${rowId}')">Remove</button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', rowHTML);
+    documentRows.push(rowId);
+}
+function removeDocumentRow(rowId) {
+    if (documentRows.length <= 1) {
+        alert("You must have at least one document row.");
+        return;
+    }
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    documentRows = documentRows.filter(id => id !== rowId);
+}
+async function uploadDocuments() {
+    if (!currentToken) {
+        alert("You must be logged in.");
+        return;
+    }
+    const formData = new FormData();
+    let hasFiles = false;
+    for (let rowId of documentRows) {
+        const nameInput = document.getElementById(rowId + '-name');
+        const fileInput = document.getElementById(rowId + '-file');
+        const docName = nameInput ? nameInput.value.trim() : '';
+        const file = fileInput && fileInput.files[0];
+        if (file) {
+            if (!docName) {
+                alert("Please provide a name for every document you upload.");
+                return;
+            }
+            formData.append('documentNames', docName);
+            formData.append('documents', file);
+            hasFiles = true;
+        }
+    }
+    if (!hasFiles) {
+        alert("Please select at least one file to upload.");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE}/api/documents/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${currentToken}` },
+            body: formData
+        });
+        const result = await response.json();
+        if (response.ok) {
+            alert("Documents uploaded successfully!");
+            document.getElementById("dynamicDocumentsContainer").innerHTML = '';
+            documentRows = [];
+            addDocumentRow();
+            loadProfile();
+        } else {
+            alert(result.msg || "Upload failed");
+        }
+    } catch (err) {
+        alert("Error uploading documents.");
+    }
+}
+function renderSavedDocuments() {
+    const container = document.getElementById("savedDocumentsList");
+    container.innerHTML = "";
+    if (!uploadedDocuments || uploadedDocuments.length === 0) {
+        container.innerHTML = `<p style="color:#666; font-style:italic;">No documents saved yet.</p>`;
+        return;
+    }
+    uploadedDocuments.forEach((doc, index) => {
+        const div = document.createElement("div");
+        div.className = "document-list-item";
+        div.innerHTML = `
+            <div>
+                <strong>${doc.name || 'Unnamed Document'}</strong><br>
+                <small style="color:#666;">${doc.filename || ''} • ${new Date(doc.uploadDate).toLocaleDateString()}</small>
+            </div>
+            <div class="document-actions">
+                <button class="view-btn" onclick="viewDocument('${doc._id || index}')">View</button>
+                <button class="download-btn" onclick="downloadDocument('${doc._id || index}', '${doc.name || 'document'}')">Download</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+async function viewDocument(docId) { alert("View document functionality"); }
+async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
+function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
+window.onload = function() {
+    const token = sessionStorage.getItem("fd_token");
+    const email = sessionStorage.getItem("fd_logged_email");
+    if (token && email) {
+        currentToken = token;
+        currentLoggedInEmail = email;
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        loadProfile();
+        resetInactivityTimer();
+        setupInactivityListeners();
+    }
+    setTimeout(() => {
+        if (document.getElementById("dynamicDocumentsContainer")) {
+            initDocumentUploadForm();
+        }
+    }, 800);
+    initBackground();
+};
+</script>
+</body>
+</html>
