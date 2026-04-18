@@ -404,6 +404,9 @@
             user-select: none;
             pointer-events: none;
         }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -426,6 +429,14 @@
         <input type="password" id="password" placeholder="••••••••">
         <span class="toggle-password" onclick="togglePassword()">👁</span>
     </div>
+    <label id="mobileLabel" class="hidden">Mobile Number</label>
+    <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
+
+    <label id="confirmLabel" class="hidden">Confirm Password</label>
+    <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
+
+    <label id="secretLabel" class="hidden">Secret Code</label>
+    <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
    
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
@@ -842,28 +853,69 @@ function getBeneficiariesData() {
 }
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
+
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
+
+    const mobile = document.getElementById("mobileNumber").value.trim();
+    const confirmPass = document.getElementById("confirmPassword").value.trim();
+    const secretCode = document.getElementById("regSecretCode").value.trim();
+
     const msg = document.getElementById("authMessage");
-    if (!email || !pass) {
-        msg.textContent = "Email and password are required.";
+
+    // STEP 1: FIRST CLICK SHOWS FIELDS ONLY (NO REGISTRATION YET)
+    if (document.getElementById("mobileNumber").classList.contains("hidden")) {
+
+        document.getElementById("mobileNumber").classList.remove("hidden");
+        document.getElementById("confirmPassword").classList.remove("hidden");
+        document.getElementById("regSecretCode").classList.remove("hidden");
+
+        document.getElementById("mobileLabel").classList.remove("hidden");
+        document.getElementById("confirmLabel").classList.remove("hidden");
+        document.getElementById("secretLabel").classList.remove("hidden");
+
+        msg.style.color = "#1e3a5f";
+        msg.textContent = "Complete registration form below.";
         return;
     }
+
+    // STEP 2: VALIDATION
+    if (!email || !pass || !mobile || !confirmPass || !secretCode) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "All fields are required.";
+        return;
+    }
+
+    if (pass !== confirmPass) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Passwords do not match.";
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE}/api/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
+            body: JSON.stringify({
+                email,
+                password: pass,
+                mobileNumber: mobile,
+                confirmPassword: confirmPass,
+                secretCode: secretCode
+            })
         });
+
         const data = await response.json();
+
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Registration failed.";
             return;
         }
+
         msg.style.color = "#155724";
-        msg.textContent = data.msg || "Account created successfully! Please log in.";
-        isNewUser = true;
+        msg.textContent = "Account created successfully! Please log in.";
+
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error.";
