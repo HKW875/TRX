@@ -111,7 +111,7 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
-      
+     
         /* LOGIN CARD - 35% SMALLER */
         .auth-container {
             max-width: 420px;
@@ -124,7 +124,7 @@
             transform: scale(0.65);
             transform-origin: center top;
         }
-      
+     
         /* Password Eye Toggle Styles */
         .password-container {
             position: relative;
@@ -144,7 +144,7 @@
             user-select: none;
             z-index: 10;
         }
-      
+     
         .hidden { display: none !important; }
         .upload-area {
             border: 2px dashed #1e3a5f;
@@ -406,10 +406,32 @@
         .hidden {
             display: none !important;
         }
+
+        /* Kenya Flag - Added without touching any original styles */
+        #kenya-flag {
+            position: fixed;
+            top: 15px;
+            right: 25px;
+            width: 48px;
+            height: 32px;
+            cursor: pointer;
+            z-index: 9999;
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        #kenya-flag:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
+
+<!-- Kenya Flag - Added on top right of background -->
+<img id="kenya-flag" src="https://flagcdn.com/w80/ke.png" alt="Flag of Kenya" onclick="window.location.href='https://www.growthbase.net'" title="Go to GrowthBase.net">
+
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
   <a href="/">
@@ -422,7 +444,7 @@
     <h2>Login / Register</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
-  
+ 
     <label for="password">Password</label>
     <div class="password-container">
         <input type="password" id="password" placeholder="••••••••">
@@ -430,41 +452,40 @@
     </div>
     <label id="confirmLabel" class="hidden">Confirm Password</label>
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
-   
+  
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
-  
+ 
     <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
     <div id="forgotPasswordSection" class="hidden">
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
         <label class="required">Email</label>
         <input type="email" id="forgotEmail" placeholder="your@email.com">
-        
+       
         <label class="required">Phone Number</label>
         <input type="tel" id="forgotPhone" placeholder="07xxxxxxxx">
-        
+       
         <label class="required">Secret Code</label>
         <input type="text" id="forgotSecretCode" placeholder="Enter your secret code">
-        
+       
         <div id="newPasswordFields" class="hidden">
             <label class="required">New Password</label>
             <div class="password-container">
                 <input type="password" id="newPassword" placeholder="••••••••">
                 <span class="toggle-password" onclick="toggleNewPassword()">👁</span>
             </div>
-            
+           
             <label class="required">Confirm New Password</label>
             <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
         </div>
-        
+       
         <button onclick="verifyForgotDetails()" style="margin-top:15px;">Verify Details</button>
         <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
         <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
     </div>
     <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
-
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -527,7 +548,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-      
+     
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -568,9 +589,9 @@
                 <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
-          
+         
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-          
+         
                 <!-- Save Profile Spinner -->
                 <div id="saveSpinnerContainer" class="save-spinner-container">
                     <div class="save-spinner"></div>
@@ -599,22 +620,22 @@
                     <br>
                     <label for="profileAddress">Business or Residential Location</label>
                     <textarea id="profileAddress" disabled></textarea>
-            
+           
                     <label class="required" for="profilePhone">Phone Number</label>
                     <input type="tel" id="profilePhone" disabled>
-            
+           
                     <label class="required" for="profileEmail">Email Address</label>
                     <input type="email" id="profileEmail" disabled>
-            
+           
                     <label style="margin-top:25px;">Assets and Security for capital application</label>
                     <div id="propertiesContainer"></div>
-            
+           
                     <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
-            
+           
                     <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                     <div id="bankAccountsContainer"></div>
                     <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
-            
+           
                     <div id="beneficiariesSection" class="disabled-section">
                         <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
                         <div id="beneficiariesContainer"></div>
@@ -629,7 +650,7 @@
                     <div id="documentsSection" class="documents-section disabled-section">
                         <h3>Document Uploads</h3>
                         <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
-    
+   
                         <div class="document-upload-form">
                             <div id="dynamicDocumentsContainer">
                             </div>
@@ -672,7 +693,6 @@
         </div>
     </div>
 </div>
-
 <script>
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
@@ -774,7 +794,7 @@ window.addEventListener('mousemove', e => {
 function togglePassword() {
     const passwordField = document.getElementById("password");
     const toggleIcon = document.querySelector(".toggle-password");
-  
+ 
     if (passwordField.type === "password") {
         passwordField.type = "text";
         toggleIcon.textContent = "🙈";
@@ -783,7 +803,6 @@ function togglePassword() {
         toggleIcon.textContent = "👁";
     }
 }
-
 // ==================== NEW PASSWORD TOGGLE FOR FORGOT SECTION ====================
 function toggleNewPassword() {
     const passField = document.getElementById("newPassword");
@@ -796,11 +815,10 @@ function toggleNewPassword() {
         icon.textContent = "👁";
     }
 }
-
 // ==================== IMPROVED FORGOT PASSWORD FUNCTIONS ====================
 function showForgotPassword() {
     const msg = document.getElementById("authMessage");
-    
+   
     // Hide only the login/register specific fields cleanly
     document.getElementById("password").parentElement.style.display = "none";
     document.getElementById("confirmLabel").classList.add("hidden");
@@ -809,14 +827,12 @@ function showForgotPassword() {
     document.getElementById("mobileNumber").classList.add("hidden");
     document.getElementById("secretLabel").classList.add("hidden");
     document.getElementById("regSecretCode").classList.add("hidden");
-
     document.getElementById("forgotPasswordSection").classList.remove("hidden");
     document.querySelector("h2").textContent = "Reset Password";
-    
+   
     msg.style.color = "#1e3a5f";
     msg.textContent = "Enter your details to reset password";
 }
-
 function backToLogin() {
     // Restore original login/register fields
     document.getElementById("password").parentElement.style.display = "block";
@@ -826,16 +842,15 @@ function backToLogin() {
     document.getElementById("mobileNumber").classList.add("hidden");
     document.getElementById("secretLabel").classList.add("hidden");
     document.getElementById("regSecretCode").classList.add("hidden");
-    
+   
     document.getElementById("forgotPasswordSection").classList.add("hidden");
     document.getElementById("newPasswordFields").classList.add("hidden");
     document.getElementById("resetPasswordBtn").classList.add("hidden");
-    
+   
     document.querySelector("h2").textContent = "Login / Register";
     document.getElementById("authMessage").textContent = "";
     document.getElementById("authMessage").style.color = "#dc3545";
 }
-
 // ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 // Global variables
@@ -1045,20 +1060,17 @@ function logout() {
     document.getElementById("authScreen").classList.remove("hidden");
     document.getElementById("inactivityWarningModal").style.display = "none";
 }
-
 // ==================== FORGOT PASSWORD FUNCTIONS ====================
 async function verifyForgotDetails() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const phone = document.getElementById("forgotPhone").value.trim();
     const secretCode = document.getElementById("forgotSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
-
     if (!email || !phone || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "Email, Phone and Secret Code are required.";
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/forgot-password/verify`, {
             method: 'POST',
@@ -1066,7 +1078,6 @@ async function verifyForgotDetails() {
             body: JSON.stringify({ email, phone, secretCode })
         });
         const data = await response.json();
-
         if (response.ok) {
             msg.style.color = "#155724";
             msg.textContent = "Details verified successfully. You can now set new password.";
@@ -1081,19 +1092,16 @@ async function verifyForgotDetails() {
         msg.textContent = "Server error. Please try again.";
     }
 }
-
 async function resetPassword() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const newPass = document.getElementById("newPassword").value.trim();
     const confirmNewPass = document.getElementById("confirmNewPassword").value.trim();
     const msg = document.getElementById("authMessage");
-
     if (newPass !== confirmNewPass) {
         msg.style.color = "#dc3545";
         msg.textContent = "New passwords do not match.";
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/forgot-password/reset`, {
             method: 'POST',
@@ -1101,7 +1109,6 @@ async function resetPassword() {
             body: JSON.stringify({ email, newPassword: newPass })
         });
         const data = await response.json();
-
         if (response.ok) {
             msg.style.color = "#155724";
             msg.textContent = "Password changed successfully! You can now login.";
@@ -1115,7 +1122,6 @@ async function resetPassword() {
         msg.textContent = "Server error.";
     }
 }
-
 // ==================== PLAN FUNCTIONS ====================
 let isNewUser = false;
 let hasStartedPlan = false;
