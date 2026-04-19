@@ -1197,11 +1197,15 @@ async function handleRegister() {
                 email,
                 password: pass,
                 mobileNumber: mobile,
-                occupation: occupation || "Not Provided",
+                occupation: occupation,
                 confirmPassword: confirmPass,
                 secretCode: secretCode
             })
         });
+        if (!occupation || occupation.trim() === "") {
+            alert("Occupation is required");
+            return;
+        }
         const data = await response.json();
         if (!response.ok) {
             msg.style.color = "#dc3545";
