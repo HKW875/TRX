@@ -111,7 +111,7 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
-       
+      
         /* LOGIN CARD - 35% SMALLER */
         .auth-container {
             max-width: 420px;
@@ -124,7 +124,7 @@
             transform: scale(0.65);
             transform-origin: center top;
         }
-       
+      
         /* Password Eye Toggle Styles */
         .password-container {
             position: relative;
@@ -144,7 +144,7 @@
             user-select: none;
             z-index: 10;
         }
-       
+      
         .hidden { display: none !important; }
         .upload-area {
             border: 2px dashed #1e3a5f;
@@ -397,7 +397,6 @@
             border-color: #28a745;
             background: #e6f4ea;
         }
-
         /* Added ONLY for your blurring requirement - no other changes */
         #profileContentArea.blurred {
             filter: blur(5px);
@@ -423,22 +422,48 @@
     <h2>Login / Register</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
-   
+  
     <label for="password">Password</label>
     <div class="password-container">
         <input type="password" id="password" placeholder="••••••••">
         <span class="toggle-password" onclick="togglePassword()">👁</span>
     </div>
-
     <label id="confirmLabel" class="hidden">Confirm Password</label>
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
-    
+   
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
-
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
-   
+  
+    <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
+    <div id="forgotPasswordSection" class="hidden">
+        <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
+        <label class="required">Email</label>
+        <input type="email" id="forgotEmail" placeholder="your@email.com">
+        
+        <label class="required">Phone Number</label>
+        <input type="tel" id="forgotPhone" placeholder="07xxxxxxxx">
+        
+        <label class="required">Secret Code</label>
+        <input type="text" id="forgotSecretCode" placeholder="Enter your secret code">
+        
+        <div id="newPasswordFields" class="hidden">
+            <label class="required">New Password</label>
+            <div class="password-container">
+                <input type="password" id="newPassword" placeholder="••••••••">
+                <span class="toggle-password" onclick="toggleNewPassword()">👁</span>
+            </div>
+            
+            <label class="required">Confirm New Password</label>
+            <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
+        </div>
+        
+        <button onclick="verifyForgotDetails()" style="margin-top:15px;">Verify Details</button>
+        <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
+    </div>
+    <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
+
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -447,7 +472,7 @@
         <button onclick="handleRegister()">Create Account</button>
     </div>
     <div style="margin-top: 15px;">
-        <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #1e3a5f; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
+        <a href="#" onclick="showForgotPassword(); return false;" style="color: #1e3a5f; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
@@ -500,7 +525,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-       
+      
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -541,16 +566,15 @@
                 <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
-           
+          
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-           
+          
                 <!-- Save Profile Spinner -->
                 <div id="saveSpinnerContainer" class="save-spinner-container">
                     <div class="save-spinner"></div>
                     <span>Saving Changes...</span>
                 </div>
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
-
                 <!-- ALL PROFILE FIELDS WRAPPED HERE (100% original fields kept) - this is the ONLY added wrapper for blurring -->
                 <div id="profileContentArea" class="blurred">
                     <label class="required" for="profileFullName">Full Names</label>
@@ -573,22 +597,22 @@
                     <br>
                     <label for="profileAddress">Business or Residential Location</label>
                     <textarea id="profileAddress" disabled></textarea>
-             
+            
                     <label class="required" for="profilePhone">Phone Number</label>
                     <input type="tel" id="profilePhone" disabled>
-             
+            
                     <label class="required" for="profileEmail">Email Address</label>
                     <input type="email" id="profileEmail" disabled>
-             
+            
                     <label style="margin-top:25px;">Assets and Security for capital application</label>
                     <div id="propertiesContainer"></div>
-             
+            
                     <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
-             
+            
                     <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                     <div id="bankAccountsContainer"></div>
                     <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
-             
+            
                     <div id="beneficiariesSection" class="disabled-section">
                         <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
                         <div id="beneficiariesContainer"></div>
@@ -603,7 +627,7 @@
                     <div id="documentsSection" class="documents-section disabled-section">
                         <h3>Document Uploads</h3>
                         <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
-     
+    
                         <div class="document-upload-form">
                             <div id="dynamicDocumentsContainer">
                             </div>
@@ -748,7 +772,7 @@ window.addEventListener('mousemove', e => {
 function togglePassword() {
     const passwordField = document.getElementById("password");
     const toggleIcon = document.querySelector(".toggle-password");
-   
+  
     if (passwordField.type === "password") {
         passwordField.type = "text";
         toggleIcon.textContent = "🙈";
@@ -757,6 +781,20 @@ function togglePassword() {
         toggleIcon.textContent = "👁";
     }
 }
+
+// ==================== NEW PASSWORD TOGGLE FOR FORGOT SECTION ====================
+function toggleNewPassword() {
+    const passField = document.getElementById("newPassword");
+    const icon = passField.parentElement.querySelector(".toggle-password");
+    if (passField.type === "password") {
+        passField.type = "text";
+        icon.textContent = "🙈";
+    } else {
+        passField.type = "password";
+        icon.textContent = "👁";
+    }
+}
+
 // ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 // Global variables
@@ -854,45 +892,35 @@ function getBeneficiariesData() {
 }
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
-
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
-
     const mobile = document.getElementById("mobileNumber").value.trim();
     const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
-
     const msg = document.getElementById("authMessage");
-
     // STEP 1: FIRST CLICK SHOWS FIELDS ONLY (NO REGISTRATION YET)
     if (document.getElementById("mobileNumber").classList.contains("hidden")) {
-
         document.getElementById("mobileNumber").classList.remove("hidden");
         document.getElementById("confirmPassword").classList.remove("hidden");
         document.getElementById("regSecretCode").classList.remove("hidden");
-
         document.getElementById("mobileLabel").classList.remove("hidden");
         document.getElementById("confirmLabel").classList.remove("hidden");
         document.getElementById("secretLabel").classList.remove("hidden");
-
         msg.style.color = "#1e3a5f";
         msg.textContent = "Complete registration form below.";
         return;
     }
-
     // STEP 2: VALIDATION
     if (!email || !pass || !mobile || !confirmPass || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "All fields are required.";
         return;
     }
-
     if (pass !== confirmPass) {
         msg.style.color = "#dc3545";
         msg.textContent = "Passwords do not match.";
         return;
     }
-
     try {
         const response = await fetch(`${API_BASE}/api/register`, {
             method: 'POST',
@@ -905,18 +933,14 @@ async function handleRegister() {
                 secretCode: secretCode
             })
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Registration failed.";
             return;
         }
-
         msg.style.color = "#155724";
         msg.textContent = "Account created successfully! Please log in.";
-
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error.";
@@ -980,6 +1004,91 @@ function logout() {
     document.getElementById("authScreen").classList.remove("hidden");
     document.getElementById("inactivityWarningModal").style.display = "none";
 }
+
+// ==================== NEW FORGOT PASSWORD FUNCTIONS ====================
+function showForgotPassword() {
+    // Hide login/register fields
+    document.getElementById("password").parentElement.parentElement.style.display = "none"; // hide password row
+    document.getElementById("confirmLabel").classList.add("hidden");
+    document.getElementById("confirmPassword").classList.add("hidden");
+    document.getElementById("mobileLabel").classList.add("hidden");
+    document.getElementById("mobileNumber").classList.add("hidden");
+    document.getElementById("secretLabel").classList.add("hidden");
+    document.getElementById("regSecretCode").classList.add("hidden");
+    
+    document.getElementById("forgotPasswordSection").classList.remove("hidden");
+    document.getElementById("authMessage").textContent = "";
+}
+
+async function verifyForgotDetails() {
+    const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+    const phone = document.getElementById("forgotPhone").value.trim();
+    const secretCode = document.getElementById("forgotSecretCode").value.trim();
+    const msg = document.getElementById("authMessage");
+
+    if (!email || !phone || !secretCode) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Email, Phone and Secret Code are required.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/forgot-password/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, phone, secretCode })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            msg.style.color = "#155724";
+            msg.textContent = "Details verified successfully. You can now set new password.";
+            document.getElementById("newPasswordFields").classList.remove("hidden");
+            document.getElementById("resetPasswordBtn").classList.remove("hidden");
+        } else {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Verification failed. Details do not match our records.";
+        }
+    } catch (err) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Server error. Please try again.";
+    }
+}
+
+async function resetPassword() {
+    const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
+    const newPass = document.getElementById("newPassword").value.trim();
+    const confirmNewPass = document.getElementById("confirmNewPassword").value.trim();
+    const msg = document.getElementById("authMessage");
+
+    if (newPass !== confirmNewPass) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "New passwords do not match.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/forgot-password/reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, newPassword: newPass })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            msg.style.color = "#155724";
+            msg.textContent = "Password changed successfully! You can now login.";
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Failed to reset password.";
+        }
+    } catch (err) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Server error.";
+    }
+}
+
 // ==================== PLAN FUNCTIONS ====================
 let isNewUser = false;
 let hasStartedPlan = false;
@@ -1234,7 +1343,6 @@ async function searchProfiles() {
         resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
     }
 }
- 
 // MODIFIED loadProfile - ONLY this function changed (original logic kept 100%, blur added at the end)
 async function loadProfile() {
     if (!currentToken) return;
@@ -1393,7 +1501,6 @@ function getBankAccountsData() {
     });
     return data;
 }
-
 // MODIFIED editMyProfile - ONLY this function changed (original logic kept 100%, secret verification added)
 function editMyProfile() {
     if (!currentLoggedInEmail) {
