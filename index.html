@@ -461,6 +461,7 @@
         
         <button onclick="verifyForgotDetails()" style="margin-top:15px;">Verify Details</button>
         <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
+        <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
     </div>
     <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
 
@@ -795,6 +796,45 @@ function toggleNewPassword() {
     }
 }
 
+// ==================== IMPROVED FORGOT PASSWORD FUNCTIONS ====================
+function showForgotPassword() {
+    const msg = document.getElementById("authMessage");
+    
+    // Hide only the login/register specific fields cleanly
+    document.getElementById("password").parentElement.style.display = "none";
+    document.getElementById("confirmLabel").classList.add("hidden");
+    document.getElementById("confirmPassword").classList.add("hidden");
+    document.getElementById("mobileLabel").classList.add("hidden");
+    document.getElementById("mobileNumber").classList.add("hidden");
+    document.getElementById("secretLabel").classList.add("hidden");
+    document.getElementById("regSecretCode").classList.add("hidden");
+
+    document.getElementById("forgotPasswordSection").classList.remove("hidden");
+    document.querySelector("h2").textContent = "Reset Password";
+    
+    msg.style.color = "#1e3a5f";
+    msg.textContent = "Enter your details to reset password";
+}
+
+function backToLogin() {
+    // Restore original login/register fields
+    document.getElementById("password").parentElement.style.display = "block";
+    document.getElementById("confirmLabel").classList.add("hidden");
+    document.getElementById("confirmPassword").classList.add("hidden");
+    document.getElementById("mobileLabel").classList.add("hidden");
+    document.getElementById("mobileNumber").classList.add("hidden");
+    document.getElementById("secretLabel").classList.add("hidden");
+    document.getElementById("regSecretCode").classList.add("hidden");
+    
+    document.getElementById("forgotPasswordSection").classList.add("hidden");
+    document.getElementById("newPasswordFields").classList.add("hidden");
+    document.getElementById("resetPasswordBtn").classList.add("hidden");
+    
+    document.querySelector("h2").textContent = "Login / Register";
+    document.getElementById("authMessage").textContent = "";
+    document.getElementById("authMessage").style.color = "#dc3545";
+}
+
 // ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 // Global variables
@@ -1005,21 +1045,7 @@ function logout() {
     document.getElementById("inactivityWarningModal").style.display = "none";
 }
 
-// ==================== NEW FORGOT PASSWORD FUNCTIONS ====================
-function showForgotPassword() {
-    // Hide login/register fields
-    document.getElementById("password").parentElement.parentElement.style.display = "none"; // hide password row
-    document.getElementById("confirmLabel").classList.add("hidden");
-    document.getElementById("confirmPassword").classList.add("hidden");
-    document.getElementById("mobileLabel").classList.add("hidden");
-    document.getElementById("mobileNumber").classList.add("hidden");
-    document.getElementById("secretLabel").classList.add("hidden");
-    document.getElementById("regSecretCode").classList.add("hidden");
-    
-    document.getElementById("forgotPasswordSection").classList.remove("hidden");
-    document.getElementById("authMessage").textContent = "";
-}
-
+// ==================== FORGOT PASSWORD FUNCTIONS ====================
 async function verifyForgotDetails() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const phone = document.getElementById("forgotPhone").value.trim();
@@ -1343,7 +1369,6 @@ async function searchProfiles() {
         resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
     }
 }
-// MODIFIED loadProfile - ONLY this function changed (original logic kept 100%, blur added at the end)
 async function loadProfile() {
     if (!currentToken) return;
     try {
@@ -1383,7 +1408,6 @@ async function loadProfile() {
             secretInput.value = "";
         }
         document.getElementById("referredBy").value = userProfile.referredBy || "";
-        // Apply blur after loading (this is the only addition)
         document.getElementById("profileContentArea").classList.add("blurred");
         isEditing = false;
     } catch (err) {
@@ -1501,7 +1525,6 @@ function getBankAccountsData() {
     });
     return data;
 }
-// MODIFIED editMyProfile - ONLY this function changed (original logic kept 100%, secret verification added)
 function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
