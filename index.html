@@ -111,7 +111,7 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
-     
+    
         /* LOGIN CARD - 35% SMALLER */
         .auth-container {
             max-width: 420px;
@@ -124,7 +124,7 @@
             transform: scale(0.65);
             transform-origin: center top;
         }
-     
+    
         /* Password Eye Toggle Styles */
         .password-container {
             position: relative;
@@ -144,7 +144,7 @@
             user-select: none;
             z-index: 10;
         }
-     
+    
         .hidden { display: none !important; }
         .upload-area {
             border: 2px dashed #1e3a5f;
@@ -406,7 +406,6 @@
         .hidden {
             display: none !important;
         }
-
         /* Flags Container - Added without touching any original styles */
         #flags-container {
             position: fixed;
@@ -429,11 +428,13 @@
         .flag:hover {
             transform: scale(1.1);
         }
+
+        /* NEW: Occupation field styling */
+        #occupationLabel, #occupationInput { margin-top: 8px; }
     </style>
 </head>
 <body>
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
-
 <!-- Flags Container - US | Kenya | Ghana -->
 <div id="flags-container">
     <!-- US Flag -->
@@ -443,7 +444,6 @@
     <!-- Ghana Flag (new - rightmost) -->
     <img class="flag" src="https://flagcdn.com/w80/gh.png" alt="Flag of Ghana" onclick="window.location.href='https://growthbase.net/gh'" title="Go to GrowthBase Ghana">
 </div>
-
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
   <a href="/">
@@ -456,7 +456,6 @@
     <h2>Login / Register</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
- 
     <label for="password">Password</label>
     <div class="password-container">
         <input type="password" id="password" placeholder="••••••••">
@@ -464,35 +463,38 @@
     </div>
     <label id="confirmLabel" class="hidden">Confirm Password</label>
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
- 
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
+    
+    <!-- NEW: Occupation / Business field added after mobile number -->
+    <label id="occupationLabel" class="hidden">Occupation or Business</label>
+    <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
+
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
- 
     <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
     <div id="forgotPasswordSection" class="hidden">
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
         <label class="required">Email</label>
         <input type="email" id="forgotEmail" placeholder="your@email.com">
-       
+      
         <label class="required">Phone Number</label>
         <input type="tel" id="forgotPhone" placeholder="07xxxxxxxx">
-       
+      
         <label class="required">Secret Code</label>
         <input type="text" id="forgotSecretCode" placeholder="Enter your secret code">
-       
+      
         <div id="newPasswordFields" class="hidden">
             <label class="required">New Password</label>
             <div class="password-container">
                 <input type="password" id="newPassword" placeholder="••••••••">
                 <span class="toggle-password" onclick="toggleNewPassword()">👁</span>
             </div>
-           
+          
             <label class="required">Confirm New Password</label>
             <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
         </div>
-       
+      
         <button onclick="verifyForgotDetails()" style="margin-top:15px;">Verify Details</button>
         <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
         <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
@@ -560,7 +562,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-     
+    
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -601,9 +603,9 @@
                 <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
-         
+        
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-         
+        
                 <!-- Save Profile Spinner -->
                 <div id="saveSpinnerContainer" class="save-spinner-container">
                     <div class="save-spinner"></div>
@@ -632,22 +634,22 @@
                     <br>
                     <label for="profileAddress">Business or Residential Location</label>
                     <textarea id="profileAddress" disabled></textarea>
-           
+          
                     <label class="required" for="profilePhone">Phone Number</label>
                     <input type="tel" id="profilePhone" disabled>
-           
+          
                     <label class="required" for="profileEmail">Email Address</label>
                     <input type="email" id="profileEmail" disabled>
-           
+          
                     <label style="margin-top:25px;">Assets and Security for capital application</label>
                     <div id="propertiesContainer"></div>
-           
+          
                     <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
-           
+          
                     <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                     <div id="bankAccountsContainer"></div>
                     <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
-           
+          
                     <div id="beneficiariesSection" class="disabled-section">
                         <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
                         <div id="beneficiariesContainer"></div>
@@ -662,7 +664,7 @@
                     <div id="documentsSection" class="documents-section disabled-section">
                         <h3>Document Uploads</h3>
                         <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
-   
+  
                         <div class="document-upload-form">
                             <div id="dynamicDocumentsContainer">
                             </div>
@@ -679,6 +681,10 @@
         <!-- Services Page -->
         <div id="servicesPage" class="page">
             <div class="card">
+                <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
+                <h3 style="margin-bottom:10px;">User Occupation / Business Distribution</h3>
+                <canvas id="occupationPieChart" width="600" height="400" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
+
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -705,6 +711,8 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
@@ -806,7 +814,6 @@ window.addEventListener('mousemove', e => {
 function togglePassword() {
     const passwordField = document.getElementById("password");
     const toggleIcon = document.querySelector(".toggle-password");
- 
     if (passwordField.type === "password") {
         passwordField.type = "text";
         toggleIcon.textContent = "🙈";
@@ -830,7 +837,7 @@ function toggleNewPassword() {
 // ==================== IMPROVED FORGOT PASSWORD FUNCTIONS ====================
 function showForgotPassword() {
     const msg = document.getElementById("authMessage");
-   
+  
     // Hide only the login/register specific fields cleanly
     document.getElementById("password").parentElement.style.display = "none";
     document.getElementById("confirmLabel").classList.add("hidden");
@@ -841,7 +848,7 @@ function showForgotPassword() {
     document.getElementById("regSecretCode").classList.add("hidden");
     document.getElementById("forgotPasswordSection").classList.remove("hidden");
     document.querySelector("h2").textContent = "Reset Password";
-   
+  
     msg.style.color = "#1e3a5f";
     msg.textContent = "Enter your details to reset password";
 }
@@ -854,11 +861,11 @@ function backToLogin() {
     document.getElementById("mobileNumber").classList.add("hidden");
     document.getElementById("secretLabel").classList.add("hidden");
     document.getElementById("regSecretCode").classList.add("hidden");
-   
+  
     document.getElementById("forgotPasswordSection").classList.add("hidden");
     document.getElementById("newPasswordFields").classList.add("hidden");
     document.getElementById("resetPasswordBtn").classList.add("hidden");
-   
+  
     document.querySelector("h2").textContent = "Login / Register";
     document.getElementById("authMessage").textContent = "";
     document.getElementById("authMessage").style.color = "#dc3545";
@@ -958,11 +965,79 @@ function getBeneficiariesData() {
     });
     return data;
 }
+// ==================== NEW: Occupation & Geolocation Functions ====================
+let userOccupation = "";
+let userLocation = { latitude: null, longitude: null };
+
+function requestGeolocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                userLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    timestamp: new Date().toISOString()
+                };
+                // Send to backend (you will handle this endpoint in backend)
+                try {
+                    await fetch(`${API_BASE}/api/save-location`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${currentToken}`
+                        },
+                        body: JSON.stringify(userLocation)
+                    });
+                } catch(e) {}
+            },
+            () => { console.log("Geolocation permission denied or unavailable"); }
+        );
+    }
+}
+
+// NEW: Fetch occupation statistics and render pie chart
+let occupationChart;
+async function loadOccupationChart() {
+    try {
+        const res = await fetch(`${API_BASE}/api/occupations-stats`, {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        
+        const ctx = document.getElementById('occupationPieChart');
+        if (occupationChart) occupationChart.destroy();
+        
+        occupationChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.percentages,
+                    backgroundColor: [
+                        '#1e3a5f', '#28a745', '#ffc107', '#dc3545', 
+                        '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Occupation / Business Distribution (%)' }
+                }
+            }
+        });
+    } catch(e) {
+        console.log("Could not load occupation chart");
+    }
+}
+
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
     const mobile = document.getElementById("mobileNumber").value.trim();
+    const occupation = document.getElementById("occupationInput").value.trim();
     const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
@@ -974,6 +1049,8 @@ async function handleRegister() {
         document.getElementById("mobileLabel").classList.remove("hidden");
         document.getElementById("confirmLabel").classList.remove("hidden");
         document.getElementById("secretLabel").classList.remove("hidden");
+        document.getElementById("occupationLabel").classList.remove("hidden");
+        document.getElementById("occupationInput").classList.remove("hidden");
         msg.style.color = "#1e3a5f";
         msg.textContent = "Complete registration form below.";
         return;
@@ -997,6 +1074,7 @@ async function handleRegister() {
                 email,
                 password: pass,
                 mobileNumber: mobile,
+                occupation: occupation || "Not Provided",
                 confirmPassword: confirmPass,
                 secretCode: secretCode
             })
@@ -1052,6 +1130,8 @@ async function handleLogin() {
         }
         resetInactivityTimer();
         setupInactivityListeners();
+        requestGeolocation();           // NEW: Request geolocation after login
+        setTimeout(loadOccupationChart, 800); // NEW: Load pie chart
     } catch (err) {
         msg.style.color = "";
         msg.textContent = "";
@@ -1589,6 +1669,9 @@ function switchTab(tabIndex) {
         const pageEl = document.getElementById(id);
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
     });
+    if (tabIndex === 2) { // Services tab
+        setTimeout(loadOccupationChart, 300);
+    }
 }
 function initDocumentUploadForm() {
     documentRows = [];
@@ -1699,6 +1782,8 @@ window.onload = function() {
         loadProfile();
         resetInactivityTimer();
         setupInactivityListeners();
+        requestGeolocation();
+        setTimeout(loadOccupationChart, 1000);
     }
     setTimeout(() => {
         if (document.getElementById("dynamicDocumentsContainer")) {
