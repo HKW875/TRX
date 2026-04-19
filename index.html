@@ -1787,7 +1787,7 @@ function enableEditing() {
 }
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    const pages = ['plansPage', 'profilePage', 'servicesPage'];
+    const pages = ['plansPage', 'profilePage', 'servicesPage', 'advertisePage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
