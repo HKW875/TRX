@@ -407,21 +407,26 @@
             display: none !important;
         }
 
-        /* Kenya Flag - Added without touching any original styles */
-        #kenya-flag {
+        /* Flags Container - Added without touching any original styles */
+        #flags-container {
             position: fixed;
             top: 15px;
             right: 25px;
+            display: flex;
+            gap: 12px;
+            z-index: 9999;
+            align-items: center;
+        }
+        .flag {
             width: 48px;
             height: 32px;
             cursor: pointer;
-            z-index: 9999;
             border: 1px solid rgba(255,255,255,0.6);
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: transform 0.2s;
         }
-        #kenya-flag:hover {
+        .flag:hover {
             transform: scale(1.1);
         }
     </style>
@@ -429,8 +434,13 @@
 <body>
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 
-<!-- Kenya Flag - Added on top right of background -->
-<img id="kenya-flag" src="https://flagcdn.com/w80/ke.png" alt="Flag of Kenya" onclick="window.location.href='https://www.growthbase.net'" title="Go to GrowthBase.net">
+<!-- Flags Container - Kenya and US Flags -->
+<div id="flags-container">
+    <!-- US Flag (left) -->
+    <img class="flag" src="https://flagcdn.com/w80/us.png" alt="Flag of USA" onclick="window.location.href='https://growthbase.net/us'" title="Go to GrowthBase US">
+    <!-- Kenya Flag (right) -->
+    <img class="flag" src="https://flagcdn.com/w80/ke.png" alt="Flag of Kenya" onclick="window.location.href='https://growthbase.net'" title="Go to GrowthBase Kenya">
+</div>
 
 <!-- Auth Screen -->
 <div id="authScreen" class="auth-container">
