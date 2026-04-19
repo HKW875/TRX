@@ -1057,7 +1057,7 @@ async function handleRegister() {
         return;
     }
     // STEP 2: VALIDATION
-    if (!email || !pass || !mobile || !confirmPass || !secretCode) {
+    if (!email || !pass || !mobile || !occupation || !confirmPass || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "All fields are required.";
         return;
