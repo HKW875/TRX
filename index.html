@@ -13,9 +13,11 @@
             color: #333;
         }
         #occupationPieChart {
-            width: 30% !important;
-            height: 30% !important;
-            margin: auto;
+            display: block;
+            width: 100% !important; /* Allow it to fill its container */
+            max-width: 500px;        /* Prevents it from getting too huge on big monitors */
+            height: auto !important;
+            margin: 20px auto;
         }
         header {
             background: #1e3a5f;
@@ -733,7 +735,7 @@
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
                
                
-                <canvas id="occupationPieChart" width="600" height="400" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
+                <canvas id="occupationPieChart" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
                
                
                 <h2>Services</h2>
@@ -1769,6 +1771,9 @@ function switchTab(tabIndex) {
     });
     if (tabIndex === 2) { // Services tab
         setTimeout(loadOccupationChart, 300);
+    if (index === 2) { 
+        // Logic to render or resize the chart here
+        renderOccupationChart();
     }
 }
 function initDocumentUploadForm() {
