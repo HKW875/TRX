@@ -12,7 +12,6 @@
             min-height: 100vh;
             color: #333;
         }
-
         #occupationPieChart {
             width: 30% !important;
             height: 30% !important;
@@ -117,7 +116,7 @@
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
-    
+   
         /* LOGIN CARD - 35% SMALLER */
         .auth-container {
             max-width: 420px;
@@ -130,7 +129,7 @@
             transform: scale(0.65);
             transform-origin: center top;
         }
-    
+   
         /* Password Eye Toggle Styles */
         .password-container {
             position: relative;
@@ -150,7 +149,7 @@
             user-select: none;
             z-index: 10;
         }
-    
+   
         .hidden { display: none !important; }
         .upload-area {
             border: 2px dashed #1e3a5f;
@@ -434,9 +433,21 @@
         .flag:hover {
             transform: scale(1.1);
         }
-
         /* NEW: Occupation field styling */
         #occupationLabel, #occupationInput { margin-top: 8px; }
+
+        /* Adverts Page Styling */
+        .adverts-category {
+            background: #f9fbff;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border-left: 5px solid #1e3a5f;
+        }
+        .adverts-category h3 {
+            margin: 0 0 12px 0;
+            color: #1e3a5f;
+        }
     </style>
 </head>
 <body>
@@ -471,11 +482,10 @@
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
-    
+   
     <!-- NEW: Occupation / Business field added after mobile number -->
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
-
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
     <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
@@ -483,24 +493,24 @@
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
         <label class="required">Email</label>
         <input type="email" id="forgotEmail" placeholder="your@email.com">
-      
+     
         <label class="required">Phone Number</label>
         <input type="tel" id="forgotPhone" placeholder="07xxxxxxxx">
-      
+     
         <label class="required">Secret Code</label>
         <input type="text" id="forgotSecretCode" placeholder="Enter your secret code">
-      
+     
         <div id="newPasswordFields" class="hidden">
             <label class="required">New Password</label>
             <div class="password-container">
                 <input type="password" id="newPassword" placeholder="••••••••">
                 <span class="toggle-password" onclick="toggleNewPassword()">👁</span>
             </div>
-          
+         
             <label class="required">Confirm New Password</label>
             <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
         </div>
-      
+     
         <button onclick="verifyForgotDetails()" style="margin-top:15px;">Verify Details</button>
         <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
         <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
@@ -530,6 +540,7 @@
             <div class="tab active" onclick="switchTab(0)" id="tab-plans">Plans</div>
             <div class="tab" onclick="switchTab(1)" id="tab-profile">Apply Now</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
+            <div class="tab" onclick="switchTab(3)" id="tab-adverts">Adverts</div>
         </div>
         <!-- Plans Page -->
         <div id="plansPage" class="page active">
@@ -568,7 +579,7 @@
                     </ul>
                     <button onclick="upgradeToPremium()">Upgrade to Premium</button>
                 </div>
-    
+   
                 <!-- BodaGo Plan -->
                 <div class="plan-section" style="border-color: #1e3a5f;">
                     <h3>BodaGo Plan</h3>
@@ -609,9 +620,9 @@
                 <label class="required">Profile ID</label>
                 <input type="text" id="profilePermanentID" readonly style="background:#e9ecef; font-family:monospace; font-size:1.1em;">
                 <div id="profileStatusMessage" style="margin:12px 0; font-weight:600;"></div>
-        
+       
                 <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-        
+       
                 <!-- Save Profile Spinner -->
                 <div id="saveSpinnerContainer" class="save-spinner-container">
                     <div class="save-spinner"></div>
@@ -640,22 +651,22 @@
                     <br>
                     <label for="profileAddress">Business or Residential Location</label>
                     <textarea id="profileAddress" disabled></textarea>
-          
+         
                     <label class="required" for="profilePhone">Phone Number</label>
                     <input type="tel" id="profilePhone" disabled>
-          
+         
                     <label class="required" for="profileEmail">Email Address</label>
                     <input type="email" id="profileEmail" disabled>
-          
+         
                     <label style="margin-top:25px;">Assets and Security for capital application</label>
                     <div id="propertiesContainer"></div>
-          
+         
                     <button type="button" class="add-property-btn" onclick="addPropertyField()">+ Add Another Security</button>
-          
+         
                     <label style="margin-top:25px;">Banking Institution (Name only, Optional)</label>
                     <div id="bankAccountsContainer"></div>
                     <button type="button" class="add-bank-btn" onclick="addBankAccountField()">+ Add Another Account.</button>
-          
+         
                     <div id="beneficiariesSection" class="disabled-section">
                         <label style="margin-top:25px;" class="required">Beneficiaries/ Next of kin.</label>
                         <div id="beneficiariesContainer"></div>
@@ -670,7 +681,7 @@
                     <div id="documentsSection" class="documents-section disabled-section">
                         <h3>Document Uploads</h3>
                         <p style="margin-bottom:15px;">Upload any necessary important documents. Give each document a clear name. You can add multiple documents.</p>
-  
+ 
                         <div class="document-upload-form">
                             <div id="dynamicDocumentsContainer">
                             </div>
@@ -689,11 +700,11 @@
             <div class="card">
                 <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
-                
-                
+               
+               
                 <canvas id="occupationPieChart" width="600" height="400" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
-                
-                
+               
+               
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -718,8 +729,78 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
+        <!-- New Adverts Page -->
+        <div id="advertsPage" class="page">
+            <div class="card">
+                <h2>Adverts / Business Listings</h2>
+                <p>Browse local business adverts and service providers. Contact them directly.</p>
+                
+                <div class="adverts-category">
+                    <h3>Airbnb</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Westlands, Nairobi" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Auto Parts</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Industrial Area, Nairobi" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Beauty</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Eastleigh, Nairobi" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Farmers</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Kiambu, Kenya" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>For Sale</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Various Locations" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Miscellaneous</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Nairobi CBD" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Motorcycle Repair</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. South B, Nairobi" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Transport (Uber, Bolt)</h3>
+                    <label>Location:</label>
+                    <input type="text" placeholder="e.g. Nairobi Metropolitan" readonly>
+                    <label>Phone Number:</label>
+                    <input type="tel" placeholder="07xxxxxxxx" readonly>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -848,7 +929,7 @@ function toggleNewPassword() {
 // ==================== IMPROVED FORGOT PASSWORD FUNCTIONS ====================
 function showForgotPassword() {
     const msg = document.getElementById("authMessage");
-  
+ 
     // Hide only the login/register specific fields cleanly
     document.getElementById("password").parentElement.style.display = "none";
     document.getElementById("confirmLabel").classList.add("hidden");
@@ -859,7 +940,7 @@ function showForgotPassword() {
     document.getElementById("regSecretCode").classList.add("hidden");
     document.getElementById("forgotPasswordSection").classList.remove("hidden");
     document.querySelector("h2").textContent = "Reset Password";
-  
+ 
     msg.style.color = "#1e3a5f";
     msg.textContent = "Enter your details to reset password";
 }
@@ -872,11 +953,11 @@ function backToLogin() {
     document.getElementById("mobileNumber").classList.add("hidden");
     document.getElementById("secretLabel").classList.add("hidden");
     document.getElementById("regSecretCode").classList.add("hidden");
-  
+ 
     document.getElementById("forgotPasswordSection").classList.add("hidden");
     document.getElementById("newPasswordFields").classList.add("hidden");
     document.getElementById("resetPasswordBtn").classList.add("hidden");
-  
+ 
     document.querySelector("h2").textContent = "Login / Register";
     document.getElementById("authMessage").textContent = "";
     document.getElementById("authMessage").style.color = "#dc3545";
@@ -979,7 +1060,6 @@ function getBeneficiariesData() {
 // ==================== NEW: Occupation & Geolocation Functions ====================
 let userOccupation = "";
 let userLocation = { latitude: null, longitude: null };
-
 function requestGeolocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -993,7 +1073,7 @@ function requestGeolocation() {
                 try {
                     await fetch(`${API_BASE}/api/save-location`, {
                         method: 'POST',
-                        headers: { 
+                        headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${currentToken}`
                         },
@@ -1005,7 +1085,6 @@ function requestGeolocation() {
         );
     }
 }
-
 // NEW: Fetch occupation statistics and render pie chart
 let occupationChart;
 async function loadOccupationChart() {
@@ -1014,10 +1093,10 @@ async function loadOccupationChart() {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const data = await res.json();
-        
+       
         const ctx = document.getElementById('occupationPieChart');
         if (occupationChart) occupationChart.destroy();
-        
+       
         occupationChart = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -1025,7 +1104,7 @@ async function loadOccupationChart() {
                 datasets: [{
                     data: data.percentages,
                     backgroundColor: [
-                        '#1e3a5f', '#28a745', '#ffc107', '#dc3545', 
+                        '#1e3a5f', '#28a745', '#ffc107', '#dc3545',
                         '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c'
                     ]
                 }]
@@ -1043,7 +1122,6 @@ async function loadOccupationChart() {
         console.log("Could not load occupation chart");
     }
 }
-
 // ==================== AUTH FUNCTIONS ====================
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
@@ -1146,7 +1224,7 @@ async function handleLogin() {
         }
         resetInactivityTimer();
         setupInactivityListeners();
-        requestGeolocation();           // NEW: Request geolocation after login
+        requestGeolocation(); // NEW: Request geolocation after login
         setTimeout(loadOccupationChart, 800); // NEW: Load pie chart
     } catch (err) {
         msg.style.color = "";
@@ -1680,7 +1758,7 @@ function enableEditing() {
 }
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    const pages = ['plansPage', 'profilePage', 'servicesPage', 'advertisePage'];
+    const pages = ['plansPage', 'profilePage', 'servicesPage', 'advertsPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
