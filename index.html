@@ -1085,12 +1085,7 @@ async function loadOccupationChart() {
         const res = await fetch(`${API_BASE}/api/occupations-stats`, {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
-        const data = await res.json();
-
-        if (!data || !data.length) return;
-
-        renderChart(data); // separate function
-       
+        const data = await res.json(); 
         const ctx = document.getElementById('occupationPieChart');
         if (occupationChart) occupationChart.destroy();
        
