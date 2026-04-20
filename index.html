@@ -12,6 +12,11 @@
             min-height: 100vh;
             color: #333;
         }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px; /* IMPORTANT */
+        }
         #occupationPieChart {
             width: 30% !important;
             height: 30% !important;
@@ -688,8 +693,11 @@
             <div class="card">
                 <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
+                
+                <div class="chart-container">
                 <canvas id="occupationPieChart" width="600" height="400" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
-
+                </div>
+                
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -1025,6 +1033,10 @@ async function loadOccupationChart() {
                         '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c'
                     ]
                 }]
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
             },
             options: {
                 responsive: true,
