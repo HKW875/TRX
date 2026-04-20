@@ -1086,6 +1086,10 @@ async function loadOccupationChart() {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const data = await res.json();
+
+        if (!data || !data.length) return;
+
+        renderChart(data); // separate function
        
         const ctx = document.getElementById('occupationPieChart');
         if (occupationChart) occupationChart.destroy();
