@@ -13,6 +13,19 @@
             min-height: 100vh;
             color: #333;
         }
+        @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+            border-right: none;
+            border-bottom: 1px solid #eee;
+
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns grid */
+            gap: 10px;
+        }
+        }
 
         .market-header {
             background: #1e3a5f;
