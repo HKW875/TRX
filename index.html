@@ -12,11 +12,15 @@
             min-height: 100vh;
             color: #333;
         }
-
+        #occupationPieChart {
+            width: 30% !important;
+            height: 30% !important;
+            margin: auto;
+        }
         header {
             background: #1e3a5f;
             color: white;
-            padding: 20px 20px;
+            padding: 30px 20px;
             text-align: center;
             position: relative;
         }
@@ -448,33 +452,6 @@
             margin: 8px 0;
             font-size: 1.02em;
         }
-        .advert-item {
-            background: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-        .advert-gallery {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-        }
-        .advert-gallery img {
-            width: 130px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 4px;
-            flex-shrink: 0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        }
-        #submitAdvertSection {
-            margin-top: 40px;
-            border-top: 2px solid #ddd;
-            padding-top: 30px;
-        }
     </style>
 </head>
 <body>
@@ -729,7 +706,6 @@
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
                
                
-                
                 <canvas id="occupationPieChart" width="600" height="400" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
                
                
@@ -763,42 +739,53 @@
             <div class="card">
                 <h2>Adverts / Business Listings</h2>
                 <p>Browse local business adverts and service providers. Contact them directly.</p>
-                <p>To advertise your business here send email with photos, location, price, phone number details to info@growthbase.net. Kes 1000 only per advert.</p>
-                
-                <div id="advertsList">
-                    <!-- Dynamically populated by JavaScript - each listing shows up to 5 photos + Location + Price + Phone -->
+               
+                <div class="adverts-category">
+                    <h3>Airbnb</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Westlands &amp; Kilimani, Nairobi</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0712 345 678</div>
                 </div>
-                
-                <div id="submitAdvertSection" class="hidden">
-                    <h3>Submit Advert</h3>
-                    <form id="submitAdvertForm">
-                        <label for="advertCategory">Category</label>
-                        <select id="advertCategory" required>
-                            <option value="">Select Category</option>
-                            <option value="Airbnb">Airbnb</option>
-                            <option value="Auto Parts">Auto Parts</option>
-                            <option value="Beauty">Beauty</option>
-                            <option value="Farmers">Farmers</option>
-                            <option value="For Sale">For Sale</option>
-                            <option value="Miscellaneous">Miscellaneous</option>
-                            <option value="Motorcycle Repair">Motorcycle Repair</option>
-                            <option value="Transport (Uber, Bolt)">Transport (Uber, Bolt)</option>
-                        </select>
-                        
-                        <label for="advertLocation">Location</label>
-                        <input type="text" id="advertLocation" placeholder="e.g. Westlands, Nairobi" required>
-                        
-                        <label for="advertPrice">Price</label>
-                        <input type="text" id="advertPrice" placeholder="e.g. KES 4,500 / night" required>
-                        
-                        <label for="advertPhone">Phone Number</label>
-                        <input type="tel" id="advertPhone" placeholder="07xxxxxxxx" required>
-                        
-                        <label for="advertImages">Upload up to 5 Photos</label>
-                        <input type="file" id="advertImages" multiple accept="image/*">
-                        
-                        <button type="submit" style="margin-top:25px;">Submit Advert</button>
-                    </form>
+
+                <div class="adverts-category">
+                    <h3>Auto Parts</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Industrial Area, Nairobi</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0723 456 789</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Beauty</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Eastleigh, Nairobi</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0701 234 567</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Farmers</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Kiambu &amp; Limuru, Kenya</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0722 987 654</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>For Sale</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Various Locations in Nairobi</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0718 765 432</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Miscellaneous</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Nairobi CBD &amp; Surrounding Areas</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0790 123 456</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Motorcycle Repair</h3>
+                    <div class="adverts-info"><strong>Location:</strong> South B &amp; Embakasi, Nairobi</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0721 567 890</div>
+                </div>
+
+                <div class="adverts-category">
+                    <h3>Transport (Uber, Bolt)</h3>
+                    <div class="adverts-info"><strong>Location:</strong> Nairobi Metropolitan Area</div>
+                    <div class="adverts-info"><strong>Phone Number:</strong> 0715 678 901</div>
                 </div>
             </div>
         </div>
@@ -1886,274 +1873,6 @@ window.onload = function() {
         }
     }, 800);
     initBackground();
-};
-// ==================== NEW ADVERTS FUNCTIONALITY (100% added without touching any original lines above) ====================
-let advertsData = [];
-
-const fixedCategories = [
-    "Airbnb",
-    "Auto Parts",
-    "Beauty",
-    "Farmers",
-    "For Sale",
-    "Miscellaneous",
-    "Motorcycle Repair",
-    "Transport (Uber, Bolt)"
-];
-
-async function loadAdverts() {
-    try {
-        const res = await fetch(`${API_BASE}/api/adverts`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
-        });
-        if (res.ok) {
-            advertsData = await res.json();
-        } else {
-            throw new Error("Backend not ready yet");
-        }
-    } catch (e) {
-        // Sample fallback data until your backend /api/adverts endpoint is live
-        advertsData = [
-            {
-                category: "Airbnb",
-                location: "Westlands & Kilimani, Nairobi",
-                price: "KES 4,500 / night",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/1015/300/200",
-                    "https://picsum.photos/id/102/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Auto Parts",
-                location: "Industrial Area, Nairobi",
-                price: "KES 1,200",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/133/300/200",
-                    "https://picsum.photos/id/160/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Beauty",
-                location: "Eastleigh, Nairobi",
-                price: "KES 800",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/1015/300/200",
-                    "https://picsum.photos/id/102/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Farmers",
-                location: "Kiambu & Limuru, Kenya",
-                price: "KES 2,500",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/133/300/200",
-                    "https://picsum.photos/id/160/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "For Sale",
-                location: "Various Locations in Nairobi",
-                price: "KES 15,000",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/1015/300/200",
-                    "https://picsum.photos/id/102/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Miscellaneous",
-                location: "Nairobi CBD & Surrounding Areas",
-                price: "KES 3,000",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/133/300/200",
-                    "https://picsum.photos/id/160/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Motorcycle Repair",
-                location: "South B & Embakasi, Nairobi",
-                price: "KES 1,500",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/1015/300/200",
-                    "https://picsum.photos/id/102/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            },
-            {
-                category: "Transport (Uber, Bolt)",
-                location: "Nairobi Metropolitan Area",
-                price: "KES 500 / ride",
-                phone: "",
-                images: [
-                    "https://picsum.photos/id/133/300/200",
-                    "https://picsum.photos/id/160/300/200",
-                    "https://picsum.photos/id/201/300/200",
-                    "https://picsum.photos/id/29/300/200",
-                    "https://picsum.photos/id/30/300/200"
-                ]
-            }
-        ];
-    }
-    renderAdverts();
-}
-
-function renderAdverts() {
-    const container = document.getElementById("advertsList");
-    if (!container) return;
-    container.innerHTML = "";
-    fixedCategories.forEach(cat => {
-        const categoryAdverts = advertsData.filter(a => a.category === cat);
-        if (categoryAdverts.length === 0) return;
-        const sectionHTML = `
-            <div class="adverts-category">
-                <h3>${cat}</h3>
-        `;
-        let advertsHTML = "";
-        categoryAdverts.forEach(adv => {
-            let galleryHTML = `<div class="advert-gallery">`;
-            adv.images.forEach(url => {
-                galleryHTML += `<img src="${url}" alt="${cat}">`;
-            });
-            galleryHTML += `</div>`;
-            advertsHTML += `
-                <div class="advert-item">
-                    ${galleryHTML}
-                    <div class="adverts-info"><strong>Location:</strong> ${adv.location}</div>
-                    <div class="adverts-info"><strong>Price:</strong> ${adv.price}</div>
-                    <div class="adverts-info"><strong>Phone Number:</strong> ${adv.phone}</div>
-                </div>
-            `;
-        });
-        container.innerHTML += sectionHTML + advertsHTML + `</div>`;
-    });
-}
-
-function initSubmitAdvertForm() {
-    const form = document.getElementById("submitAdvertForm");
-    if (!form) return;
-    form.addEventListener("submit", async function(e) {
-        e.preventDefault();
-        if (!currentToken) {
-            alert("You must be logged in.");
-            return;
-        }
-        const category = document.getElementById("advertCategory").value;
-        const location = document.getElementById("advertLocation").value.trim();
-        const price = document.getElementById("advertPrice").value.trim();
-        const phone = document.getElementById("advertPhone").value.trim();
-        const fileInput = document.getElementById("advertImages");
-        const files = fileInput.files;
-        if (files.length > 5) {
-            alert("Maximum 5 photos allowed per advert.");
-            return;
-        }
-        if (!category || !location || !price || !phone) {
-            alert("All fields are required.");
-            return;
-        }
-        const formData = new FormData();
-        formData.append("category", category);
-        formData.append("location", location);
-        formData.append("price", price);
-        formData.append("phone", phone);
-        for (let i = 0; i < files.length; i++) {
-            formData.append("images", files[i]);
-        }
-        try {
-            const response = await fetch(`${API_BASE}/api/adverts/submit`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${currentToken}`
-                },
-                body: formData
-            });
-            const result = await response.json();
-            if (response.ok) {
-                alert("Advert submitted successfully! It will appear in the list.");
-                form.reset();
-                await loadAdverts();
-            } else {
-                alert(result.msg || "Submission failed.");
-            }
-        } catch (err) {
-            alert("Backend endpoint /api/adverts/submit is being added by you - submission saved locally for demo.");
-            // Demo fallback - add to front-end immediately
-            const newAdvert = {
-                category: category,
-                location: location,
-                price: price,
-                phone: phone,
-                images: Array.from({length: Math.min(5, files.length)}, (_, i) => `https://picsum.photos/id/${100 + i}/300/200`)
-            };
-            advertsData.push(newAdvert);
-            renderAdverts();
-            form.reset();
-        }
-    });
-}
-
-function checkSubmitAdvertVisibility() {
-    const section = document.getElementById("submitAdvertSection");
-    if (!section) return;
-    if (currentLoggedInEmail === "wambuguhkw@gmail.com") {
-        section.classList.remove("hidden");
-    } else {
-        section.classList.add("hidden");
-    }
-}
-
-// Attach new functions to existing tab switch (added after original switchTab logic - original lines untouched)
-const originalSwitchTab = switchTab;
-switchTab = function(tabIndex) {
-    originalSwitchTab(tabIndex);
-    if (tabIndex === 3) {
-        loadAdverts();
-        checkSubmitAdvertVisibility();
-    }
-};
-
-// Initialize adverts when page loads or user logs in (added without touching original onload or handleLogin)
-const originalOnload = window.onload;
-window.onload = function() {
-    if (originalOnload) originalOnload();
-    if (document.getElementById("advertsList")) {
-        initSubmitAdvertForm();
-        checkSubmitAdvertVisibility();
-    }
-};
-
-const originalHandleLogin = handleLogin;
-handleLogin = async function() {
-    await originalHandleLogin();
-    if (document.getElementById("advertsList")) {
-        checkSubmitAdvertVisibility();
-    }
 };
 </script>
 </body>
