@@ -578,6 +578,48 @@
             margin: 8px 0;
             font-size: 1.02em;
         }
+        .category-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .category-list img {
+            width: 28px;
+            height: 28px;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+
+        /* sidebar becomes horizontal/hidden feel */
+        .sidebar {
+            width: 100%;
+            height: auto;
+            border-right: none;
+        }
+
+        /* turn categories into grid */
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .category-list li {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+       .category-list img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 6px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -860,55 +902,108 @@
             </div>
         </div>
 
-        <!-- New Adverts Page -->
         <div id="advertsPage">
 
-            <!-- HEADER -->
-            <div class="market-header">
-                <h2>GrowthBase Marketplace</h2>
+    <!-- HEADER -->
+    <div class="market-header">
+    <h2>GB Marketplace</h2>
                 <input type="text" placeholder="Search for products, services...">
                 <button class="post-btn">+ Post Ad</button>
-            </div>
+    </div>
 
-            <div class="market-container">
+    <div class="market-container">
 
-                <!-- SIDEBAR -->
-                <div class="sidebar">
-                    <h3>Categories</h3>
-                    <ul>
-                        <li>Animals & Birds</li>
-                        <li>Beauty </li>
-                        <li>Commercial Equipment</li>
-                        <li>Electronics</li>
-                        <li>Fashion Latest</li>
-                        <li>Food & Farming</li>
-                        <li>For Kids</li>
-                        <li>Furniture & Appliances</li>
-                        <li>Jobs available</li>
-                        <li>Leisure & Hobbies</li>
-                        <li>Motorvehicles</li>
-                        <li>Properties</li>
-                        <li>Repair Services</li>
-                        <li>Services(Others)</li>
-                
-                    </ul>
-                </div>
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h3>Categories</h3>
+            <ul class="category-list">
+            <li>
+                <img src="images/animals.png" alt="">
+                <span>Animals & Birds</span>
+            </li>
 
-                <!-- LISTINGS -->
-                <div class="listings">
-                    <div class="grid">
+            <li>
+                <img src="images/beauty.png" alt="">
+                <span>Beauty</span>
+            </li>
 
+            <li>
+                <img src="images/equipment.png" alt="">
+                <span>Commercial Equipment</span>
+            </li>
 
-                    </div>
-                </div>
+            <li>
+                <img src="images/electronics.png" alt="">
+                <span>Electronics</span>
+            </li>
 
-            </div>
+            <li>
+                <img src="images/fashion.png" alt="">
+                <span>Fashion Latest</span>
+            </li>
 
-            <div class="footer">
-                © 2026 GrowthBase Marketplace
-            </div>
+            <li>
+                <img src="images/farming.png" alt="">
+                <span>Food & Farming</span>
+            </li>
 
+            <li>
+                <img src="images/kids.png" alt="">
+                <span>For Kids</span>
+            </li>
+
+            <li>
+                <img src="images/furniture.png" alt="">
+                <span>Furniture & Appliances</span>
+            </li>
+
+            <li>
+                <img src="images/jobs.png" alt="">
+                <span>Jobs available</span>
+            </li>
+
+            <li>
+                <img src="images/hobbies.png" alt="">
+                <span>Leisure & Hobbies</span>
+            </li>
+
+            <li>
+                <img src="images/cars.png" alt="">
+                <span>Motorvehicles</span>
+            </li>
+
+            <li>
+                <img src="images/property.png" alt="">
+                <span>Properties</span>
+            </li>
+
+            <li>
+                <img src="images/repair.png" alt="">
+                <span>Repair Services</span>
+            </li>
+
+            <li>
+                <img src="images/services.png" alt="">
+                <span>Services (Others)</span>
+            </li>
+        </ul>
         </div>
+
+        <!-- LISTINGS -->
+        <div class="listings">
+            <div class="grid">
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 GrowthBase Marketplace
+    </div>
+
+</div>
     </div>
 </div>
 
