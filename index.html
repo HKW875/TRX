@@ -210,11 +210,16 @@
         #logoutBtn:hover { background: #9b2c2c; }
         /* Tabs */
         .tabs {
+            width: 100%
+            box-sizing: border-box;
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 10px;
             margin-bottom: 10px;
             border-bottom: 2px solid #ddd;
+            justify-content: flex-start;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
         .tab {
             padding: 12px 20px;
