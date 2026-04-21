@@ -8,50 +8,9 @@
         .sidebar {
             overflow: visible;
         }
-        
-        /* Tabs */
-        .tabs {
-            margin-bottom: 10px;
-            border-bottom: 2px solid #ddd;
-        }
-        /* Hide all pages by default */
-        #plansPage, #profilePage, #servicesPage, #advertsPage {
-            display: none;
-        }
-
-        /* Show the first page (or whichever is active) by default */
-        #plansPage {
-            display: block;
-        }
-
-        /* Style the tabs to look interactive */
-        .tabs > div {
-            cursor: pointer;
-            padding: 10px;
-        }
-
-        /* Optional: Active tab styling */
-        .tabs > div.active {
-             font-weight: bold;
-             border-bottom: 2px solid blue;
-         }
-
-    
-        .tabs {
-            width:100%;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            overflow-x: auto;
-            scrollbar-width: none;
-            display: flex;
-            gap: 10px;
-        }
-
-        
         .page {
             min-height: 60vh;
         }
-        
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-image: none;
@@ -66,21 +25,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            color: white;
             position: sticky;
             top: 0;
             z-index: 1000;
-            width: 100%
-            box-sizing:border-box;
         }
 
         .market-header input {
+            width: 40%;
             padding: 10px;
             border-radius: 8px;
             border: none;
-            height: 26px;
-            width: 52%;
-            padding-top: 0px;
-            padding-bottom: 0px;
         }
 
         .post-btn {
@@ -98,14 +53,16 @@
         /* LAYOUT */
         .market-container {
             display: flex;
-            width: 100%;
-            flex-direction: column;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 100%;
-            box-sizing: border-box;
+            width: 260px;
+            background: white;
+            padding: 20px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            border-right: 1px solid #eee;
         }
 
         .sidebar h3 {
@@ -114,25 +71,12 @@
         }
 
         .sidebar ul {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 76.93px;
-            gap: 10px;
-            justify-content: center;
-            padding: 0px;
+            list-style: none;
+            padding: 0;
         }
 
         .sidebar ul li {
-            width: 76.93px;
-            height: 94.4px;
-            box-sizing: border-box;
-            padding: 5px;
-            margin: 0px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            text-align: center;
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
@@ -144,19 +88,9 @@
         }
 
         /* MAIN GRID */
-        /* 4-column grid for listings */
         .listings {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Individual listing items */
-        .listings > * {
-           width: 100%;
-           box-sizing: border-box;
+            flex: 1;
+            padding: 20px;
         }
 
         .grid {
@@ -223,10 +157,8 @@
         }
         .container {
             padding: 20px;
+            max-width: 980px;
             margin: 0 auto;
-            box-sizing: border-box;
-            overflow-x: hidden;
-            max-width: 100%;
         }
         .card {
             background: white;
@@ -245,7 +177,11 @@
             color: #dc3545;
         }
         input, select, textarea {
+            width: 100%;
+            padding: 10px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             font-size: 1em;
         }
         textarea {
@@ -270,7 +206,14 @@
             background: #721c24;
         }
         #logoutBtn:hover { background: #9b2c2c; }
-        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
         .tab {
             padding: 12px 20px;
             cursor: pointer;
@@ -279,12 +222,6 @@
             border-radius: 8px 8px 0 0;
             transition: all 0.3s;
             white-space: nowrap;
-            flex: 1 1 auto;
-            text-align: center;
-            min-width: min-content;
-            padding-left: 8px;
-            padding-right: 8px;
-            font-size: 14px;
         }
         .tab.active {
             background: white;
@@ -293,37 +230,22 @@
             color: #1e3a5f;
             z-index: 2;
             position: relative;
-            flex: 1 1 auto;
-            white-space: nowrap;
-            text-align: center;
-            min-width: min-content;
-            padding-left: 8px;
-            padding-right: 8px;
-            font-size: 14px;
         }
         /* Pages */
         .page {
+            display: none;
             background: white;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             position: relative;
         }
         .page.active {
             display: block;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            padding: 0px;
-            overflow-x: hidden;
         }
         .page.profile {
             margin-top: -18px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            padding: 15px;
-            overflow-x: hidden;
         }
    
         /* LOGIN CARD - 35% SMALLER */
@@ -662,44 +584,30 @@
             font-size: 1.02em;
         }
         .category-list li {
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
         .category-list img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 28px;
+            height: 28px;
             object-fit: cover;
         }
         @media (max-width: 768px) {
-            background: white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+
+            /* 🔥 Stack sidebar and listings vertically */
+       .market-container {
+           flex-direction: column;
        }
 
        .sidebar {
            width: 100%;
        }
 
-       /* Grid Container */
        .listings {
-           display: grid;
-           grid-template-columns: repeat(4, 1fr);
-           gap: 5px; /* Reduced gap */
            width: 100%;
-           box-sizing: border-box;
-        }
-
-        /* Individual Listing Item */
-        .listings > * {
-           width: 100%;
-           min-width: 0; /* Allows item to shrink to fit the column */
-           padding: 5px; /* Reduced internal spacing */
-           box-sizing: border-box;
-        } 
-
-        /* Ensure images don't break the layout */
-        .listings img {
-           max-width: 100%;
-           height: auto;
-        }
+           padding-top: 10px;
+       }
 
         /* sidebar becomes horizontal/hidden feel */
         .sidebar {
@@ -752,7 +660,7 @@
          width="250"
          height="50">
   </a>
-    <h5>No Interest Business Capital, Free Advertising to Millions of Users.</h5>
+    <h5>No Interest Business Capital, Connecting Buyers to Discount Sellers.</h5>
     <h2>Login / Register</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
@@ -821,7 +729,7 @@
         <!-- Tabs -->
         <div class="tabs">
             <div class="tab active" onclick="switchTab(0)" id="tab-plans">Plans</div>
-            <div class="tab" onclick="switchTab(1)" id="tab-profile">Apply</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-profile">Apply Now</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services">Services</div>
             <div class="tab" onclick="switchTab(3)" id="tab-adverts">Adverts</div>
         </div>
@@ -1018,7 +926,7 @@
 
             <!-- HEADER -->
             <div class="market-header">
-                
+                <h2>GB Marketplace</h2>
                 <input type="text" placeholder="Search for products, services...">
                 <button class="post-btn">+ Post Ad</button>
             </div>
@@ -1027,7 +935,6 @@
 
                     <!-- SIDEBAR -->
                     <div class="sidebar">
-                        <h5>Under construction</h5>
                         <h3>Categories</h3>
                             <ul class="category-list">
                                 <li>
@@ -1115,19 +1022,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-
-const tabs = document.querySelectorAll('.tabs > div');
-const pages = document.querySelectorAll('#plansPage, #profilePage, #servicesPage, #advertsPage');
-
-tabs.forEach((tab, index) => {
-  tab.addEventListener('click', () => {
-    // Hide all pages
-    pages.forEach(page => page.style.display = 'none');
-    // Show the clicked page
-    pages[index].style.display = 'block';
-  });
-});
-
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
 const ctx = canvas.getContext('2d');
