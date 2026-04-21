@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Interest Business Capital, Business & Asset Growth Platform.</title>
     <style>
+        
         .sidebar {
             overflow: visible;
         }
@@ -18,6 +19,29 @@
             min-height: 100vh;
             color: #333;
         }
+
+        /* Hide all pages by default */
+        #plansPage, #profilePage, #servicesPage, #advertsPage {
+           display: none;
+       }
+
+       /* Show the active page (Plans is usually the default) */
+          #plansPage {
+          display: block;
+       }
+
+       /* Tab styling for interactivity */
+         .tabs div {
+          cursor: pointer;
+          background-color: #f1f1f1; /* Inactive color */
+          padding: 10px; /* Optional: for better hit area */
+       }
+
+       /* Active tab style */
+          .tabs div.active {
+          background-color: white;
+          font-weight: bold;
+       }
 
         .market-header {
             background: #1e3a5f;
@@ -1113,6 +1137,41 @@ function resizeCanvas() {
     canvas.width = width;
     canvas.height = height;
 }
+    
+// Select all tabs and pages
+const tabs = {
+    'tab-plans': document.getElementById('plansPage'),
+    'tab-profile': document.getElementById('profilePage'),
+    'tab-services': document.getElementById('servicesPage'),
+    'tab-adverts': document.getElementById('advertsPage')
+};
+
+const tabElements = document.querySelectorAll('.tabs > div');
+
+tabElements.forEach(tabElement => {
+    tabElement.addEventListener('click', () => {
+        // 1. Hide all pages
+        Object.values(tabs).forEach(page => {
+            page.style.display = 'none';
+        });
+
+        // 2. Reset all tab styles
+        tabElements.forEach(el => {
+            el.style.backgroundColor = '#f1f1f1';
+            el.style.fontWeight = 'normal';
+        });
+
+        // 3. Show the clicked page
+        const targetPage = tabs[tabElement.id];
+        if (targetPage) {
+            targetPage.style.display = 'block';
+            
+            // 4. Highlight the active tab
+            tabElement.style.backgroundColor = 'white';
+            tabElement.style.fontWeight = 'bold';
+        }
+    });
+});
 function connectParticles() {
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
