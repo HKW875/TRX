@@ -770,13 +770,13 @@
     <div class="container">
         <!-- Tabs -->
         <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);" >Plans</div>
+            <div class="tab" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);" >Plans</div>
             <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);" >Apply Now</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services" style="background-color: rgb(241, 241, 241);" >Services</div>
-            <div class="tab" onclick="switchTab(3)" id="tab-adverts">Adverts</div>
+            <div class="tab active" onclick="switchTab(3)" id="tab-adverts" style="background-color: white;">Adverts</div>
         </div>
         <!-- Plans Page -->
-        <div id="plansPage" class="page" >
+        <div id="plansPage" class="page" style="display: none;">
             <div class="card">
                 <h2>Choose A Strategy Plan</h2>
                 <!-- Free Plan -->
@@ -847,7 +847,7 @@
             </div>
         </div>
         <!-- My Profile Page -->
-        <div id="profilePage" class="page profile" >
+        <div id="profilePage" class="page profile" style="display: none;">
             <div class="card">
                 <h3>My Profile</h3>
                 <label class="required">Profile ID</label>
@@ -930,7 +930,7 @@
         </div>
        
         <!-- Services Page -->
-        <div id="servicesPage" class="page" ">
+        <div id="servicesPage" class="page" style="display: none;">
             <div class="card">
                 <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
