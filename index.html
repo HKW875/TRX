@@ -99,17 +99,13 @@
         .market-container {
             display: flex;
             width: 100%;
-            box-sizing: border-box;
+            flex-direction: column;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 260px;
-            background: white;
-            padding: 20px;
-            height: calc(100vh - 70px);
-            overflow-y: auto;
-            border-right: 1px solid #eee;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .sidebar h3 {
@@ -135,9 +131,19 @@
         }
 
         /* MAIN GRID */
+        /* 4-column grid for listings */
         .listings {
-            flex: 1;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Individual listing items */
+        .listings > * {
+           width: 100%;
+           box-sizing: border-box;
         }
 
         .grid {
