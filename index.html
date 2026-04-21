@@ -48,6 +48,8 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%
+            box-sizing:border-box;
         }
 
         .market-header input {
@@ -75,6 +77,8 @@
         /* LAYOUT */
         .market-container {
             display: flex;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* SIDEBAR */
@@ -259,23 +263,17 @@
         }
         /* Pages */
         .page {
-            display: none;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             position: relative;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            padding: 15px;
-            overflow-x: hidden;
         }
         .page.active {
             display: block;
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
-            padding: 15px;
+            padding: 0px;
             overflow-x: hidden;
         }
         .page.profile {
