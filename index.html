@@ -11,68 +11,17 @@
         .page {
             min-height: 60vh;
         }
-
-        .sidebar ul {
-            width: 100%;
-            box-sizing: border-box;
-            height: auto;
-            margin-left: auto;
-            margin-right: auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: auto;
-            gap: 8px;
-            overflow: visible;
-            font-size: 14.4px;
-        }
-        }
-
-        .sidebar {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 10px;
-        }
-        }
-
-        .sidebar ul {
-            font-size: 10.24px;
-            width: 209.92px;
-            transform: scale(0.64);
-            transform-origin: left top;
-        }
-        }
-        
-        .body {
+        body {
             font-family: Arial, Helvetica, sans-serif;
             background-image: none;
             margin: 0;
             min-height: 100vh;
             color: #333;
         }
-        .market-header {
-        height: 60px;
-        }
-        }
-        .market-header input{
-            border: 5px solid black;
-            box-sizing: border-box;
-            border-width: 2px;
-        }
-        }
-
-        .post-btn{
-            height: 41.6px;
-            box-sizing: border-box;
-            padding-top: 0px;
-            padding-bottom: 0px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        }
 
         .market-header {
             background: #1e3a5f;
+            padding: 15px 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -83,15 +32,15 @@
         }
 
         .market-header input {
-            width: 60%;
+            width: 40%;
             padding: 10px;
-            border-radius: 12px;
+            border-radius: 8px;
             border: none;
         }
 
         .post-btn {
             background: #00c896;
-            padding: 5px 4px;
+            padding: 5px 9px;
             border-radius: 8px;
             color: white;
             border: none;
@@ -185,7 +134,7 @@
             color: white;
             margin-top: 20px;
         }
-        
+       
         #occupationPieChart {
             width: 100% !important;
             height: 100% !important;
@@ -228,8 +177,9 @@
             color: #dc3545;
         }
         input, select, textarea {
-            width: 80%;
+            width: 100%;
             padding: 10px;
+            box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1em;
@@ -260,14 +210,15 @@
         .tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 9px;
+            gap: 5px;
             margin-bottom: 10px;
             border-bottom: 2px solid #ddd;
         }
         .tab {
-            padding: 6px 6px;
+            padding: 12px 20px;
             cursor: pointer;
-            background: #b3afaf;
+            font-weight: bold;
+            background: #f1f1f1;
             border-radius: 8px 8px 0 0;
             transition: all 0.3s;
             white-space: nowrap;
@@ -284,6 +235,7 @@
         .page {
             display: none;
             background: white;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             position: relative;
@@ -682,9 +634,9 @@
         }
 
        .category-list img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 3px;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 6px;
         }
         }
 </style>
@@ -934,7 +886,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <!-- Services Page -->
         <div id="servicesPage" class="page">
             <div class="card">
@@ -974,7 +926,8 @@
 
             <!-- HEADER -->
             <div class="market-header">
-                <input type="text" placeholder="Search products& services">
+                <h2>GB Marketplace</h2>
+                <input type="text" placeholder="Search for products, services...">
                 <button class="post-btn">+ Post Ad</button>
             </div>
 
@@ -982,88 +935,76 @@
 
                     <!-- SIDEBAR -->
                     <div class="sidebar">
-                        <h5>Advertise for Free. Under Construction!</h5>
-                        <h5>Categories</h5>
+                        <h3>Categories</h3>
                             <ul class="category-list">
-
-                                <li data-category="Animals">
-                                   <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5" />
+                                <li>
+                                   <img src="images/animals.png" alt="">
                                    <span>Animals</span>
                                 </li>
-                                
-                                <li data-category="Airbnb">
-                                   <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=300&fit=crop" />
-                                   <span>Airbnb</span>
+
+                                <li>
+                                   <img src="images/beauty.png" alt="">
+                                   <span>Beauty</span>
                                 </li>
 
-                                <li data-category="Electronics">
-                                   <img src="https://images.pexels.com/photos/8938259/pexels-photo-8938259.jpeg?auto=compress&cs=tinysrgb&w=1200" />
-                                   <span>Electronics</span>
-                                </li>
-                                
-                                <li data-category="Equipment">
-                                   <img src="https://images.pexels.com/photos/36506004/pexels-photo-36506004.jpeg?auto=compress&cs=tinysrgb&w=1200" />  <!-- heavy equipment -->
+                                <li>
+                                   <img src="images/equipment.png" alt="">
                                    <span>Equipment</span>
                                 </li>
 
-                                <li data-category="Fashion">
-                                   <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab" />
+                                <li>
+                                   <img src="images/electronics.png" alt="">
+                                   <span>Electronics</span>
+                                </li>
+
+                                <li>
+                                   <img src="images/fashion.png" alt="">
                                    <span>Fashion</span>
                                 </li>
 
-                               <li data-category="Food">
-                                   <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" />
+                                <li>
+                                   <img src="images/farming.png" alt="">
                                    <span>Food</span>
                                 </li>
 
-                                <li data-category="For Kids">
-                                   <img src="https://images.pexels.com/photos/4491701/pexels-photo-4491701.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+                                <li>
+                                   <img src="images/kids.png" alt="">
                                    <span>For Kids</span>
                                 </li>
 
-                                <li data-category="Home">
-                                   <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511" />
+                                <li>
+                                   <img src="images/furniture.png" alt="">
                                    <span>Home</span>
                                 </li>
 
-                                <li data-category="Jobs">
-                                   <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72" />
+                                <li>
+                                   <img src="images/jobs.png" alt="">
                                    <span>Jobs</span>
                                 </li>
 
-                                <li data-category="Leisure">
-                                   <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400&h=300&fit=crop" />
+                                <li>
+                                   <img src="images/hobbies.png" alt="">
                                    <span>Leisure</span>
                                 </li>
 
-                                <li data-category="Cars">
-                                   <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70" />
+                                <li>
+                                   <img src="images/cars.png" alt="">
                                    <span>Cars</span>
                                 </li>
-                                
-                                <li data-category="Onions">
-                                   <img src="https://images.pexels.com/photos/36938846/pexels-photo-36938846.jpeg" />
-                                   <span>Onions</span>
-                                </li>
 
-                               <li data-category="Properties">
-                                   <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa" />
+                                <li>
+                                   <img src="images/property.png" alt="">
                                    <span>Properties</span>
                                 </li>
 
-                                <li data-category="ChickenPlace">
-                                   <img src="https://images.pexels.com/photos/35641002/pexels-photo-35641002.jpeg?auto=compress&cs=tinysrgb&w=1200" />
-                                   <span>ChickenPlace</span>
+                                <li>
+                                   <img src="images/repair.png" alt="">
+                                   <span>Repairs</span>
                                 </li>
 
-                                <li data-category="Services">
-                                   <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216" />
+                                <li>
+                                   <img src="images/services.png" alt="">
                                    <span>Services</span>
-                                </li>
-
-                                <li data-category="Cars4Rent">
-                                   <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70" />
-                                   <span>cars4rent</span>
                                 </li>
                             </ul>
                      </div>
