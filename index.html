@@ -669,10 +669,28 @@
            width: 100%;
        }
 
+       /* Grid Container */
        .listings {
+           display: grid;
+           grid-template-columns: repeat(4, 1fr);
+           gap: 5px; /* Reduced gap */
            width: 100%;
-           padding-top: 10px;
-       }
+           box-sizing: border-box;
+        }
+
+        /* Individual Listing Item */
+        .listings > * {
+           width: 100%;
+           min-width: 0; /* Allows item to shrink to fit the column */
+           padding: 5px; /* Reduced internal spacing */
+           box-sizing: border-box;
+        } 
+
+        /* Ensure images don't break the layout */
+        .listings img {
+           max-width: 100%;
+           height: auto;
+        }
 
         /* sidebar becomes horizontal/hidden feel */
         .sidebar {
