@@ -14,6 +14,27 @@
             margin-bottom: 10px;
             border-bottom: 2px solid #ddd;
         }
+        /* Hide all pages by default */
+        #plansPage, #profilePage, #servicesPage, #advertsPage {
+            display: none;
+        }
+
+        /* Show the first page (or whichever is active) by default */
+        #plansPage {
+            display: block;
+        }
+
+        /* Style the tabs to look interactive */
+        .tabs > div {
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        /* Optional: Active tab styling */
+        .tabs > div.active {
+             font-weight: bold;
+             border-bottom: 2px solid blue;
+         }
 
     
         .tabs {
@@ -1061,6 +1082,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+
+const tabs = document.querySelectorAll('.tabs > div');
+const pages = document.querySelectorAll('#plansPage, #profilePage, #servicesPage, #advertsPage');
+
+tabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => {
+    // Hide all pages
+    pages.forEach(page => page.style.display = 'none');
+    // Show the clicked page
+    pages[index].style.display = 'block';
+  });
+});
+
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
 const ctx = canvas.getContext('2d');
