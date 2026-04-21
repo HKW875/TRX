@@ -114,12 +114,25 @@
         }
 
         .sidebar ul {
-            list-style: none;
-            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 76.93px;
+            gap: 10px;
+            justify-content: center;
+            padding: 0px;
         }
 
         .sidebar ul li {
-            padding: 10px;
+            width: 76.93px;
+            height: 94.4px;
+            box-sizing: border-box;
+            padding: 5px;
+            margin: 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
@@ -649,8 +662,6 @@
             font-size: 1.02em;
         }
         .category-list li {
-            display: flex;
-            align-items: center;
             gap: 10px;
         }
         .category-list img {
@@ -659,10 +670,6 @@
             object-fit: cover;
         }
         @media (max-width: 768px) {
-
-            /* 🔥 Stack sidebar and listings vertically */
-       .market-container {
-           flex-direction: column;
        }
 
        .sidebar {
