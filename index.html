@@ -8,14 +8,22 @@
         .sidebar {
             overflow: visible;
         }
+        
+        /* Tabs */
+        .tabs {
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
 
     
         .tabs {
+            width:100%;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            overflow-x: auto;
+            scrollbar-width: none;
             display: flex;
             gap: 10px;
-            width: 90%;
-            box-sizing: border-box;
-            justify-content: space-between;
         }
 
         
@@ -220,11 +228,7 @@
             background: #721c24;
         }
         #logoutBtn:hover { background: #9b2c2c; }
-        /* Tabs */
-        .tabs {
-            margin-bottom: 10px;
-            border-bottom: 2px solid #ddd;
-        }
+        
         .tab {
             padding: 12px 20px;
             cursor: pointer;
