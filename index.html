@@ -1866,13 +1866,7 @@ async function initiateLifetimeSTKPush() {
 }
 // ==================== PROFILE FUNCTIONS ====================
 
-const tabs = document.querySelector('.tabs');
-const tabAdverts = document.getElementById('tab-adverts');
 
-if (tabs && tabAdverts) {
-  // .prepend() moves the element to be the first child of the parent
-  tabs.prepend(tabAdverts);
-}
 async function searchProfiles() {
     const term = document.getElementById("searchTerm").value.trim();
     const resultsDiv = document.getElementById("searchResults");
