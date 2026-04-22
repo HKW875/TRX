@@ -10,6 +10,7 @@
             overflow: visible;
         }
 
+
         /* Hide horizontal scrollbar for clean UI */
         #listings-scroller-screen::-webkit-scrollbar {
             display: none;
@@ -2567,6 +2568,51 @@ window.onload = function() {
     }, 800);
     initBackground();
 };
+
+/**
+ * Scroller Visibility Manager
+ * Automatically hides/shows the listings scroller based on login state.
+ */
+(function() {
+    // 1. Reference all relevant elements
+    const authScreen = document.getElementById('authScreen');
+    const mainApp = document.getElementById('mainApp');
+    const scroller = document.getElementById('listings-scroller-screen');
+    const arrowLeft = document.getElementById('scroll-arrow-left');
+    const arrowRight = document.getElementById('scroll-arrow-right');
+
+    // 2. Safety check: ensure the main screens exist
+    if (!authScreen || !mainApp) return;
+
+    // 3. Logic to update visibility
+    const updateVisibility = () => {
+        // We determine if the user is logged out by checking if authScreen is visible
+        const isAuthVisible = !authScreen.classList.contains('hidden') && 
+                             window.getComputedStyle(authScreen).display !== 'none';
+
+        if (isAuthVisible) {
+            // Logged Out -> Show the scroller elements
+            if (scroller) scroller.style.display = 'flex';
+            if (arrowLeft) arrowLeft.style.display = 'block';
+            if (arrowRight) arrowRight.style.display = 'block';
+        } else {
+            // Logged In -> Hide the scroller elements
+            if (scroller) scroller.style.display = 'none';
+            if (arrowLeft) arrowLeft.style.display = 'none';
+            if (arrowRight) arrowRight.style.display = 'none';
+        }
+    };
+
+    // 4. Set up an observer to watch for class/style changes on login/logout
+    const observer = new MutationObserver(updateVisibility);
+    
+    // Watch for attribute changes on the two main screen containers
+    observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
+    observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
+
+    // 5. Run once immediately to set the correct initial state
+    updateVisibility();
+})();
 </script>
 </body>
 </html>
