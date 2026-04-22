@@ -1216,6 +1216,41 @@ if (authMessage && loginSpinner) {
         subtree: true 
     });
 }
+
+// 1. Activate spinner on "Login" click
+const loginBtn = document.querySelector('button[onclick="handlelogin()"]');
+const loginSpinner = document.getElementById('loginSpinner');
+
+if (loginBtn && loginSpinner) {
+    createAccountBtn.addEventListener('click', function() {
+        loginSpinner.style.visibility = 'visible';
+        loginSpinner.style.opacity = '1';
+    });
+}
+
+// 2. Hide spinner if an error message appears
+const authMessage = document.getElementById('authMessage');
+
+if (authMessage && loginSpinner) {
+    // Create an observer to watch for text changes in the error message container
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            // If the message is not empty, hide the spinner
+            if (authMessage.textContent.trim() !== "") {
+                loginSpinner.style.visibility = 'hidden';
+                loginSpinner.style.opacity = '0';
+            }
+        });
+    });
+
+    // Start observing changes to the text inside #authMessage
+    observer.observe(authMessage, { 
+        childList: true, 
+        characterData: true, 
+        subtree: true 
+    });
+}
+    
     
 // Select all tabs and pages
 const tabs = {
