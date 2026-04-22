@@ -5,29 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No Interest Business Capital, Business & Asset Growth Platform.</title>
     <style>
-        
+       
         .sidebar {
             overflow: visible;
         }
         .page {
             min-height: 60vh;
-        }
-
-        /* Ensure the spinner is hidden by default */
-        #loginSpinner {
-            display: block;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        
-
-
-        /* Optional: Class to show the spinner via JS */
-        #loginSpinner.active {
-            visibility: visible;
-            opacity: 1;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -49,24 +32,24 @@
         }
 
         /* Hide all pages by default */
-        #advertsPage {
-           display: block;
+        #plansPage, #profilePage, #servicesPage, #advertsPage {
+           display: none;
        }
 
        /* Show the active page (Plans is usually the default) */
-       #plansPage {
-            
+          #plansPage {
+          display: block;
        }
 
        /* Tab styling for interactivity */
-        .tabs div {
+         .tabs div {
           cursor: pointer;
           background-color: #f1f1f1; /* Inactive color */
           padding: 10px; /* Optional: for better hit area */
        }
 
        /* Active tab style */
-        .tabs div.active {
+          .tabs div.active {
           background-color: white;
           font-weight: bold;
        }
@@ -108,7 +91,7 @@
 
         /* LAYOUT */
         .market-container {    
-            flex-direction: column;   
+            flex-direction: column;  
         }
 
         /* SIDEBAR */
@@ -132,7 +115,7 @@
            justify-content: center;
            padding: 0px;
            font-size: 11.2px;
-            
+           
         }
 
         .sidebar ul li {
@@ -318,7 +301,7 @@
         .page {
             background: white;
             border-radius: 8px;
-            
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             position: relative;
         }
         .page.active {
@@ -354,7 +337,7 @@
    
         /* Password Eye Toggle Styles */
         .password-container {
-            width: 210px;
+            width: 228px;
             display: block;
             box-sizing: border-box;
             margin-left: auto;
@@ -365,10 +348,6 @@
         }
         .password-container input {
             padding-right: 45px;
-            width: 201.6px;
-            display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
         }
         .toggle-password {
             position: absolute;
@@ -685,7 +664,7 @@
             font-size: 1.02em;
         }
         .category-list li {
-            
+           
             gap: 10px;
         }
         .category-list img {
@@ -697,13 +676,13 @@
         @media (max-width: 768px) {
 
         /* 🔥 Stack sidebar and listings vertically */
-       .market-container { 
+       .market-container {
            box-sizing: border-box;
            width: 100%;
        }
 
        .sidebar {
-        
+       
        }
 
        .listings {
@@ -723,15 +702,15 @@
 
         /* turn categories into grid */
         .category-list {
-            
+           
             grid-template-columns: repeat(4, 1fr);
-            
+           
         }
 
         .category-list li {
-            
+           
             background: white;
-            
+           
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
 
@@ -743,9 +722,8 @@
         }
 </style>
 </head>
-    
 <body>
-<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>   
+<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 <!-- Flags Container - US | Kenya | Ghana -->
 <div id="flags-container">
     <!-- US Flag -->
@@ -1029,7 +1007,7 @@
 
             <!-- HEADER -->
             <div class="market-header">
-                
+               
                 <input type="text" placeholder="Search for products, services...">
                 <button class="post-btn">+ Post Ad</button>
             </div>
@@ -1041,7 +1019,7 @@
                         <h4>Coming Soon</h4>
                         <h4>Categories</h4>
                             <ul class="category-list">
-                                
+                               
                                 <li data-category="Animals">
                                    <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5" />
                                    <span>Animals</span>
@@ -1179,48 +1157,11 @@ class Particle {
         ctx.fill();
     }
 }
-    
-   
-    
 function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
-}
-    
-// 1. Activate spinner on "Create Account" click
-const createAccountBtn = document.querySelector('button[onclick="handleRegister()"]');
-const loginSpinner = document.getElementById('loginSpinner');
-
-if (createAccountBtn && loginSpinner) {
-    createAccountBtn.addEventListener('click', function() {
-        loginSpinner.style.visibility = 'visible';
-        loginSpinner.style.opacity = '1';
-    });
-}
-
-// 2. Hide spinner if an error message appears
-const authMessage = document.getElementById('authMessage');
-
-if (authMessage && loginSpinner) {
-    // Create an observer to watch for text changes in the error message container
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            // If the message is not empty, hide the spinner
-            if (authMessage.textContent.trim() !== "") {
-                loginSpinner.style.visibility = 'hidden';
-                loginSpinner.style.opacity = '0';
-            }
-        });
-    });
-
-    // Start observing changes to the text inside #authMessage
-    observer.observe(authMessage, { 
-        childList: true, 
-        characterData: true, 
-        subtree: true 
-    });
 }
    
 // Select all tabs and pages
@@ -1250,7 +1191,7 @@ tabElements.forEach(tabElement => {
         const targetPage = tabs[tabElement.id];
         if (targetPage) {
             targetPage.style.display = 'block';
-            
+           
             // 4. Highlight the active tab
             tabElement.style.backgroundColor = 'white';
             tabElement.style.fontWeight = 'bold';
@@ -2289,6 +2230,5 @@ window.onload = function() {
     initBackground();
 };
 </script>
-            
 </body>
 </html>
