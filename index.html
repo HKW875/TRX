@@ -32,24 +32,24 @@
         }
 
         /* Hide all pages by default */
-        #plansPage, #profilePage, #servicesPage, #advertsPage {
-           
+        #advertsPage {
+           display: block;
        }
 
        /* Show the active page (Plans is usually the default) */
        #plansPage {
-            display: none;
+            
        }
 
        /* Tab styling for interactivity */
-         .tabs div {
+        .tabs div {
           cursor: pointer;
           background-color: #f1f1f1; /* Inactive color */
           padding: 10px; /* Optional: for better hit area */
        }
 
        /* Active tab style */
-          .tabs div.active {
+        .tabs div.active {
           background-color: white;
           font-weight: bold;
        }
@@ -301,7 +301,7 @@
         .page {
             background: white;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            
             position: relative;
         }
         .page.active {
