@@ -1275,6 +1275,47 @@ class Particle {
         ctx.fill();
     }
 }
+
+function validateRegisterInputs() {
+    const mobile = document.getElementById("mobileNumber").value.trim();
+    const occupation = document.getElementById("occupationInput").value.trim();
+    const secret = document.getElementById("regSecretCode").value.trim();
+
+    return mobile !== "" && occupation !== "" && secret !== "";
+}
+
+function showSpinner() {
+    document.getElementById("loginSpinner").classList.add("show");
+}
+
+function hideSpinner() {
+    document.getElementById("loginSpinner").classList.remove("show");
+}
+
+/* Wrap existing function safely */
+const originalHandleRegister = window.handleRegister;
+
+window.handleRegister = function () {
+
+    if (!validateRegisterInputs()) {
+        alert("Please fill Mobile Number, Occupation and Secret Code");
+        return;
+    }
+
+    showSpinner();
+
+    setTimeout(() => {
+        hideSpinner();
+
+        if (typeof originalHandleRegister === "function") {
+            originalHandleRegister();
+        } else {
+            console.log("Account created (placeholder)");
+        }
+
+    }, 2000);
+};
+    
 function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
