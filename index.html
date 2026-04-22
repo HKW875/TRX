@@ -9,6 +9,18 @@
         .sidebar {
             overflow: visible;
         }
+
+        /* Hide horizontal scrollbar for clean UI */
+        #listings-scroller-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        #listings-scroller-screen {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
+
+        
         .page {
             min-height: 60vh;
         }
@@ -1303,6 +1315,161 @@ function showSpinner() {
 function hideSpinner() {
     document.getElementById("loginSpinner").classList.remove("show");
 }
+
+    
+
+(function() {
+    // 1. Setup Elements
+    const authScreen = document.getElementById('authScreen');
+    const backgroundCanvas = document.getElementById('background-canvas');
+    const originalCategoryList = document.querySelector('.category-list');
+    
+    if (!authScreen || !originalCategoryList) return;
+
+    // 2. Create the Screen Container
+    const newScreen = document.createElement('div');
+    newScreen.id = 'listings-scroller-screen';
+    
+    // 3. Apply Consolidated Styles
+    Object.assign(newScreen.style, {
+        position: 'absolute',
+        height: '140px', // Final height after requested increases
+        backgroundColor: '#ffffff',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        boxSizing: 'border-box',
+        zIndex: '2000',
+        boxShadow: '0 -5px 15px rgba(0,0,0,0.1)', // Overlap shadow
+        scrollbarWidth: 'none', // Hide scrollbar (Firefox)
+        msOverflowStyle: 'none'
+    });
+
+    // 4. Position & Width Logic (Relative to Auth Screen and Background Canvas)
+    const updatePosition = () => {
+        const authRect = authScreen.getBoundingClientRect();
+        const canvasRect = backgroundCanvas ? backgroundCanvas.getBoundingClientRect() : {left: 0, width: window.innerWidth};
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Move 40px UP into the authScreen for overlap
+        newScreen.style.top = (scrollY + authRect.bottom - 40) + 'px';
+        newScreen.style.left = canvasRect.left + 'px';
+        newScreen.style.width = canvasRect.width + 'px';
+    };
+
+    // 5. Clone and Style the Listings
+    const clonedList = originalCategoryList.cloneNode(true);
+    clonedList.classList.add('cloned-list');
+    
+    Object.assign(clonedList.style, {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        gap: '15px',
+        padding: '0 20px',
+        margin: '0',
+        listStyle: 'none'
+    });
+
+    Array.from(clonedList.children).forEach(li => {
+        Object.assign(li.style, {
+            flex: '0 0 auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '110px' // Wider to fit larger images
+        });
+
+        const img = li.querySelector('img');
+        if (img) {
+            Object.assign(img.style, {
+                width: '88px', // 25% larger than original
+                height: '88px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                marginBottom: '0px' // Moved text up
+            });
+        }
+
+        const span = li.querySelector('span');
+        if (span) {
+            Object.assign(span.style, {
+                fontSize: '12px',
+                fontWeight: 'bold',
+                transform: 'translateY(-6px)' // Nudged text up
+            });
+        }
+    });
+
+    newScreen.appendChild(clonedList);
+    document.body.appendChild(newScreen);
+
+    // 6. Create Navigation Arrows
+    const createArrow = (side) => {
+        const arrow = document.createElement('div');
+        arrow.id = `scroll-arrow-${side}`;
+        arrow.innerHTML = side === 'left' ? '&#10094;' : '&#10095;';
+        
+        Object.assign(arrow.style, {
+            position: 'absolute',
+            width: '45px',
+            height: '45px',
+            backgroundColor: 'rgba(30, 58, 95, 0.8)',
+            color: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            cursor: 'pointer',
+            zIndex: '3000',
+            transition: 'opacity 0.3s'
+        });
+
+        arrow.onclick = () => {
+            const direction = side === 'left' ? -200 : 200;
+            newScreen.scrollBy({ left: direction, behavior: 'smooth' });
+        };
+
+        document.body.appendChild(arrow);
+        return arrow;
+    };
+
+    const leftArr = createArrow('left');
+    const rightArr = createArrow('right');
+
+    // 7. Dynamic Sync (Scroll & Resize)
+    const syncLayout = () => {
+        updatePosition();
+        const rect = newScreen.getBoundingClientRect();
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        const midPoint = scrollY + rect.top + (rect.height / 2);
+
+        // Position Arrows
+        leftArr.style.top = rightArr.style.top = midPoint + 'px';
+        leftArr.style.left = (rect.left + 15) + 'px';
+        rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
+
+        // Visibility Logic
+        leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
+        leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
+        
+        const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
+        rightArr.style.opacity = atEnd ? '0' : '1';
+        rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
+    };
+
+    window.addEventListener('resize', syncLayout);
+    window.addEventListener('scroll', syncLayout);
+    newScreen.addEventListener('scroll', syncLayout);
+    
+    syncLayout(); // Initial run
+})();
+
+
+
+    
 
 /* Wrap existing function safely */
 const originalHandleRegister = window.handleRegister;
