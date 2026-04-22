@@ -918,6 +918,12 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+
+    
+<!-- ✅ NEW SCREEN (ADDED - NO ORIGINAL LINE CHANGED) -->
+<div id="authListingsScreen"></div> 
+    
+    
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
@@ -1233,6 +1239,36 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+
+    
+<!-- LISTINGS below authscreen -->
+document.addEventListener("DOMContentLoaded", () => {
+
+    const strip = document.getElementById("authListingsScreen");
+
+    const categoryItems = document.querySelectorAll(".category-list li");
+    const gridItems = document.querySelectorAll(".grid .card-item");
+
+    function addItem(img, text) {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<img src="${img}"><span>${text}</span>`;
+        strip.appendChild(div);
+    }
+
+    categoryItems.forEach(li => {
+        const img = li.querySelector("img")?.src;
+        const text = li.querySelector("span")?.innerText;
+        if (img && text) addItem(img, text);
+    });
+
+    gridItems.forEach(card => {
+        const text = card.innerText;
+        addItem("https://via.placeholder.com/60", text);
+    });
+
+});
+    
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
 const ctx = canvas.getContext('2d');
