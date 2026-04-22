@@ -1214,78 +1214,7 @@ class Particle {
     }
 }
     
-// 1. Setup References for listings screen below authpage
-const authScreen = document.querySelector('#authScreen');
-const canvas = document.querySelector('#background-canvas');
-const marketContainer = document.querySelector('.market-container');
-const listings = Array.from(marketContainer.querySelectorAll('.category-list li'));
-
-const authRect = authScreen.getBoundingClientRect();
-const canvasRect = canvas.getBoundingClientRect();
-
-// 2. Create and Style Container
-const newScreen = document.createElement('div');
-newScreen.id = 'new-listing-screen';
-
-Object.assign(newScreen.style, {
-    position: 'absolute',
-    width: canvasRect.width + 'px',       // Matches canvas width
-    height: '125px',
-    top: (authRect.bottom + window.scrollY + 10) + 'px', // 10px below authScreen
-    left: canvasRect.left + 'px',         // Aligned to canvas left
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    border: '1px solid #ccc',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-    overflowX: 'auto',                    // Enables horizontal scrolling
-    overflowY: 'hidden',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: '10px',
-    gap: '15px',
-    zIndex: '1000',
-    whiteSpace: 'nowrap'
-});
-
-// 3. Clone and Style Items
-listings.forEach(listing => {
-    const clone = listing.cloneNode(true);
-    
-    // Style the Item Container
-    Object.assign(clone.style, {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        flexShrink: '0',
-        listStyle: 'none'
-    });
-    
-    // Maintain Image CSS
-    const img = clone.querySelector('img');
-    if (img) {
-        Object.assign(img.style, {
-            width: '76.93px',
-            height: '76.93px',
-            objectFit: 'cover',
-            borderRadius: '8px'
-        });
-    }
-
-    // Style the Label
-    const span = clone.querySelector('span');
-    if (span) {
-        Object.assign(span.style, {
-            fontSize: '12px',
-            marginTop: '5px',
-            textAlign: 'center'
-        });
-    }
-
-    newScreen.appendChild(clone);
-});
-
-// 4. Inject into Page
-document.body.appendChild(newScreen);    
+   
     
 function resizeCanvas() {
     width = window.innerWidth;
