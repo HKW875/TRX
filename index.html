@@ -843,7 +843,10 @@
     <!-- Ghana Flag (new - rightmost) -->
     <img class="flag" src="https://flagcdn.com/w80/gh.png" alt="Flag of Ghana" onclick="window.location.href='https://growthbase.net/gh'" title="Go to GrowthBase Ghana">
 </div>
+
+    
 <!-- Auth Screen -->
+    
 <div id="authScreen" class="auth-container">
   <a href="/">
     <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
@@ -920,8 +923,7 @@
 </div>
 
     
-<!-- ✅ NEW SCREEN (ADDED - NO ORIGINAL LINE CHANGED) -->
-<div id="authListingsScreen"></div> 
+
     
     
 <!-- Main Application -->
@@ -1241,33 +1243,7 @@
 <script>
 
     
-<!-- LISTINGS below authscreen -->
-document.addEventListener("DOMContentLoaded", () => {
 
-    const strip = document.getElementById("authListingsScreen");
-
-    const categoryItems = document.querySelectorAll(".category-list li");
-    const gridItems = document.querySelectorAll(".grid .card-item");
-
-    function addItem(img, text) {
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `<img src="${img}"><span>${text}</span>`;
-        strip.appendChild(div);
-    }
-
-    categoryItems.forEach(li => {
-        const img = li.querySelector("img")?.src;
-        const text = li.querySelector("span")?.innerText;
-        if (img && text) addItem(img, text);
-    });
-
-    gridItems.forEach(card => {
-        const text = card.innerText;
-        addItem("https://via.placeholder.com/60", text);
-    });
-
-});
     
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
