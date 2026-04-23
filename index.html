@@ -10,6 +10,39 @@
             overflow: visible;
         }
 
+        #scroll-arrow-left, #scroll-arrow-right {
+        /* Layout & Centering */
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+    
+         /* Shape & Size (Keeping your existing dimensions) */
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+    
+         /* Typography */
+            font-size: 24px;
+            line-height: 1;
+            color: white;
+            background-color: rgba(30, 58, 95, 0.8);
+    
+            /* Interaction */
+            cursor: pointer;
+            user-select: none;
+            z-index: 3000;
+            position: absolute;
+         }
+
+         /* Specific Positioning */
+         #scroll-arrow-left {
+            left: 15px;
+         }
+
+         #scroll-arrow-right {
+            right: 30px;
+         }
+
 
         /* Hide horizontal scrollbar for clean UI */
         #listings-scroller-screen::-webkit-scrollbar {
