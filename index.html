@@ -9,6 +9,9 @@
         .sidebar {
             overflow: visible;
         }
+        #image-preview {
+            display: flex;
+        }
 
         #scroll-arrow-left, #scroll-arrow-right {
         /* Layout & Centering */
@@ -1200,6 +1203,7 @@
 
                     <!-- SIDEBAR -->
                     <div class="sidebar">
+                        <button id="post-ad-btn" style="width: 100%; padding: 10px; background: #1e3a5f; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px;">+ Post Ad</button>
                         <h4>Coming Soon</h4>
                         <h4>Categories</h4>
                             <ul class="category-list">
@@ -1296,6 +1300,43 @@
         <div class="footer">
         © 2026 GrowthBase Marketplace
         </div>
+    <div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display: flex; align-items: center; justify-content: center;">
+    <div style="background:white; width: 340px; padding: 20px; border-radius: 8px; max-height: 90vh; overflow-y: auto;">
+        <h3>Post New Advert</h3>
+        <form id="ad-form">
+            <input type="file" id="ad-images" multiple accept="image/*" required style="margin-bottom:10px;">
+            <p style="font-size:12px; color:gray;">Up to 5 images</p>
+            <form id="ad-form">
+            <input type="file" id="ad-images" multiple accept="image/*" required style="margin-bottom:10px;">
+    
+            <!-- ADD THIS PREVIEW BOX -->
+            <div id="image-preview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;"></div>
+    
+            <p style="font-size:12px; color:gray;">Up to 5 images</p>
+            <!-- ... rest of your form fields ... -->
+            </form>
+            
+            <select id="ad-category" required style="width:100%; margin-bottom:10px; padding:8px;">
+                <!-- Categories will be injected here -->
+            </select>
+            
+            <input type="number" id="ad-price" placeholder="Price" required style="width:100%; margin-bottom:10px; padding:8px;">
+            <textarea id="ad-desc" placeholder="Description" required style="width:100%; margin-bottom:10px; padding:8px;"></textarea>
+            <input type="text" id="ad-location" placeholder="Location Name" required style="width:100%; margin-bottom:10px; padding:8px;">
+            <input type="tel" id="ad-phone" placeholder="Contact Number" required style="width:100%; margin-bottom:10px; padding:8px;">
+            
+            <select id="ad-condition" required style="width:100%; margin-bottom:10px; padding:8px;">
+                <option value="new">New</option>
+                <option value="used">Used</option>
+            </select>
+            
+            <div style="display:flex; gap:10px;">
+                <button type="submit" style="flex:1; background:#28a745; color:white; padding:10px; border:none;">Submit Ad</button>
+                <button type="button" onclick="document.getElementById('ad-modal').style.display='none'" style="flex:1; background:#dc3545; color:white; padding:10px; border:none;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
@@ -1345,6 +1386,72 @@ class Particle {
         ctx.fill();
     }
 }
+const imageInput = document.getElementById('ad-images');
+const previewContainer = document.getElementById('image-preview');
+
+
+const imageInput = document.getElementById('ad-images');
+const previewContainer = document.getElementById('image-preview');
+let selectedFiles = []; // This will keep track of our files
+
+imageInput.addEventListener('change', function() {
+    // Convert FileList to Array and limit to 5
+    const newFiles = Array.from(this.files).slice(0, 5);
+    selectedFiles = newFiles; 
+    renderPreviews();
+});
+
+function renderPreviews() {
+    previewContainer.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgWrapper = document.createElement('div');
+            imgWrapper.style.cssText = `
+                width: 65px; height: 65px; border: 1px solid #ddd; 
+                border-radius: 4px; overflow: hidden; position: relative;
+            `;
+
+            // The Preview Image
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = "width: 100%; height: 100%; object-fit: cover;";
+
+            // The Delete Button (X)
+            const removeBtn = document.createElement('div');
+            removeBtn.innerHTML = '×';
+            removeBtn.style.cssText = `
+                position: absolute; top: 0; right: 0; background: rgba(255,0,0,0.7);
+                color: white; width: 18px; height: 18px; display: flex;
+                align-items: center; justify-content: center; cursor: pointer;
+                font-weight: bold; font-size: 14px;
+            `;
+
+            // Click event to remove the image
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1); // Remove from our array
+                updateInputFiles(); // Sync back to the hidden input
+                renderPreviews(); // Redraw the UI
+            };
+
+            imgWrapper.appendChild(img);
+            imgWrapper.appendChild(removeBtn);
+            previewContainer.appendChild(imgWrapper);
+        }
+        reader.readAsDataURL(file);
+    });
+}
+
+// CRITICAL: This syncs our array back to the actual form input
+function updateInputFiles() {
+    const dataTransfer = new DataTransfer();
+    selectedFiles.forEach(file => dataTransfer.items.add(file));
+    imageInput.files = dataTransfer.files;
+}
+
+
+    
 
 function validateRegisterInputs() {
     const mobile = document.getElementById("mobileNumber").value.trim();
@@ -1512,6 +1619,96 @@ function hideSpinner() {
     
     syncLayout(); // Initial run
 })();
+
+document.getElementById('post-ad-btn').addEventListener('click', () => {
+    // Populate categories dynamically from your existing list
+    const categorySelect = document.getElementById('ad-category');
+    categorySelect.innerHTML = '';
+    document.querySelectorAll('.category-list li').forEach(li => {
+        const option = document.createElement('option');
+        option.value = li.innerText.trim();
+        option.textContent = li.innerText.trim();
+        categorySelect.appendChild(option);
+    });
+    document.getElementById('ad-modal').style.display = 'flex';
+});
+
+document.getElementById('ad-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Capture Geolocation
+    navigator.geolocation.getCurrentPosition(async (position) => {
+        const formData = new FormData();
+        const files = document.getElementById('ad-images').files;
+        
+        for(let i=0; i < Math.min(files.length, 5); i++) {
+            formData.append('images', files[i]);
+        }
+        
+        formData.append('category', document.getElementById('ad-category').value);
+        formData.append('price', document.getElementById('ad-price').value);
+        formData.append('description', document.getElementById('ad-desc').value);
+        formData.append('locationName', document.getElementById('ad-location').value);
+        formData.append('phone', document.getElementById('ad-phone').value);
+        formData.append('condition', document.getElementById('ad-condition').value);
+        formData.append('lat', position.coords.latitude);
+        formData.append('lng', position.coords.longitude);
+
+        const response = await fetch('/api/ads/create', {
+            method: 'POST',
+            body: formData // Note: Don't set Content-Type header when using FormData
+        });
+        }, (err) => alert("Please enable location to post ads.")); 
+        document.getElementById('ad-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            // Show a "Loading" state on the button
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = "Uploading...";
+            submitBtn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const formData = new FormData(e.target); // Shortcut to get all form fields
+                // Add coordinates manually since they aren't in the form fields
+                formData.append('lat', position.coords.latitude);
+                formData.append('lng', position.coords.longitude);
+
+                try {
+                     const response = await fetch('/api/ads/create', {
+                         method: 'POST',
+                         body: formData
+                     });
+
+                     if (response.ok) {
+                        // 1. Success Message
+                        alert('Success! Your advert is now live.');
+
+                        // 2. Clear the form fields
+                        e.target.reset(); 
+
+                        // 3. Close the modal
+                        document.getElementById('ad-modal').style.display = 'none';
+
+                        // 4. (Optional) Refresh the listings if the user is on that category
+                        const currentCategory = document.getElementById('ad-category').value;
+                        loadCategoryAds(currentCategory); 
+
+                     } else {
+                         alert('Upload failed. Please check your connection.');
+                     }
+                 } catch (error) {
+                     console.error("Error:", error);
+                     alert('A server error occurred.');
+                 } finally {
+                     // Restore button state
+                     submitBtn.textContent = originalText;
+                     submitBtn.disabled = false;
+                 }
+            });
+        });
+    
+});
 
 
 
@@ -2498,6 +2695,8 @@ function initDocumentUploadForm() {
     documentRows = [];
     addDocumentRow();
 }
+
+    
 function addDocumentRow() {
     const container = document.getElementById("dynamicDocumentsContainer");
     const rowId = 'doc-row-' + Date.now();
