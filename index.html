@@ -1300,6 +1300,52 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+    
+const adImagesMap = {
+    
+  "Kitengela Opposite Salem Quarry": [
+    "https://github.com/HKW875/TRX/blob/main/listingImages/kapiti1.jpg?raw=true",
+    "https://github.com/HKW875/TRX/blob/main/listingImages/kapiti2.jpg?raw=true",
+    "https://github.com/HKW875/TRX/blob/main/listingImages/kapiti3.jpg?raw=true",
+    "https://github.com/HKW875/TRX/blob/main/listingImages/kapiti4.jpg?raw=true",
+    "https://github.com/HKW875/TRX/blob/main/listingImages/kapiti5.jpg?raw=true"
+  ],
+    
+  "Properties Ad 2": [
+    "https://github.com/HKW875/TRX/blob/main/listingImages/other_image.jpg?raw=true"
+  ]
+    
+  // Note: Ensure the name here matches the text in your <strong> tag exactly!
+};
+    
+
+function initializeAdImages(container) {
+  // Use 'container' instead of searching the whole document
+  const cards = container.querySelectorAll('div > div:first-child');
+
+  cards.forEach(imgBox => {
+    const titleEl = imgBox.parentElement.querySelector('strong');
+    const titleText = titleEl ? titleEl.innerText.trim() : "";
+    
+    if (adImagesMap[titleText]) {
+      const images = adImagesMap[titleText];
+      
+      // Apply the styles and inject images
+      imgBox.style.cssText = "width:100%; height:140px; background:none; display:flex; overflow-x:auto; scroll-snap-type:x mandatory;";
+      imgBox.innerHTML = '';
+
+      images.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.cssText = "width:100%; height:140px; object-fit:cover; flex-shrink:0; scroll-snap-align:start;";
+        imgBox.appendChild(img);
+      });
+    }
+  });
+}    
+
+
+    
 (function() {
     const categoryList = document.querySelector('ul.category-list');
     const marketContainer = document.querySelector('.market-container');
@@ -1365,6 +1411,9 @@
         }
 
         document.body.appendChild(overlay);
+
+        // CALL THE FUNCTION HERE
+        initializeAdImages(overlay); 
     });
 })();
 
