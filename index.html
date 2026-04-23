@@ -1299,7 +1299,78 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+(function() {
+    const categoryList = document.querySelector('ul.category-list');
+    const marketContainer = document.querySelector('.market-container');
 
+    if (!categoryList || !marketContainer) return;
+
+    categoryList.addEventListener('click', function(event) {
+        const targetLi = event.target.closest('li');
+        if (!targetLi) return;
+
+        // Remove old overlay if it exists
+        const existingOverlay = document.getElementById('ad-overlay');
+        if (existingOverlay) existingOverlay.remove();
+
+        const categoryName = targetLi.innerText.trim();
+        const rect = marketContainer.getBoundingClientRect();
+
+        // Create the new screen
+        const overlay = document.createElement('div');
+        overlay.id = 'ad-overlay';
+        
+        // Match dimensions and position 10px below market container
+        Object.assign(overlay.style, {
+            position: 'absolute',
+            top: `${window.scrollY + rect.bottom + 10}px`,
+            left: `${window.scrollX + rect.left}px`,
+            width: `${rect.width}px`,
+            height: `${rect.height}px`,
+            backgroundColor: '#ffffff',
+            border: '1px solid #ccc',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: '1fr 1fr',
+            gap: '12px',
+            padding: '12px',
+            boxSizing: 'border-box',
+            borderRadius: '4px'
+        });
+
+        // Generate 4 Adverts
+        for (let i = 1; i <= 4; i++) {
+            const ad = document.createElement('div');
+            Object.assign(ad.style, {
+                border: '1px solid #eee',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: '#fdfdfd'
+            });
+
+            ad.innerHTML = `
+                <div style="width:100%; height:70px; background:#ddd; margin-bottom:8px;"></div>
+                <strong style="font-size:14px;">${categoryName} Ad ${i}</strong>
+                <p style="font-size:11px; margin: 4px 0; flex-grow:1;">Premium selection of ${categoryName}.</p>
+                <div style="font-size:12px; font-weight:bold; color:navy;">$${(Math.random()*200).toFixed(2)}</div>
+                <div style="font-size:10px; color:#555;">📍 North Road ${10+i}, Bldg ${i*5}</div>
+                <div style="font-size:10px; color:#555;">📞 555-019${i}</div>
+                <div style="font-size:10px; font-weight:bold; color:green;">New Condition</div>
+            `;
+            overlay.appendChild(ad);
+        }
+
+        document.body.appendChild(overlay);
+    });
+})();
+
+ window.addEventListener('resize', () => {
+    const existingOverlay = document.getElementById('ad-overlay');
+    if (existingOverlay) existingOverlay.remove();
+});   
    
 
    
