@@ -1300,7 +1300,59 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+    
+let activeOverlay = null;  
+    
+const marketContainer = document.querySelector('.market-container');
+const categoryList = document.querySelector('ul.category-list');
+let activeOverlay = null;
 
+categoryList.addEventListener('click', (e) => {
+    const li = e.target.closest('li');
+    if (!li) return;
+
+    // Clear previous overlay
+    if (activeOverlay) activeOverlay.remove();
+
+    const rect = marketContainer.getBoundingClientRect();
+    const overlay = document.createElement('div');
+    
+    // Set styles for the new screen
+    Object.assign(overlay.style, {
+        position: 'absolute',
+        top: (window.scrollY + rect.bottom + 10) + 'px',
+        left: (window.scrollX + rect.left) + 'px',
+        width: rect.width + 'px',
+        height: rect.height + 'px',
+        backgroundColor: 'white',
+        border: '2px solid #ddd',
+        zIndex: '9999',
+        padding: '15px',
+        boxSizing: 'border-box',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '10px',
+        overflowY: 'auto'
+    });
+
+    // Generate 4 adverts
+    for (let i = 0; i < 4; i++) {
+        const ad = document.createElement('div');
+        ad.style.cssText = 'border: 1px solid #eee; padding: 10px; font-size: 12px;';
+        ad.innerHTML = `
+            <img src="https://via.placeholder.com/100" style="width:100%;">
+            <p><strong>Item Name ${i+1}</strong></p>
+            <p>Price: $${(Math.random()*100).toFixed(2)}</p>
+            <p>Loc: 123 Sample Rd, Bldg ${i+1}</p>
+            <p>Phone: 555-000${i}</p>
+            <p>Condition: Excellent</p>
+        `;
+        overlay.appendChild(ad);
+    }
+
+    document.body.appendChild(overlay);
+    activeOverlay = overlay;
+});
    
 
    
