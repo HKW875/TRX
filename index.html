@@ -1482,45 +1482,43 @@ window.removeImage = (index) => {
 adForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const desc = document.getElementById('adDesc').value;
-    const wordCount = desc.split(/\s+/).filter(w => w.length > 0).length;
-    
-    if (wordCount > 40) {
-        alert("Description must be no more than 40 words.");
-        return;
-    }
+    // Convert selected images to Base64
+    const imagePromises = selectedFiles.map(file => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (en) => resolve(en.target.result);
+            reader.readAsDataURL(file);
+        });
+    });
 
-    if (selectedFiles.length === 0) {
-        alert("Please upload at least one image.");
-        return;
-    }
+    const base64Images = await Promise.all(imagePromises);
 
     const adData = {
-        id: Date.now(),
         title: document.getElementById('adTitle').value,
-        category: categorySelect.value,
-        description: desc,
+        category: document.getElementById('adCategory').value,
+        description: document.getElementById('adDesc').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
         phone: document.getElementById('adPhone').value,
-        images: [] // In a real app, these would be URLs from MongoDB/GitHub
+        images: base64Images
     };
 
-    // Convert images to base64 for immediate display
-    for (const file of selectedFiles) {
-        const base64 = await new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.readAsDataURL(file);
+    try {
+        const response = await fetch('/api/ads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(adData)
         });
-        adData.images.push(base64);
-    }
 
-    createOrUpdateCard(adData);
-    modal.style.display = 'none';
-    adForm.reset();
-    selectedFiles = [];
-    renderPreviews();
+        if (response.ok) {
+            alert("Advert Posted Successfully!");
+            modal.style.display = 'none';
+            adForm.reset();
+            fetchAds(); // Refresh the listings
+        }
+    } catch (err) {
+        console.error("Upload failed:", err);
+    }
 });
 
 function createOrUpdateCard(data) {
@@ -1544,6 +1542,32 @@ function createOrUpdateCard(data) {
     grid.insertAdjacentHTML('afterbegin', cardHTML);
 }
 });
+
+async function fetchAds() {
+    const response = await fetch('/api/ads');
+    const result = await response.json();
+    const grid = document.querySelector('.listings .grid');
+    grid.innerHTML = ''; // Clear existing
+
+    result.data.forEach(ad => {
+        const cardHTML = `
+            <div class="ad-card">
+                <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
+                    ${ad.images.map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
+                </div>
+                <div class="card-body" style="padding:15px;">
+                    <h4>${ad.title}</h4>
+                    <p style="color:green; font-weight:bold;">$${ad.price}</p>
+                    <p>${ad.description}</p>
+                    <small>📍 ${ad.location} | 📞 ${ad.phone}</small>
+                </div>
+            </div>`;
+        grid.insertAdjacentHTML('beforeend', cardHTML);
+    });
+}
+
+// Call fetchAds when the page loads
+document.addEventListener('DOMContentLoaded', fetchAds);    
 
 
     
