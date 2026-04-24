@@ -1386,14 +1386,27 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-//  Logic to populate categories and handle modal
-const postBtn = document.querySelector('.post-btn');
-const modal = document.getElementById('adModal');
-const closeModal = document.getElementById('closeModal');
-const adForm = document.getElementById('adForm');
-const previewContainer = document.getElementById('previewContainer');
-const imageInput = document.getElementById('adImages');
-let selectedFiles = [];
+
+    
+// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK
+document.addEventListener('DOMContentLoaded', () => {
+    const postBtn = document.querySelector('.post-btn');
+    const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
+    const closeModal = document.getElementById('closeModal');
+    const adForm = document.getElementById('adForm');
+    
+    // Check if elements exist before adding listeners to prevent errors
+    if (postBtn && modal) {
+        postBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
 
 // Populate categories from the sidebar
 const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
@@ -1507,6 +1520,7 @@ function createOrUpdateCard(data) {
     // Logic to replace or add
     grid.insertAdjacentHTML('afterbegin', cardHTML);
 }
+});
 
 
     
