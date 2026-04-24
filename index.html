@@ -1257,7 +1257,7 @@
             <div class="market-header">
                
                 <input type="text" placeholder="Search for products, services...">
-                <button class="post-btn">+ Post Ad</button>
+                <button type="button" class="post-btn">+ Post Ad</button>
             </div>
 
                 <div class="market-container">
@@ -1485,6 +1485,40 @@ imageInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
     selectedFiles = [...selectedFiles, ...files];
     renderPreviews();
+
+if (adForm) {
+    // We use .onsubmit to ensure it overrides any other behaviors
+    adForm.onsubmit = async function(e) {
+        // 1. STOP THE RELOAD
+        if (e) e.preventDefault();
+        
+        console.log("Form submission intercepted. Page will NOT reload.");
+
+        // 2. Your existing logic
+        try {
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            // ... (Your compression and fetch code) ...
+
+            // 3. Close the modal without refreshing
+            document.getElementById('adModal').style.display = 'none';
+            alert("Success!");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            adForm.querySelector('button[type="submit"]').disabled = false;
+            adForm.querySelector('button[type="submit"]').textContent = "Submit Advert";
+        }
+
+        // 4. RETURN FALSE as a secondary backup to stop the reload
+        return false; 
+    };
+}
+
+
+    
 });
 
 function renderPreviews() {
