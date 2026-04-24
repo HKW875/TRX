@@ -1511,32 +1511,16 @@ window.removeImage = (index) => {
 
 //  Form Submission and Card Creation
 adForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    // CRITICAL: This stops the page from reloading/logging you out
+    e.preventDefault(); 
     
-    // Show a loading state on the button
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Compressing & Uploading...";
-    submitBtn.disabled = true;
+    console.log("Submission started without reloading the page...");
 
     try {
-        // 1. Compress all selected files
-        const compressedImages = await Promise.all(
-            selectedFiles.map(file => compressImage(file))
-        );
+        // ... Your compression and data gathering logic ...
+        const adData = { /* your data */ };
 
-        // 2. Prepare the payload
-        const adData = {
-            title: document.getElementById('adTitle').value,
-            category: document.getElementById('adCategory').value,
-            description: document.getElementById('adDesc').value,
-            price: document.getElementById('adPrice').value,
-            location: document.getElementById('adLocation').value,
-            phone: document.getElementById('adPhone').value,
-            images: compressedImages // Now sends small, optimized strings
-        };
-
-        // 3. POST to your Vercel API
+        // 2. Send data in the background
         const response = await fetch('/api/ads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1544,22 +1528,13 @@ adForm.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert("Advert Posted Successfully!");
-            document.getElementById('adModal').style.display = 'none';
+            alert("Advert Posted!");
+            // 3. Close the modal manually instead of letting the page refresh
+            document.getElementById('adOverlay').style.display = 'none'; 
             adForm.reset();
-            selectedFiles = []; // Clear the file array
-            document.getElementById('previewContainer').innerHTML = ''; // Clear previews
-            if (typeof fetchAds === 'function') fetchAds(); // Refresh listings
-        } else {
-            const errData = await response.json();
-            alert("Error: " + (errData.message || "Upload failed"));
         }
-    } catch (err) {
-        console.error("Critical error during upload:", err);
-        alert("An error occurred. Check console for details.");
-    } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+    } catch (error) {
+        console.error("Submission failed", error);
     }
 });
 
