@@ -1388,12 +1388,35 @@
 <script>
 
     
-// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK
+// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
 document.addEventListener('DOMContentLoaded', () => {
     const postBtn = document.querySelector('.post-btn');
+    const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
     const closeModal = document.getElementById('closeModal');
     const adForm = document.getElementById('adForm');
+
+    // 2. Add the click event listener
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', (event) => {
+            // Prevent any default form behavior
+            event.preventDefault(); 
+        
+            // Hide the modal
+            modal.style.display = 'none';
+        
+            // Optional: Reset the form so it's clean for next time
+            if (adForm) adForm.reset();
+        
+            // Optional: Clear the image preview container
+            const preview = document.getElementById('previewContainer');
+            if (preview) preview.innerHTML = '';
+        
+            console.log("Modal closed successfully");
+        });
+    } else {
+        console.error("Cancel button or Modal not found in DOM");
+    }
     
     // Check if elements exist before adding listeners to prevent errors
     if (postBtn && modal) {
