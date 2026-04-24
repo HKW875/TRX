@@ -10,6 +10,17 @@
             overflow: visible;
         }
 
+        /* Style all cards */
+        .ad-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        /* Target a specific slot by ID */
+            #ad-card-1 {
+            border-color: gold; /* Make the first ad a 'Featured' slot */
+        }
+
         #scroll-arrow-left, #scroll-arrow-right {
         /* Layout & Centering */
             display: flex !important;
@@ -1300,6 +1311,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+
+// DYNAMICALLY ASSIGN IDS TO CATEGORY LISTINGS
+
+const categories = ['Properties', 'Vehicles', 'Electronics']; // Example categories
+
+function renderAds(ads) {
+  const container = document.getElementById('ad-overlay');
+  container.innerHTML = ''; // Clear existing
+
+  ads.forEach((ad, index) => {
+    const cardId = `ad-card-${index + 1}`; // Create the ID: ad-card-1, ad-card-2, etc.
+    
+    const cardHTML = `
+      <div id="${cardId}" class="ad-card">
+        <strong>${ad.title}</strong>
+        <p>${ad.description}</p>
+        <div class="price">${ad.price}</div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', cardHTML);
+  });
+}
+
+// DYNAMICALLY SEND ADS TO SPECIFIC SLOTS
+function updateCardContent(cardNumber, newData) {
+  const card = document.getElementById(`ad-card-${cardNumber}`);
+  if (card) {
+    card.querySelector('strong').textContent = newData.title;
+    card.querySelector('.price').textContent = newData.price;
+  }
+}
+
+// Example: Send a new listing to slot 2
+updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
+    
+    
 (function() {
     const categoryList = document.querySelector('ul.category-list');
     const marketContainer = document.querySelector('.market-container');
