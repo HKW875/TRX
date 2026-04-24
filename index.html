@@ -1386,6 +1386,37 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+// Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
+async function compressImage(file, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Resize logic: Keep aspect ratio
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert to compressed Base64 JPEG
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(dataUrl);
+            };
+        };
+    });
+}
 
     
 // WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
@@ -1478,32 +1509,34 @@ window.removeImage = (index) => {
     renderPreviews();
 };
 
-// 4. Form Submission and Card Creation
+//  Form Submission and Card Creation
 adForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Convert selected images to Base64
-    const imagePromises = selectedFiles.map(file => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (en) => resolve(en.target.result);
-            reader.readAsDataURL(file);
-        });
-    });
-
-    const base64Images = await Promise.all(imagePromises);
-
-    const adData = {
-        title: document.getElementById('adTitle').value,
-        category: document.getElementById('adCategory').value,
-        description: document.getElementById('adDesc').value,
-        price: document.getElementById('adPrice').value,
-        location: document.getElementById('adLocation').value,
-        phone: document.getElementById('adPhone').value,
-        images: base64Images
-    };
+    // Show a loading state on the button
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Compressing & Uploading...";
+    submitBtn.disabled = true;
 
     try {
+        // 1. Compress all selected files
+        const compressedImages = await Promise.all(
+            selectedFiles.map(file => compressImage(file))
+        );
+
+        // 2. Prepare the payload
+        const adData = {
+            title: document.getElementById('adTitle').value,
+            category: document.getElementById('adCategory').value,
+            description: document.getElementById('adDesc').value,
+            price: document.getElementById('adPrice').value,
+            location: document.getElementById('adLocation').value,
+            phone: document.getElementById('adPhone').value,
+            images: compressedImages // Now sends small, optimized strings
+        };
+
+        // 3. POST to your Vercel API
         const response = await fetch('/api/ads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1512,12 +1545,21 @@ adForm.addEventListener('submit', async (e) => {
 
         if (response.ok) {
             alert("Advert Posted Successfully!");
-            modal.style.display = 'none';
+            document.getElementById('adModal').style.display = 'none';
             adForm.reset();
-            fetchAds(); // Refresh the listings
+            selectedFiles = []; // Clear the file array
+            document.getElementById('previewContainer').innerHTML = ''; // Clear previews
+            if (typeof fetchAds === 'function') fetchAds(); // Refresh listings
+        } else {
+            const errData = await response.json();
+            alert("Error: " + (errData.message || "Upload failed"));
         }
     } catch (err) {
-        console.error("Upload failed:", err);
+        console.error("Critical error during upload:", err);
+        alert("An error occurred. Check console for details.");
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
 });
 
