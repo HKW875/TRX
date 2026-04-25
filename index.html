@@ -1408,6 +1408,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const adForm = document.getElementById('adForm');
 
     // 2. Add the click event listener
+    
+    // Check if elements exist before adding listeners to prevent errors. You attach multiple listeners to the same closeBtn:1
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', (event) => {
             // Prevent any default form behavior
@@ -1415,9 +1417,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
             // Hide the modal
             modal.style.display = 'none';
-        
-            // Optional: Reset the form so it's clean for next time
-            if (adForm) adForm.reset();
         
             // Optional: Clear the image preview container
             const preview = document.getElementById('previewContainer');
@@ -1429,44 +1428,46 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Cancel button or Modal not found in DOM");
     }
     
-    // Check if elements exist before adding listeners to prevent errors
+    // Check if elements exist before adding listeners to prevent errors. You attach multiple listeners to the same closeBtn:2
     if (postBtn && modal) {
         postBtn.addEventListener('click', () => {
             modal.style.display = 'flex';
         });
+        event.preventDefault();
     }
 
+    // Check if elements exist before adding listeners to prevent errors. You attach multiple listeners to the same closeBtn:3
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
+        event.preventDefault();
     }
 
-// Populate categories from the sidebar
-const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
-const categorySelect = document.getElementById('adCategory');
-categories.forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    categorySelect.appendChild(opt);
-});
+    // Populate categories from the sidebar
+    const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
+    const categorySelect = document.getElementById('adCategory');
+    categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        categorySelect.appendChild(opt);
+    });
 
-postBtn.addEventListener('click', () => modal.style.display = 'flex');
-closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    adForm.reset();
-    selectedFiles = [];
-    renderPreviews();
-});
+    postBtn.addEventListener('click', () => modal.style.display = 'flex');
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+        selectedFiles = [];
+        renderPreviews();
+    });
 
-// Image Preview logic
-imageInput.addEventListener('change', (e) => {
-    const files = Array.from(e.target.files);
-    selectedFiles = [...selectedFiles, ...files];
-    renderPreviews();
+    // Image Preview logic
+    imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        selectedFiles = [...selectedFiles, ...files];
+        renderPreviews();
 
-if (adForm) {
+    if (adForm) {
     // We use .onsubmit to ensure it overrides any other behaviors
     adForm.onsubmit = async function(e) {
         // 1. STOP THE RELOAD
@@ -1551,7 +1552,9 @@ adForm.addEventListener('submit', async (e) => {
         console.error("Submission failed", error);
     }
 });
-
+    
+// END OF....MODAL LOGIC
+    
 function createOrUpdateCard(data) {
     const grid = document.querySelector('.listings .grid');
     const cardHTML = `
