@@ -10,6 +10,69 @@
             overflow: visible;
         }
 
+        /* Modal Styling */
+        .ad-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .ad-modal-content {
+            background: white; padding: 25px; border-radius: 12px; width: 95%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .preview-container {
+            display: flex; gap: 10px; overflow-x: auto; margin: 10px 0; padding: 10px; border: 2px dashed #eee;
+        }
+        .preview-item { position: relative; flex: 0 0 80px; height: 80px; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+       
+        /* Card Styling */
+        .custom-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; background: white; margin-bottom: 20px; }
+        .card-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 200px; }
+        .card-slider img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
+
+        /* Style all cards */
+        .ad-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .ad-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000;
+       }
+       .ad-modal-content {
+            background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto; position: relative;
+       }
+       .preview-container {
+            display: flex; gap: 10px; overflow-x: auto; margin: 10px 0; padding: 5px; border: 1px dashed #ccc;
+       }
+       .preview-item {
+            position: relative; flex: 0 0 80px; height: 80px;
+       }
+       .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+       .remove-img {
+            position: absolute; top: -5px; right: -5px; background: red; color: white;
+            border-radius: 50%; width: 20px; height: 20px; cursor: pointer; text-align: center; line-height: 18px;
+       }
+       .ad-card {
+            border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff;
+            display: flex; flex-direction: column; margin-bottom: 20px;
+       }
+       .card-images {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 200px;
+       }
+       .card-images img {
+            flex: 0 0 100%; object-fit: cover; scroll-snap-align: start;
+        }
+        .card-body { padding: 15px; }
+        .card-price { font-weight: bold; color: green; font-size: 1.2em; };
+
+        /* Target a specific slot by ID */
+            #ad-card-1 {
+            border-color: gold; /* Make the first ad a 'Featured' slot */
+        }
+
         #scroll-arrow-left, #scroll-arrow-right {
         /* Layout & Centering */
             display: flex !important;
@@ -65,7 +128,6 @@
             align-items: center;
             z-index: 2000;
         }
-
        
         .page {
             min-height: 60vh;
@@ -182,7 +244,6 @@
            justify-content: center;
            padding: 0px;
            font-size: 11.2px;
-           
         }
 
         .sidebar ul li {
@@ -406,7 +467,6 @@
         }
    
         /* Password Eye Toggle Styles */
-
         .password-container& {
             width: 198.4px;
             margin-left: auto;
@@ -419,8 +479,7 @@
             overflow: visible;
             margin: 2px auto;
         }
-
-       
+     
         .password-container input {
             padding-right: 45px;
         }
@@ -435,8 +494,7 @@
             margin: 0px auto;
             padding: 1px 0px;
          }
-
-       
+     
         .toggle-password {
             position: absolute;
             right: 12px;
@@ -769,8 +827,7 @@
            width: 100%;
        }
 
-       .sidebar {
-       
+       .sidebar {  
        }
 
        .listings {
@@ -789,16 +846,12 @@
         }
 
         /* turn categories into grid */
-        .category-list {
-           
-            grid-template-columns: repeat(4, 1fr);
-           
+        .category-list {    
+            grid-template-columns: repeat(4, 1fr);    
         }
 
-        .category-list li {
-           
-            background: white;
-           
+        .category-list li {      
+            background: white;  
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
 
@@ -903,8 +956,7 @@
 </div>
 
    
-<!-- Auth Screen -->
-   
+<!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
   <a href="/">
     <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
@@ -913,8 +965,7 @@
          height="50">
   </a>
     <h5>Advertise Free, Get Zero Interest Business Capital</h5>
-    <h2>Login / Register</h2>
-   
+    <h2>Login / Register</h2>  
     <div class="auth-field">
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
@@ -939,6 +990,8 @@
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
+
+   
     <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
     <div id="forgotPasswordSection" class="hidden">
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
@@ -967,6 +1020,8 @@
         <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
     </div>
     <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
+
+   
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -979,23 +1034,18 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-
-   
-
-   
-   
+ 
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
-        <h4>Contact: info@growthbase.net</h4>
-       
+        <h5>Contact: info@growthbase.net</h5>  
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
     <div class="container">
         <!-- Tabs -->
         <div class="tabs">
             <div class="tab" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);" >Plans</div>
-            <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);" >Apply Now</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);" >Apply</div>
             <div class="tab" onclick="switchTab(2)" id="tab-services" style="background-color: rgb(241, 241, 241);" >Services</div>
             <div class="tab active" onclick="switchTab(3)" id="tab-adverts" style="background-color: white;">Adverts</div>
         </div>
@@ -1157,12 +1207,8 @@
         <div id="servicesPage" class="page" >
             <div class="card">
                 <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
-                <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>
-               
-               
-                <canvas id="occupationPieChart"  style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>
-               
-               
+                <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>        
+                <canvas id="occupationPieChart"  style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>              
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -1191,18 +1237,15 @@
         <div id="advertsPage" class="page" >
 
             <!-- HEADER -->
-            <div class="market-header">
-               
+            <div class="market-header">          
                 <input type="text" placeholder="Search for products, services...">
-                <button class="post-btn">+ Post Ad</button>
+                <button type="button" class="post-btn">+ Post Ad</button>
             </div>
-
                 <div class="market-container">
-
                     <!-- SIDEBAR -->
                     <div class="sidebar">
-                        <h4>Post an ad for free. Click Post Ad button or send advert details with photos to info@growthbase.net</h4>
-                        <h4>Categories</h4>
+                        <h5>Post an ad for free. Click Post Ad button or send advert details with photos to info@growthbase.net</h5>
+                        <h5>Categories</h5>
                             <ul class="category-list">
                                
                                 <li data-category="Animals">
@@ -1297,9 +1340,304 @@
         <div class="footer">
         © 2026 GrowthBase Marketplace
         </div>
-
+           
+<div class="ad-modal-overlay" id="adModal">
+    <div class="ad-modal-content">
+        <h3>Post a New Advertisement</h3>
+        <form id="adForm">
+            <input type="text" id="adTitle" placeholder="Title" required style="width:100%; margin-bottom:10px;">
+            <select id="adCategory" required style="width:100%; margin-bottom:10px;"></select>
+            <textarea id="adDesc" placeholder="Description (max 40 words)" required style="width:100%; height:80px; margin-bottom:10px;"></textarea>
+            <input type="number" id="adPrice" placeholder="Price" required style="width:100%; margin-bottom:10px;">
+            <input type="text" id="adLocation" placeholder="Location/Address" required style="width:100%; margin-bottom:10px;">
+            <input type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
+           
+            <label>Upload Images:</label>
+            <input type="file" id="adImages" multiple accept="image/*" style="margin-bottom:10px;">
+            <div class="preview-container" id="previewContainer"></div>
+           
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button type="submit" style="flex:1; padding:10px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Submit Advert</button>
+                <button type="button" id="closeModal" style="flex:1; padding:10px; background:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+   
+// Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
+async function compressImage(file, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Resize logic: Keep aspect ratio
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert to compressed Base64 JPEG
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(dataUrl);
+            };
+        };
+    });
+}
+
+   
+// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+    const postBtn = document.querySelector('.post-btn');
+    const closeBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
+    const closeModal = document.getElementById('closeModal');
+    const adForm = document.getElementById('adForm');
+
+    // 2. Add the click event listener
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', (event) => {
+            // Prevent any default form behavior
+            event.preventDefault();
+       
+            // Hide the modal
+            modal.style.display = 'none';
+       
+            // Optional: Reset the form so it's clean for next time
+            if (adForm) adForm.reset();
+       
+            // Optional: Clear the image preview container
+            const preview = document.getElementById('previewContainer');
+            if (preview) preview.innerHTML = '';
+       
+            console.log("Modal closed successfully");
+        });
+    } else {
+        console.error("Cancel button or Modal not found in DOM");
+    }
+   
+    // Check if elements exist before adding listeners to prevent errors
+    if (postBtn && modal) {
+        postBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+
+// Populate categories from the sidebar
+const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
+const categorySelect = document.getElementById('adCategory');
+categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+});
+
+postBtn.addEventListener('click', () => modal.style.display = 'flex');
+closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    adForm.reset();
+    selectedFiles = [];
+    renderPreviews();
+});
+
+// Image Preview logic
+imageInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    selectedFiles = [...selectedFiles, ...files];
+    renderPreviews();
+
+if (adForm) {
+    // We use .onsubmit to ensure it overrides any other behaviors
+    adForm.onsubmit = async function(e) {
+        // 1. STOP THE RELOAD
+        if (e) e.preventDefault();
+       
+        console.log("Form submission intercepted. Page will NOT reload.");
+
+        // 2. Your existing logic
+        try {
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            // ... (Your compression and fetch code) ...
+
+            // 3. Close the modal without refreshing
+            document.getElementById('adModal').style.display = 'none';
+            alert("Success!");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            adForm.querySelector('button[type="submit"]').disabled = false;
+            adForm.querySelector('button[type="submit"]').textContent = "Submit Advert";
+        }
+
+        // 4. RETURN FALSE as a secondary backup to stop the reload
+        return false;
+    };
+}
+
+
+   
+});
+
+function renderPreviews() {
+    previewContainer.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}">
+                <span class="remove-img" onclick="removeImage(${index})">&times;</span>
+            `;
+            previewContainer.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+window.removeImage = (index) => {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
+};
+
+//  Form Submission and Card Creation
+adForm.addEventListener('submit', async (e) => {
+    // CRITICAL: This stops the page from reloading/logging you out
+    e.preventDefault();
+   
+    console.log("Submission started without reloading the page...");
+
+    try {
+        // ... Your compression and data gathering logic ...
+        const adData = { /* your data */ };
+
+        // 2. Send data in the background
+        const response = await fetch('/api/ads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(adData)
+        });
+
+        if (response.ok) {
+            alert("Advert Posted!");
+            // 3. Close the modal manually instead of letting the page refresh
+            document.getElementById('adOverlay').style.display = 'none';
+            adForm.reset();
+        }
+    } catch (error) {
+        console.error("Submission failed", error);
+    }
+});
+
+function createOrUpdateCard(data) {
+    const grid = document.querySelector('.listings .grid');
+    const cardHTML = `
+        <div class="ad-card" data-id="${data.id}">
+            <div class="card-images">
+                ${data.images.map(img => `<img src="${img}">`).join('')}
+            </div>
+            <div class="card-body">
+                <h4>${data.title}</h4>
+                <p class="card-price">$${data.price}</p>
+                <p>${data.description}</p>
+                <p><small>📍 ${data.location}</small></p>
+                <p><small>📞 ${data.phone}</small></p>
+            </div>
+        </div>
+    `;
+   
+    // Logic to replace or add
+    grid.insertAdjacentHTML('afterbegin', cardHTML);
+}
+});
+
+async function fetchAds() {
+    const response = await fetch('/api/ads');
+    const result = await response.json();
+    const grid = document.querySelector('.listings .grid');
+    grid.innerHTML = ''; // Clear existing
+
+    result.data.forEach(ad => {
+        const cardHTML = `
+            <div class="ad-card">
+                <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
+                    ${ad.images.map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
+                </div>
+                <div class="card-body" style="padding:15px;">
+                    <h4>${ad.title}</h4>
+                    <p style="color:green; font-weight:bold;">$${ad.price}</p>
+                    <p>${ad.description}</p>
+                    <small>📍 ${ad.location} | 📞 ${ad.phone}</small>
+                </div>
+            </div>`;
+        grid.insertAdjacentHTML('beforeend', cardHTML);
+    });
+}
+
+// Call fetchAds when the page loads
+document.addEventListener('DOMContentLoaded', fetchAds);    
+
+
+   
+
+// DYNAMICALLY ASSIGN IDS TO CATEGORY LISTINGS
+
+const categories = ['Properties', 'Vehicles', 'Electronics']; // Example categories
+
+function renderAds(ads) {
+  const container = document.getElementById('ad-overlay');
+  container.innerHTML = ''; // Clear existing
+
+  ads.forEach((ad, index) => {
+    const cardId = `ad-card-${index + 1}`; // Create the ID: ad-card-1, ad-card-2, etc.
+   
+    const cardHTML = `
+      <div id="${cardId}" class="ad-card">
+        <strong>${ad.title}</strong>
+        <p>${ad.description}</p>
+        <div class="price">${ad.price}</div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', cardHTML);
+  });
+}
+
+// DYNAMICALLY SEND ADS TO SPECIFIC SLOTS
+function updateCardContent(cardNumber, newData) {
+  const card = document.getElementById(`ad-card-${cardNumber}`);
+  if (card) {
+    card.querySelector('strong').textContent = newData.title;
+    card.querySelector('.price').textContent = newData.price;
+  }
+}
+
+// Example: Send a new listing to slot 2
+updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
+   
+   
 (function() {
     const categoryList = document.querySelector('ul.category-list');
     const marketContainer = document.querySelector('.market-container');
