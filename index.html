@@ -1363,6 +1363,93 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
+// Global variables
+let currentToken = null;
+let currentLoggedInEmail = null;
+let editVerificationCode = null;
+let isEditing = false;
+let propertyFields = [];
+let bankAccounts = [];
+let beneficiaries = [];
+let uploadedDocuments = [];
+let documentRows = [];
+let selectedBodaGoPlan = null;
+let selectedPremiumPlan = null;
+// ==================== INACTIVITY TIMEOUT ====================
+let inactivityTimer;
+let warningTimer;
+const INACTIVITY_LIMIT = 5 * 60 * 1000;
+const WARNING_TIME = 60 * 1000;
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    clearTimeout(warningTimer);
+    document.getElementById("inactivityWarningModal").style.display = "none";
+    inactivityTimer = setTimeout(() => {
+        showInactivityWarning();
+    }, INACTIVITY_LIMIT);
+}
+
+async function handleLogin() {
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const pass = document.getElementById("password").value.trim();
+    const msg = document.getElementById("authMessage");
+    const spinner = document.getElementById("loginSpinner");
+    const verifyingText = document.getElementById("verifyingText");
+    if (!email || !pass) {
+        msg.textContent = "Email and password are required.";
+        return;
+    }
+    spinner.classList.add("show");
+    verifyingText.style.display = "block";
+    try {
+        const response = await fetch(`${API_BASE}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Incorrect email or password.";
+            return;
+        }
+        currentToken = data.token;
+        currentLoggedInEmail = email;
+        sessionStorage.setItem("fd_token", currentToken);
+        sessionStorage.setItem("fd_logged_email", email);
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        if (isNewUser) {
+            switchTab(0);
+            disableBeneficiariesAndDocuments();
+        } else {
+            loadProfile();
+        }
+        resetInactivityTimer();
+        setupInactivityListeners();
+        requestGeolocation(); // NEW: Request geolocation after login
+        setTimeout(loadOccupationChart, 800); // NEW: Load pie chart
+    } catch (err) {
+        msg.style.color = "";
+        msg.textContent = "";
+    } finally {
+        spinner.classList.remove("show");
+        verifyingText.style.display = "none";
+    }
+}
+function logout() {
+    clearTimeout(inactivityTimer);
+    clearTimeout(warningTimer);
+    currentToken = null;
+    currentLoggedInEmail = null;
+    isNewUser = false;
+    hasStartedPlan = false;
+    sessionStorage.clear();
+    document.getElementById("mainApp").classList.add("hidden");
+    document.getElementById("authScreen").classList.remove("hidden");
+    document.getElementById("inactivityWarningModal").style.display = "none";
+}
    
 // Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -2155,32 +2242,7 @@ function backToLogin() {
     document.getElementById("authMessage").style.color = "#dc3545";
 }
 // ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
-const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
-// Global variables
-let currentToken = null;
-let currentLoggedInEmail = null;
-let editVerificationCode = null;
-let isEditing = false;
-let propertyFields = [];
-let bankAccounts = [];
-let beneficiaries = [];
-let uploadedDocuments = [];
-let documentRows = [];
-let selectedBodaGoPlan = null;
-let selectedPremiumPlan = null;
-// ==================== INACTIVITY TIMEOUT ====================
-let inactivityTimer;
-let warningTimer;
-const INACTIVITY_LIMIT = 5 * 60 * 1000;
-const WARNING_TIME = 60 * 1000;
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    clearTimeout(warningTimer);
-    document.getElementById("inactivityWarningModal").style.display = "none";
-    inactivityTimer = setTimeout(() => {
-        showInactivityWarning();
-    }, INACTIVITY_LIMIT);
-}
+
 function showInactivityWarning() {
     let timeLeft = 60;
     const countdownTimerEl = document.getElementById("countdownTimer");
@@ -2377,66 +2439,7 @@ async function handleRegister() {
         msg.textContent = "Server error.";
     }
 }
-async function handleLogin() {
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const pass = document.getElementById("password").value.trim();
-    const msg = document.getElementById("authMessage");
-    const spinner = document.getElementById("loginSpinner");
-    const verifyingText = document.getElementById("verifyingText");
-    if (!email || !pass) {
-        msg.textContent = "Email and password are required.";
-        return;
-    }
-    spinner.classList.add("show");
-    verifyingText.style.display = "block";
-    try {
-        const response = await fetch(`${API_BASE}/api/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            msg.style.color = "#dc3545";
-            msg.textContent = data.msg || "Incorrect email or password.";
-            return;
-        }
-        currentToken = data.token;
-        currentLoggedInEmail = email;
-        sessionStorage.setItem("fd_token", currentToken);
-        sessionStorage.setItem("fd_logged_email", email);
-        document.getElementById("authScreen").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
-        if (isNewUser) {
-            switchTab(0);
-            disableBeneficiariesAndDocuments();
-        } else {
-            loadProfile();
-        }
-        resetInactivityTimer();
-        setupInactivityListeners();
-        requestGeolocation(); // NEW: Request geolocation after login
-        setTimeout(loadOccupationChart, 800); // NEW: Load pie chart
-    } catch (err) {
-        msg.style.color = "";
-        msg.textContent = "";
-    } finally {
-        spinner.classList.remove("show");
-        verifyingText.style.display = "none";
-    }
-}
-function logout() {
-    clearTimeout(inactivityTimer);
-    clearTimeout(warningTimer);
-    currentToken = null;
-    currentLoggedInEmail = null;
-    isNewUser = false;
-    hasStartedPlan = false;
-    sessionStorage.clear();
-    document.getElementById("mainApp").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-    document.getElementById("inactivityWarningModal").style.display = "none";
-}
+
 // ==================== FORGOT PASSWORD FUNCTIONS ====================
 async function verifyForgotDetails() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
