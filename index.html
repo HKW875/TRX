@@ -1368,6 +1368,7 @@
     
 // Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
+    let selectedFiles = [];
     return new Promise((resolve) => {
         const reader = new FileReader();
         const imageInput = document.getElementById('imageInput');
