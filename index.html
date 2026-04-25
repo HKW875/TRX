@@ -1353,7 +1353,7 @@
             <input type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
            
             <label>Upload Images:</label>
-            <input type="file" id="imageInput" multiple accept="image/*" style="margin-bottom:10px;">
+            <input type="file" id="adImages" multiple accept="image/*" style="margin-bottom:10px;">
             <div class="preview-container" id="previewContainer"></div>
            
             <div style="display:flex; gap:10px; margin-top:15px;">
@@ -1401,29 +1401,23 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
    
 // WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
 document.addEventListener('DOMContentLoaded', () => {
-    const imageInput = document.getElementById('imageInput');
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
     const closeModal = document.getElementById('closeModal');
     const adForm = document.getElementById('adForm');
 
-    if (imageInput) {
-    imageInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        selectedFiles = [...selectedFiles, ...files];
-        renderPreviews();
-    });
-    } else {
-        console.error("imageInput not found in DOM");
-    }
-
     // 2. Add the click event listener
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', (event) => {
+            // Prevent any default form behavior
+            event.preventDefault();
        
             // Hide the modal
             modal.style.display = 'none';
+       
+            // Optional: Reset the form so it's clean for next time
+            if (adForm) adForm.reset();
        
             // Optional: Clear the image preview container
             const preview = document.getElementById('previewContainer');
@@ -1434,107 +1428,129 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Cancel button or Modal not found in DOM");
     }
-
-    // Populate categories from the sidebar
-    const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
-    const categorySelect = document.getElementById('adCategory');
-    categories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        categorySelect.appendChild(opt);
-    });
-
-    // Image Preview logic
-    imageInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        selectedFiles = [...selectedFiles, ...files];
-        renderPreviews();
    
-    });
-
-    if (adForm) {
-        adForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); // ALWAYS stop reload
-            console.log("Submitting without reload");
-
-            try {
-                const submitBtn = adForm.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.textContent = "Processing...";
-
-                // your fetch code here
-
-                modal.style.display = 'none';
-                alert("Success!");
-
-            } catch (err) {
-                console.error(err);
-            } finally {
-                const submitBtn = adForm.querySelector('button[type="submit"]');
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Submit Advert";
-           }
+    // Check if elements exist before adding listeners to prevent errors
+    if (postBtn && modal) {
+        postBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
         });
     }
 
-    function renderPreviews() {
-        previewContainer.innerHTML = '';
-        selectedFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const div = document.createElement('div');
-                div.className = 'preview-item';
-                div.innerHTML = `
-                    <img src="${e.target.result}">
-                    <span class="remove-img" onclick="removeImage(${index})">&times;</span>
-                `;
-                previewContainer.appendChild(div);
-            };
-            reader.readAsDataURL(file);
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
         });
     }
 
-    window.removeImage = (index) => {
-        selectedFiles.splice(index, 1);
-        renderPreviews();
-    };
+// Populate categories from the sidebar
+const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
+const categorySelect = document.getElementById('adCategory');
+categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+});
 
-    //  Form Submission and Card Creation
-    adForm.addEventListener('submit', async (e) => {
-        // CRITICAL: This stops the page from reloading/logging you out
-        e.preventDefault();
-   
-        console.log("Submission started without reloading the page...");
+postBtn.addEventListener('click', () => modal.style.display = 'flex');
+closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    adForm.reset();
+    selectedFiles = [];
+    renderPreviews();
+});
 
+// Image Preview logic
+imageInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    selectedFiles = [...selectedFiles, ...files];
+    renderPreviews();
+
+if (adForm) {
+    // We use .onsubmit to ensure it overrides any other behaviors
+    adForm.onsubmit = async function(e) {
+        // 1. STOP THE RELOAD
+        if (e) e.preventDefault();
+       
+        console.log("Form submission intercepted. Page will NOT reload.");
+
+        // 2. Your existing logic
         try {
-            // ... Your compression and data gathering logic ...
-            const adData = { /* your data */ };
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
 
-            // 2. Send data in the background
-            const response = await fetch('/api/ads', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(adData)
-            });
+            // ... (Your compression and fetch code) ...
 
-            if (response.ok) {
-                alert("Advert Posted!");
-                // 3. Close the modal manually instead of letting the page refresh
-                document.getElementById('adOverlay').style.display = 'none';
-                adForm.reset();
-            }
-        } catch (error) {
-            console.error("Submission failed", error);
+            // 3. Close the modal without refreshing
+            document.getElementById('adModal').style.display = 'none';
+            alert("Success!");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            adForm.querySelector('button[type="submit"]').disabled = false;
+            adForm.querySelector('button[type="submit"]').textContent = "Submit Advert";
         }
+
+        // 4. RETURN FALSE as a secondary backup to stop the reload
+        return false;
+    };
+}
+
+
+   
+});
+
+function renderPreviews() {
+    previewContainer.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}">
+                <span class="remove-img" onclick="removeImage(${index})">&times;</span>
+            `;
+            previewContainer.appendChild(div);
+        };
+        reader.readAsDataURL(file);
     });
+}
 
+window.removeImage = (index) => {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
+};
 
+//  Form Submission and Card Creation
+adForm.addEventListener('submit', async (e) => {
+    // CRITICAL: This stops the page from reloading/logging you out
+    e.preventDefault();
+   
+    console.log("Submission started without reloading the page...");
 
+    try {
+        // ... Your compression and data gathering logic ...
+        const adData = { /* your data */ };
 
+        // 2. Send data in the background
+        const response = await fetch('/api/ads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(adData)
+        });
 
-
-    
+        if (response.ok) {
+            alert("Advert Posted!");
+            // 3. Close the modal manually instead of letting the page refresh
+            document.getElementById('adOverlay').style.display = 'none';
+            adForm.reset();
+        }
+    } catch (error) {
+        console.error("Submission failed", error);
+    }
+});
 
 function createOrUpdateCard(data) {
     const grid = document.querySelector('.listings .grid');
