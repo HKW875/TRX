@@ -24,7 +24,7 @@
         }
         .preview-item { position: relative; flex: 0 0 80px; height: 80px; }
         .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
-        
+       
         /* Card Styling */
         .custom-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; background: white; margin-bottom: 20px; }
         .card-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 200px; }
@@ -128,7 +128,7 @@
             align-items: center;
             z-index: 2000;
         }
-        
+       
         .page {
             min-height: 60vh;
         }
@@ -479,7 +479,7 @@
             overflow: visible;
             margin: 2px auto;
         }
-      
+     
         .password-container input {
             padding-right: 45px;
         }
@@ -847,11 +847,11 @@
 
         /* turn categories into grid */
         .category-list {    
-            grid-template-columns: repeat(4, 1fr);     
+            grid-template-columns: repeat(4, 1fr);    
         }
 
         .category-list li {      
-            background: white;   
+            background: white;  
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
 
@@ -944,7 +944,7 @@
 </style>
 </head>
 <body>
-
+<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 <!-- Flags Container - US | Kenya | Ghana -->
 <div id="flags-container">
     <!-- US Flag -->
@@ -956,7 +956,7 @@
 </div>
 
    
-<!-- Auth Screen -->   
+<!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
   <a href="/">
     <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
@@ -965,7 +965,7 @@
          height="50">
   </a>
     <h5>Advertise Free, Get Zero Interest Business Capital</h5>
-    <h2>Login / Register</h2>   
+    <h2>Login / Register</h2>  
     <div class="auth-field">
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="your@email.com">
@@ -991,7 +991,7 @@
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
 
-    
+   
     <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
     <div id="forgotPasswordSection" class="hidden">
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
@@ -1021,7 +1021,7 @@
     </div>
     <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
 
-    
+   
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -1034,11 +1034,11 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-  
+ 
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
-        <h4>Contact: info@growthbase.net</h4>   
+        <h5>Contact: info@growthbase.net</h5>  
         <button id="logoutBtn" onclick="logout()">Log Out</button>
     </header>
     <div class="container">
@@ -1208,7 +1208,7 @@
             <div class="card">
                 <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>        
-                <canvas id="occupationPieChart"  style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>               
+                <canvas id="occupationPieChart"  style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>              
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -1237,7 +1237,7 @@
         <div id="advertsPage" class="page" >
 
             <!-- HEADER -->
-            <div class="market-header">           
+            <div class="market-header">          
                 <input type="text" placeholder="Search for products, services...">
                 <button type="button" class="post-btn">+ Post Ad</button>
             </div>
@@ -1340,7 +1340,7 @@
         <div class="footer">
         © 2026 GrowthBase Marketplace
         </div>
-            
+           
 <div class="ad-modal-overlay" id="adModal">
     <div class="ad-modal-content">
         <h3>Post a New Advertisement</h3>
@@ -1351,11 +1351,11 @@
             <input type="number" id="adPrice" placeholder="Price" required style="width:100%; margin-bottom:10px;">
             <input type="text" id="adLocation" placeholder="Location/Address" required style="width:100%; margin-bottom:10px;">
             <input type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
-            
+           
             <label>Upload Images:</label>
-            <input type="file" id="imageInput" multiple accept="image/*" style="margin-bottom:10px;">
+            <input type="file" id="adImages" multiple accept="image/*" style="margin-bottom:10px;">
             <div class="preview-container" id="previewContainer"></div>
-            
+           
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <button type="submit" style="flex:1; padding:10px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Submit Advert</button>
                 <button type="button" id="closeModal" style="flex:1; padding:10px; background:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer;">Cancel</button>
@@ -1365,9 +1365,193 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-    
+   
+// Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
+async function compressImage(file, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
 
-    
+                // Resize logic: Keep aspect ratio
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert to compressed Base64 JPEG
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(dataUrl);
+            };
+        };
+    });
+}
+
+   
+// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+    const postBtn = document.querySelector('.post-btn');
+    const closeBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
+    const closeModal = document.getElementById('closeModal');
+    const adForm = document.getElementById('adForm');
+
+    // 2. Add the click event listener
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', (event) => {
+            // Prevent any default form behavior
+            event.preventDefault();
+       
+            // Hide the modal
+            modal.style.display = 'none';
+       
+            // Optional: Reset the form so it's clean for next time
+            if (adForm) adForm.reset();
+       
+            // Optional: Clear the image preview container
+            const preview = document.getElementById('previewContainer');
+            if (preview) preview.innerHTML = '';
+       
+            console.log("Modal closed successfully");
+        });
+    } else {
+        console.error("Cancel button or Modal not found in DOM");
+    }
+   
+    // Check if elements exist before adding listeners to prevent errors
+    if (postBtn && modal) {
+        postBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+
+// Populate categories from the sidebar
+const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
+const categorySelect = document.getElementById('adCategory');
+categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+});
+
+postBtn.addEventListener('click', () => modal.style.display = 'flex');
+closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    adForm.reset();
+    selectedFiles = [];
+    renderPreviews();
+});
+
+// Image Preview logic
+imageInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    selectedFiles = [...selectedFiles, ...files];
+    renderPreviews();
+
+if (adForm) {
+    // We use .onsubmit to ensure it overrides any other behaviors
+    adForm.onsubmit = async function(e) {
+        // 1. STOP THE RELOAD
+        if (e) e.preventDefault();
+       
+        console.log("Form submission intercepted. Page will NOT reload.");
+
+        // 2. Your existing logic
+        try {
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            // ... (Your compression and fetch code) ...
+
+            // 3. Close the modal without refreshing
+            document.getElementById('adModal').style.display = 'none';
+            alert("Success!");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            adForm.querySelector('button[type="submit"]').disabled = false;
+            adForm.querySelector('button[type="submit"]').textContent = "Submit Advert";
+        }
+
+        // 4. RETURN FALSE as a secondary backup to stop the reload
+        return false;
+    };
+}
+
+
+   
+});
+
+function renderPreviews() {
+    previewContainer.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}">
+                <span class="remove-img" onclick="removeImage(${index})">&times;</span>
+            `;
+            previewContainer.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+window.removeImage = (index) => {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
+};
+
+//  Form Submission and Card Creation
+adForm.addEventListener('submit', async (e) => {
+    // CRITICAL: This stops the page from reloading/logging you out
+    e.preventDefault();
+   
+    console.log("Submission started without reloading the page...");
+
+    try {
+        // ... Your compression and data gathering logic ...
+        const adData = { /* your data */ };
+
+        // 2. Send data in the background
+        const response = await fetch('/api/ads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(adData)
+        });
+
+        if (response.ok) {
+            alert("Advert Posted!");
+            // 3. Close the modal manually instead of letting the page refresh
+            document.getElementById('adOverlay').style.display = 'none';
+            adForm.reset();
+        }
+    } catch (error) {
+        console.error("Submission failed", error);
+    }
+});
+
 function createOrUpdateCard(data) {
     const grid = document.querySelector('.listings .grid');
     const cardHTML = `
@@ -1384,7 +1568,7 @@ function createOrUpdateCard(data) {
             </div>
         </div>
     `;
-    
+   
     // Logic to replace or add
     grid.insertAdjacentHTML('afterbegin', cardHTML);
 }
@@ -1417,7 +1601,7 @@ async function fetchAds() {
 document.addEventListener('DOMContentLoaded', fetchAds);    
 
 
-    
+   
 
 // DYNAMICALLY ASSIGN IDS TO CATEGORY LISTINGS
 
@@ -1429,7 +1613,7 @@ function renderAds(ads) {
 
   ads.forEach((ad, index) => {
     const cardId = `ad-card-${index + 1}`; // Create the ID: ad-card-1, ad-card-2, etc.
-    
+   
     const cardHTML = `
       <div id="${cardId}" class="ad-card">
         <strong>${ad.title}</strong>
@@ -1452,8 +1636,8 @@ function updateCardContent(cardNumber, newData) {
 
 // Example: Send a new listing to slot 2
 updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
-    
-    
+   
+   
 (function() {
     const categoryList = document.querySelector('ul.category-list');
     const marketContainer = document.querySelector('.market-container');
@@ -1529,7 +1713,48 @@ updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
    
 
    
-
+// ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
+const canvas = document.getElementById('background-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, particles = [];
+const numParticles = 80;
+const connectionDistance = 150;
+const maxSpeed = 0.8;
+class Particle {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * maxSpeed;
+        this.vy = (Math.random() - 0.5) * maxSpeed;
+        this.radius = Math.random() * 3.5 + 2.5;
+        this.hue = 200 + Math.random() * 60;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -0.95;
+        if (this.y < 0 || this.y > height) this.vy *= -0.95;
+        this.vx += (Math.random() - 0.5) * 0.05;
+        this.vy += (Math.random() - 0.5) * 0.05;
+        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        if (speed > maxSpeed) {
+            this.vx = (this.vx / speed) * maxSpeed;
+            this.vy = (this.vy / speed) * maxSpeed;
+        }
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 90%, 85%, 0.95)`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 70%, 0.8)`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+    }
+}
 
 function validateRegisterInputs() {
     const mobile = document.getElementById("mobileNumber").value.trim();
