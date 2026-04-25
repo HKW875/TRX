@@ -1367,10 +1367,7 @@
 <script>
    
 // GLOBAL STATE
-
-
-
-    
+let selectedFiles = [];   
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
     return new Promise((resolve) => {
         const reader = new FileReader();
@@ -1401,140 +1398,8 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
         };
     });
 }
-    
-let selectedFiles = [];
    
-// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
-document.addEventListener('DOMContentLoaded', () => {
 
-    const postBtn = document.querySelector('.post-btn');
-    const modal = document.getElementById('adOverlay');
-    const closeBtn = document.getElementById('closeModal');
-    const adForm = document.getElementById('adForm');
-    const imageInput = document.getElementById('imageInput');
-    const previewContainer = document.getElementById('previewContainer');
-
-    // OPEN MODAL
-    postBtn?.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
-
-    // CLOSE MODAL
-    closeBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        modal.style.display = 'none';
-
-        // OPTIONAL: do NOT reset if you want to preserve state
-        // adForm.reset();
-
-        selectedFiles = [];
-        renderPreviews();
-    });
-
-    // CATEGORY POPULATION
-    const categories = Array.from(document.querySelectorAll('.category-list li'))
-        .map(li => li.textContent.trim());
-
-    const categorySelect = document.getElementById('adCategory');
-
-    categories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        categorySelect.appendChild(opt);
-    });
-
-    // IMAGE INPUT HANDLER (FIXED)
-    imageInput?.addEventListener('change', async (e) => {
-        const files = Array.from(e.target.files);
-
-        for (let file of files) {
-            const compressed = await compressImage(file);
-            selectedFiles.push(compressed);
-        }
-
-        renderPreviews();
-    });
-
-    // FORM SUBMIT (ONLY ONE HANDLER)
-    adForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        console.log("No reload. No logout.");
-
-        try {
-            const submitBtn = adForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Processing...";
-
-
-            
-
-            const adData = {
-                // include your fields here
-                images: selectedFiles // already compressed
-                title: adForm.title.value,
-                category: adForm.category.value,
-                description: adForm.description.value,
-                price: adForm.price.value,
-                location: adForm.location.value,
-                contact: adForm.contact.value
-                
-            };
-
-            const response = await fetch('/api/ads', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(adData)
-            });
-
-            if (response.ok) {
-                alert("Advert posted!");
-
-                modal.style.display = 'none';
-
-                adForm.reset();
-                selectedFiles = [];
-                renderPreviews();
-            }
-
-        } catch (err) {
-            console.error(err);
-        } finally {
-            const btn = adForm.querySelector('button[type="submit"]');
-            btn.disabled = false;
-            btn.textContent = "Submit Advert";
-        }
-    });
-
-    // PREVIEW RENDER
-    function renderPreviews() {
-        previewContainer.innerHTML = '';
-
-        selectedFiles.forEach((imgSrc, index) => {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-
-            div.innerHTML = `
-                <img src="${imgSrc}">
-                <span class="remove-img" data-index="${index}">&times;</span>
-            `;
-
-            previewContainer.appendChild(div);
-        });
-
-        // attach remove listeners
-        document.querySelectorAll('.remove-img').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                selectedFiles.splice(index, 1);
-                renderPreviews();
-            });
-        });
-    }
-
-});
-// END OF AD MODAL BOX
     
 
 function createOrUpdateCard(data) {
