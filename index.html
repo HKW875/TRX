@@ -1552,7 +1552,7 @@ if (adForm) {
 
 
    
-})
+});
 
 function renderPreviews() {
     previewContainer.innerHTML = '';
@@ -1625,7 +1625,7 @@ function createOrUpdateCard(data) {
     // Logic to replace or add
     grid.insertAdjacentHTML('afterbegin', cardHTML);
 }
-});
+}
 
 async function fetchAds() {
     const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
