@@ -1419,13 +1419,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.getElementById('closeModal');
     const adForm = document.getElementById('adForm');
 
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // IMAGE SELECTION
+    imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        selectedFiles = [...selectedFiles, ...files];
+        renderPreviews();
+    });
+
+    // PREVIEW FUNCTION
+    function renderPreviews() {
+       previewContainer.innerHTML = '';
+
+       selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+
+                div.innerHTML = `
+                    <img src="${e.target.result}" style="width:120px;height:120px;object-fit:cover;">
+                    <span class="remove-img" data-index="${index}" style="cursor:pointer;">❌</span>
+            `    ;
+
+                previewContainer.appendChild(div);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // REMOVE IMAGE (event delegation - cleaner)
+    previewContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-img')) {
+           const index = e.target.getAttribute('data-index');
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+        }
+    });
+
+    // CLEAN FORM SUBMIT
+    adForm.addEventListener('submit', async (e) => {
+    
+
+        console.log("Submitting without reload...");
+
+        try {
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            // your existing logic here
+
+            document.getElementById('adModal').style.display = 'none';
+            alert("Success!");
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Advert";
+        }
+    });
+
     // 2. Add the click event listener
     
     // Check if elements exist before adding listeners to prevent errors. You attach multiple listeners to the same closeBtn:1
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', (event) => {
             // Prevent any default form behavior
-            event.preventDefault(); 
+            
         
             // Hide the modal
             modal.style.display = 'none';
@@ -1445,7 +1512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         postBtn.addEventListener('click', () => {
             modal.style.display = 'flex';
         });
-        event.preventDefault();
+       
     }
 
     // Check if elements exist before adding listeners to prevent errors. You attach multiple listeners to the same closeBtn:3
@@ -1453,7 +1520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
-        event.preventDefault();
+        
     }
 
     // Populate categories from the sidebar
@@ -1480,14 +1547,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPreviews();
 
     if (adForm) {
-    // We use .onsubmit to ensure it overrides any other behaviors
     adForm.onsubmit = async function(e) {
-        // 1. STOP THE RELOAD
         if (e) e.preventDefault();
-        
+    
         console.log("Form submission intercepted. Page will NOT reload.");
 
-        // 2. Your existing logic
         try {
             const submitBtn = adForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
@@ -1495,7 +1559,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ... (Your compression and fetch code) ...
 
-            // 3. Close the modal without refreshing
             document.getElementById('adModal').style.display = 'none';
             alert("Success!");
         } catch (err) {
@@ -1505,65 +1568,13 @@ document.addEventListener('DOMContentLoaded', () => {
             adForm.querySelector('button[type="submit"]').textContent = "Submit Advert";
         }
 
-        // 4. RETURN FALSE as a secondary backup to stop the reload
         return false; 
     };
-}
-
-
-    
-});
-
-function renderPreviews() {
-    previewContainer.innerHTML = '';
-    selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `
-                <img src="${e.target.result}">
-                <span class="remove-img" onclick="removeImage(${index})">&times;</span>
-            `;
-            previewContainer.appendChild(div);
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-window.removeImage = (index) => {
-    selectedFiles.splice(index, 1);
-    renderPreviews();
-};
-
-//  Form Submission and Card Creation
-adForm.addEventListener('submit', async (e) => {
-    // CRITICAL: This stops the page from reloading/logging you out
-    e.preventDefault(); 
-    
-    console.log("Submission started without reloading the page...");
-
-    try {
-        // ... Your compression and data gathering logic ...
-        const adData = { /* your data */ };
-
-        // 2. Send data in the background
-        const response = await fetch('/api/ads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(adData)
-        });
-
-        if (response.ok) {
-            alert("Advert Posted!");
-            // 3. Close the modal manually instead of letting the page refresh
-            document.getElementById('adOverlay').style.display = 'none'; 
-            adForm.reset();
-        }
-    } catch (error) {
-        console.error("Submission failed", error);
     }
-});
+
+    });
+
+
     
 // END OF....MODAL LOGIC
     
