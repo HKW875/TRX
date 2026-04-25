@@ -1353,7 +1353,7 @@
             <input type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
            
             <label>Upload Images:</label>
-            <input type="file" id="adImages" multiple accept="image/*" style="margin-bottom:10px;">
+            <input type="file" id="imageInput" multiple accept="image/*" style="margin-bottom:10px;">
             <div class="preview-container" id="previewContainer"></div>
            
             <div style="display:flex; gap:10px; margin-top:15px;">
@@ -1401,11 +1401,22 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
    
 // WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
 document.addEventListener('DOMContentLoaded', () => {
+    const imageInput = document.getElementById('imageInput');
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
     const closeModal = document.getElementById('closeModal');
     const adForm = document.getElementById('adForm');
+
+    if (imageInput) {
+    imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        selectedFiles = [...selectedFiles, ...files];
+        renderPreviews();
+    });
+    } else {
+        console.error("imageInput not found in DOM");
+    }
 
     // 2. Add the click event listener
     if (closeBtn && modal) {
