@@ -944,7 +944,7 @@
 </style>
 </head>
 <body>
-<canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
+
 <!-- Flags Container - US | Kenya | Ghana -->
 <div id="flags-container">
     <!-- US Flag -->
@@ -1713,48 +1713,7 @@ updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
    
 
    
-// ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
-const canvas = document.getElementById('background-canvas');
-const ctx = canvas.getContext('2d');
-let width, height, particles = [];
-const numParticles = 80;
-const connectionDistance = 150;
-const maxSpeed = 0.8;
-class Particle {
-    constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * maxSpeed;
-        this.vy = (Math.random() - 0.5) * maxSpeed;
-        this.radius = Math.random() * 3.5 + 2.5;
-        this.hue = 200 + Math.random() * 60;
-    }
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -0.95;
-        if (this.y < 0 || this.y > height) this.vy *= -0.95;
-        this.vx += (Math.random() - 0.5) * 0.05;
-        this.vy += (Math.random() - 0.5) * 0.05;
-        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-        if (speed > maxSpeed) {
-            this.vx = (this.vx / speed) * maxSpeed;
-            this.vy = (this.vy / speed) * maxSpeed;
-        }
-    }
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue}, 90%, 85%, 0.95)`;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = `hsla(${this.hue}, 100%, 70%, 0.8)`;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
-    }
-}
+
 
 function validateRegisterInputs() {
     const mobile = document.getElementById("mobileNumber").value.trim();
