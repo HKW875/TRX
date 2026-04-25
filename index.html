@@ -1502,10 +1502,12 @@ if (adForm) {
             card.className = 'ad-card';
 
             card.innerHTML = `
+                <p>${adData.category}</p>
                 <h3>${adData.title}</h3>
                 <p>${adData.description}</p>
                 <p>${adData.price}</p>
-                <p>${adData.category}</p>
+                <p>${adData.location}</p>
+                <p>${adData.contact}</p>
                `;
 
             // Show first image if exists
