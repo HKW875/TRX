@@ -36,79 +36,59 @@
             padding: 10px;
         }
 
-        .ad-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000;
-       }
-       .ad-modal-content {
-            background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px;
-            max-height: 90vh; overflow-y: auto; position: relative;
-       }
-       .preview-container {
-            display: flex; gap: 10px; overflow-x: auto; margin: 10px 0; padding: 5px; border: 1px dashed #ccc;
-       }
-       .preview-item {
-            position: relative; flex: 0 0 80px; height: 80px;
-       }
-       .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
-       .remove-img {
+        /* FIX #14: Removed duplicate .ad-modal-overlay block (was defined twice) */
+        /* FIX #14: Removed duplicate .ad-modal-content block (was defined twice) */
+        /* FIX #14: Removed duplicate .preview-container block (was defined twice) */
+        /* FIX #14: Removed duplicate .preview-item block (was defined twice) */
+
+        .remove-img {
             position: absolute; top: -5px; right: -5px; background: red; color: white;
             border-radius: 50%; width: 20px; height: 20px; cursor: pointer; text-align: center; line-height: 18px;
-       }
-       .ad-card {
+        }
+        .ad-card {
             border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff;
             display: flex; flex-direction: column; margin-bottom: 20px;
-       }
-       .card-images {
+        }
+        .card-images {
             display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 200px;
-       }
-       .card-images img {
+        }
+        .card-images img {
             flex: 0 0 100%; object-fit: cover; scroll-snap-align: start;
         }
         .card-body { padding: 15px; }
         .card-price { font-weight: bold; color: green; font-size: 1.2em; }
 
         /* Target a specific slot by ID */
-            #ad-card-1 {
-            border-color: gold; /* Make the first ad a 'Featured' slot */
+        #ad-card-1 {
+            border-color: gold;
         }
 
         #scroll-arrow-left, #scroll-arrow-right {
-        /* Layout & Centering */
             display: flex !important;
             align-items: center;
             justify-content: center;
             bottom: 92px;
             top: auto;
-           
-   
-         /* Shape & Size (Keeping your existing dimensions) */
             width: 45px;
             height: 45px;
             border-radius: 50%;
-   
-         /* Typography */
             font-size: 24px;
             line-height: 1;
             color: white;
             background-color: rgba(30, 58, 95, 0.8);
-   
-            /* Interaction */
             cursor: pointer;
             user-select: none;
             z-index: 3000;
             position: absolute;
-         }
+        }
 
-         /* Specific Positioning */
-         #scroll-arrow-left {
+        #scroll-arrow-left {
             left: 15px;
-         }
+        }
 
-         #scroll-arrow-right {
+        #scroll-arrow-right {
             right: 30px;
-         }
-
+        }
 
         /* Hide horizontal scrollbar for clean UI */
         #listings-scroller-screen::-webkit-scrollbar {
@@ -116,11 +96,11 @@
         }
 
         #listings-scroller-screen {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;     /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             position: absolute;
             height: 140px;
-            bottom: 45px; /* Fixed distance from the bottom */
+            bottom: 45px;
             left: 0;
             right: 0;
             width: 380px;
@@ -148,40 +128,29 @@
             min-height: 100vh;
             color: #333;
         }
-        element.style {
-            height: 76.93px !important;
-            width: 76.93px !important;
-            min-width: 76.93px !important;
-            object-fit: cover !important;
-            flex-shrink: 0 !important;
-            border-width: medium;
-            border-style: none;
-            border-color: currentcolor;
-            border-image: initial;
-        }
 
         /* Hide all pages by default */
         #plansPage, #profilePage, #servicesPage, #advertsPage {
            display: none;
-       }
+        }
 
-       /* ✅ CHANGED: Make Adverts the first page shown */
-       #advertsPage {
-          display: block;
-       }
+        /* Make Adverts the first page shown */
+        #advertsPage {
+           display: block;
+        }
 
-       /* Tab styling for interactivity */
-         .tabs div {
-          cursor: pointer;
-          background-color: #f1f1f1; /* Inactive color */
-          padding: 10px; /* Optional: for better hit area */
-       }
+        /* Tab styling for interactivity */
+        .tabs div {
+            cursor: pointer;
+            background-color: #f1f1f1;
+            padding: 10px;
+        }
 
-       /* Active tab style */
-          .tabs div.active {
-          background-color: white;
-          font-weight: bold;
-       }
+        /* Active tab style */
+        .tabs div.active {
+            background-color: white;
+            font-weight: bold;
+        }
 
         .market-header {
             background: #1e3a5f;
@@ -274,7 +243,7 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+            gap: 20px;
         }
 
         /* CARD */
@@ -294,18 +263,18 @@
         .card-item h4 {
             margin: 10px 0;
             color: #1e3a5f;
-       }
+        }
 
-       .badge {
+        .badge {
             background: #00c896;
             color: white;
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 12px;
-       }
+        }
 
-       /* FOOTER */
-       .footer {
+        /* FOOTER */
+        .footer {
             text-align: center;
             padding: 20px;
             background: #1e3a5f;
@@ -324,7 +293,7 @@
             padding: 30px 20px;
             text-align: center;
             position: relative;
-            height: 50px; /* Give header some height */
+            height: 50px;
         }
         header h4 {
             position: absolute;
@@ -357,7 +326,6 @@
             color: #dc3545;
         }
         input, select, textarea {      
-           
             font-size: 1em;
         }
         textarea {
@@ -384,8 +352,9 @@
         #logoutBtn:hover { background: #9b2c2c; }
 
         /* Tabs */
+        /* FIX #12: Added missing semicolon after width:100% */
         .tabs {
-            width: 100%
+            width: 100%;
             box-sizing: border-box;
             display: flex;
             flex-wrap: wrap;
@@ -453,7 +422,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.18);
         }
    
-        /* LOGIN CARD - 35% SMALLER */
+        /* LOGIN CARD */
         .auth-container {
             max-width: 420px;
             margin: 80px auto;
@@ -466,8 +435,8 @@
             transform-origin: center top;
         }
    
-        /* Password Eye Toggle Styles */
-        .password-container& {
+        /* FIX #14: Removed invalid .password-container& selector, corrected to .password-container */
+        .password-container {
             width: 198.4px;
             margin-left: auto;
             margin-right: auto;
@@ -493,7 +462,7 @@
             box-sizing: border-box;
             margin: 0px auto;
             padding: 1px 0px;
-         }
+        }
      
         .toggle-password {
             position: absolute;
@@ -734,6 +703,8 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* FIX #11: Added missing modal styles for inactivity warning */
         #inactivityWarningModal {
             position: fixed;
             top: 0; left: 0;
@@ -744,6 +715,7 @@
             justify-content: center;
             z-index: 2000;
         }
+
         .payment-option {
             border: 2px solid #1e3a5f;
             border-radius: 8px;
@@ -759,7 +731,7 @@
             border-color: #28a745;
             background: #e6f4ea;
         }
-        /* Added ONLY for your blurring requirement - no other changes */
+
         #profileContentArea.blurred {
             filter: blur(5px);
             user-select: none;
@@ -768,7 +740,8 @@
         .hidden {
             display: none !important;
         }
-        /* Flags Container - Added without touching any original styles */
+
+        /* Flags Container */
         #flags-container {
             position: fixed;
             top: 15px;
@@ -790,7 +763,7 @@
         .flag:hover {
             transform: scale(1.1);
         }
-        /* NEW: Occupation field styling */
+
         #occupationLabel, #occupationInput { margin-top: 8px; }
 
         /* Adverts Page Styling */
@@ -810,7 +783,6 @@
             font-size: 1.02em;
         }
         .category-list li {
-           
             gap: 10px;
         }
         .category-list img {
@@ -819,178 +791,171 @@
            object-fit: cover;
            border-radius: 8px;
         }
+
+        /* FIX #11: Payment modal styles */
+        .payment-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 5000;
+        }
+        .payment-modal-content {
+            background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 450px;
+            max-height: 90vh; overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
 
-        /* 🔥 Stack sidebar and listings vertically */
-       .market-container {
-           box-sizing: border-box;
-           width: 100%;
-       }
+            .market-container {
+                box-sizing: border-box;
+                width: 100%;
+            }
 
-       .sidebar {  
-       }
+            .listings {
+                box-sizing: border-box;
+                width: 100%;
+                padding: 15px;
+                margin: 0px;
+            }
 
-       .listings {
-           box-sizing: border-box;
-           width: 100%;
-           padding: 15px;
-           margin: 0px;
-       }
+            .sidebar {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 15px;
+                margin: 0px;
+            }
 
-        /* sidebar becomes horizontal/hidden feel */
-        .sidebar {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 15px;
-            margin: 0px;
+            .category-list {    
+                grid-template-columns: repeat(4, 1fr);    
+            }
+
+            .category-list li {      
+                background: white;  
+                box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            }
+
+            .category-list img {
+                max-width: 100%;
+                /* FIX #13: Changed Max-height to max-height (was invalid CSS) */
+                max-height: 100%;
+                margin-bottom: 6px;
+            }
+
+            .auth-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .auth-container input[type="email"],
+            .auth-container input[type="password"],
+            .auth-container input[type="tel"],
+            .auth-container input[type="text"] {
+                width: 100%;
+                max-width: 340px;
+                height: 44px;
+                padding: 10px 14px;
+                margin: 6px auto 14px auto;
+                border-radius: 10px;
+                border: 2px solid #d6dbe6;
+                outline: none;
+                font-size: 15px;
+                transition: all 0.25s ease;
+                box-sizing: border-box;
+            }
+
+            .auth-container input:focus {
+                border: 2px solid #1e90ff;
+                box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.25);
+                transform: scale(1.01);
+            }
+
+            .password-container {
+                width: 100%;
+                max-width: 340px;
+                position: relative;
+                margin: 6px auto 14px auto;
+            }
+
+            .password-container input {
+                width: 100%;
+                height: 44px;
+                padding-right: 42px;
+            }
+
+            .toggle-password {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                font-size: 18px;
+                color: #1e3a5f;
+                opacity: 0.7;
+                transition: 0.2s;
+            }
+
+            .toggle-password:hover {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .auth-container button {
+                width: 100%;
+                max-width: 340px;
+                border-radius: 10px;
+                padding: 12px;
+                transition: 0.2s ease;
+            }
+
+            .auth-container button:hover {
+                transform: translateY(-2px);
+            }
         }
-
-        /* turn categories into grid */
-        .category-list {    
-            grid-template-columns: repeat(4, 1fr);    
-        }
-
-        .category-list li {      
-            background: white;  
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-
-       .category-list img {
-            max-width: 100%;
-           Max-height: 100%;
-            margin-bottom: 6px;
-        }
-
-
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* unified input styling */
-        .auth-container input[type="email"],
-        .auth-container input[type="password"],
-        .auth-container input[type="tel"],
-        .auth-container input[type="text"] {
-            width: 100%;
-            max-width: 340px;
-            height: 44px;
-            padding: 10px 14px;
-            margin: 6px auto 14px auto;
-            border-radius: 10px;
-            border: 2px solid #d6dbe6;
-            outline: none;
-            font-size: 15px;
-            transition: all 0.25s ease;
-            box-sizing: border-box;
-        }
-
-/* 🔵 BLUE GLOW ON FOCUS */
-.auth-container input:focus {
-    border: 2px solid #1e90ff;
-    box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.25);
-    transform: scale(1.01);
-}
-
-/* password wrapper FIX (removes broken width issues) */
-.password-container {
-    width: 100%;
-    max-width: 340px;
-    position: relative;
-    margin: 6px auto 14px auto;
-}
-
-/* password input inside wrapper */
-.password-container input {
-    width: 100%;
-    height: 44px;
-    padding-right: 42px;
-}
-
-/* eye icon */
-.toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 18px;
-    color: #1e3a5f;
-    opacity: 0.7;
-    transition: 0.2s;
-}
-
-.toggle-password:hover {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.1);
-}
-
-/* button polish for login area */
-.auth-container button {
-    width: 100%;
-    max-width: 340px;
-    border-radius: 10px;
-    padding: 12px;
-    transition: 0.2s ease;
-}
-
-.auth-container button:hover {
-    transform: translateY(-2px);
-}
-       
-</style>
+    </style>
 </head>
 <body>
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
+
 <!-- Flags Container - US | Kenya | Ghana -->
 <div id="flags-container">
-    <!-- US Flag -->
     <img class="flag" src="https://flagcdn.com/w80/us.png" alt="Flag of USA" onclick="window.location.href='https://growthbase.net/us'" title="Go to GrowthBase US">
-    <!-- Kenya Flag -->
     <img class="flag" src="https://flagcdn.com/w80/ke.png" alt="Flag of Kenya" onclick="window.location.href='https://growthbase.net'" title="Go to GrowthBase Kenya">
-    <!-- Ghana Flag (new - rightmost) -->
     <img class="flag" src="https://flagcdn.com/w80/gh.png" alt="Flag of Ghana" onclick="window.location.href='https://growthbase.net/gh'" title="Go to GrowthBase Ghana">
 </div>
 
-   
 <!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
-  <a href="/">
-    <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
-         alt="Your Site Name"
-         width="250"
-         height="50">
-  </a>
+    <a href="/">
+        <img src="https://github.com/HKW875/TRX/blob/main/GrowthBase%20logo%20small.png?raw=true"
+             alt="Your Site Name"
+             width="250"
+             height="50">
+    </a>
     <h5>Advertise Free, Get Zero Interest Business Capital</h5>
     <h2>Login / Register</h2>  
     <div class="auth-field">
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="your@email.com">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="your@email.com">
     </div>
    
     <div class="auth-field">
-    <label for="password">Password</label>
-    <div class="password-container">
-        <input type="password" id="password" placeholder="••••••••">
-        <span class="toggle-password" onclick="togglePassword()">👁</span>
-    </div>
+        <label for="password">Password</label>
+        <div class="password-container">
+            <input type="password" id="password" placeholder="••••••••">
+            <span class="toggle-password" onclick="togglePassword()">👁</span>
+        </div>
     </div>
 
-   
     <label id="confirmLabel" class="hidden">Confirm Password</label>
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
    
-    <!-- NEW: Occupation / Business field added after mobile number -->
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
 
-   
-    <!-- ==================== FORGOT PASSWORD SECTION (NEW) ==================== -->
+    <!-- FORGOT PASSWORD SECTION -->
     <div id="forgotPasswordSection" class="hidden">
         <h3 style="color:#1e3a5f; margin:20px 0 15px 0;">Reset Password</h3>
         <label class="required">Email</label>
@@ -1017,9 +982,8 @@
         <button onclick="resetPassword()" id="resetPasswordBtn" class="hidden">Change Password</button>
         <button onclick="backToLogin()" style="background:#6c757d; margin-top:10px;">← Back to Login</button>
     </div>
-    <!-- ==================== END FORGOT PASSWORD SECTION ==================== -->
+    <!-- END FORGOT PASSWORD SECTION -->
 
-   
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
@@ -1042,13 +1006,14 @@
     <div class="container">
         <!-- Tabs -->
         <div class="tabs">
-            <div class="tab" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);" >Plans</div>
-            <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);" >Apply</div>
-            <div class="tab" onclick="switchTab(2)" id="tab-services" style="background-color: rgb(241, 241, 241);" >Services</div>
+            <div class="tab" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);">Plans</div>
+            <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);">Apply</div>
+            <div class="tab" onclick="switchTab(2)" id="tab-services" style="background-color: rgb(241, 241, 241);">Services</div>
             <div class="tab active" onclick="switchTab(3)" id="tab-adverts" style="background-color: white;">Adverts</div>
         </div>
+
         <!-- Plans Page -->
-        <div id="plansPage" class="page" >
+        <div id="plansPage" class="page">
             <div class="card">
                 <h2>Choose A Strategy Plan</h2>
                 <!-- Free Plan -->
@@ -1118,8 +1083,9 @@
                 </div>
             </div>
         </div>
+
         <!-- My Profile Page -->
-        <div id="profilePage" class="page profile" >
+        <div id="profilePage" class="page profile">
             <div class="card">
                 <h3>My Profile</h3>
                 <label class="required">Profile ID</label>
@@ -1134,7 +1100,7 @@
                     <span>Saving Changes...</span>
                 </div>
                 <button onclick="editMyProfile()">Create/Edit Profile</button>
-                <!-- ALL PROFILE FIELDS WRAPPED HERE (100% original fields kept) - this is the ONLY added wrapper for blurring -->
+
                 <div id="profileContentArea" class="blurred">
                     <label class="required" for="profileFullName">Full Names</label>
                     <input type="text" id="profileFullName" disabled>
@@ -1147,7 +1113,7 @@
                     <label class="required" for="profileID">National ID Number</label>
                     <input type="text" id="profileID" disabled>
                     <p style="margin-top:15px; font-weight:600; color:#721c24;">
-                    Secret code must not be shared. Must be entered to save your profile changes. Type it now to save.
+                        Secret code must not be shared. Must be entered to save your profile changes. Type it now to save.
                     </p>
                     <label class="required">Enter Secret Code</label>
                     <input type="password" id="secretCodeInput" placeholder="Enter or create secret code" disabled>
@@ -1202,11 +1168,10 @@
         </div>
        
         <!-- Services Page -->
-        <div id="servicesPage" class="page" >
+        <div id="servicesPage" class="page">
             <div class="card">
-                <!-- NEW: Occupation Distribution Pie Chart - placed at the very top of Services page -->
                 <h3 style="margin-bottom:10px;">GrowthBase user Occupations / Business Distribution</h3>        
-                <canvas id="occupationPieChart"  style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>              
+                <canvas id="occupationPieChart" style="max-width:100%; height:auto; margin-bottom:30px;"></canvas>              
                 <h2>Services</h2>
                 <p>GrowthBase platform provides resources to grow and manage you businesses and assets.</p>
                 <div class="card">
@@ -1232,123 +1197,119 @@
             </div>
         </div>
 
-        <div id="advertsPage" class="page" >
-
+        <!-- Adverts Page -->
+        <div id="advertsPage" class="page">
             <!-- HEADER -->
             <div class="market-header">          
                 <input type="text" placeholder="Search for products, services...">
                 <button type="button" class="post-btn">+ Post Ad</button>
             </div>
-                <div class="market-container">
-                    <!-- SIDEBAR -->
-                    <div class="sidebar">
-                        <h5>Post an ad for free. Click Post Ad button or send advert details with photos to info@growthbase.net</h5>
-                        <h5>Categories</h5>
-                            <ul class="category-list">
-                               
-                                <li data-category="Animals">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/german%20shepherd%20dog%20images.jpg?raw=true" />
-                                   <span>Animals</span>
-                                </li>
-
-                                <li data-category="Airbnb">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/airbnb%20photo.jpg?raw=true" />
-                                   <span>Airbnb</span>
-                                </li>
-
-                                <li data-category="Electronics">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/electronics%20images.jpg?raw=true" />
-                                   <span>Electronics</span>
-                                </li>
-                               
-                                <li data-category="Equipment">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/heavy%20equipment%20farm%20tractor%20images.jpg?raw=true" />  <!-- heavy equipment -->
-                                   <span>Equipment</span>
-                                </li>
-
-                                <li data-category="Fashion">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/fashion.jpg?raw=true" />
-                                   <span>Fashion</span>
-                                </li>
-
-                               <li data-category="Food">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/food%20green%20vegetables%20photo.jpg?raw=true" />
-                                   <span>Food</span>
-                                </li>
-
-                                <li data-category="For Kids">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/for%20kids.jpeg?raw=true" />
-                                   <span>For Kids</span>
-                                </li>
-
-                                <li data-category="Home">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/home.jpg?raw=true" />
-                                   <span>Home</span>
-                                </li>
-
-                                <li data-category="Jobs">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/laptops.jpg?raw=true" />
-                                   <span>Jobs</span>
-                                </li>
-
-                                <li data-category="Leisure">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/hotel%20pool%20kilifi%20photo.jpg?raw=true" />
-                                   <span>Leisure</span>
-                                </li>
-
-                                <li data-category="Cars">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/cars%20for%20sale%20kenya.jpeg?raw=true" />
-                                   <span>Cars&Trucks</span>
-                                </li>
-                               
-                                <li data-category="Onions">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/onions.jpeg?raw=true" />
-                                   <span>Onions</span>
-                                </li>
-
-                               <li data-category="Properties">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/property%20photo.jpg?raw=true" />
-                                   <span>Properties</span>
-                                </li>
-
-                                <li data-category="ChickenProducts">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/chickens%20images.jpg?raw=true" />
-                                   <span>ChickenPlace</span>
-                                </li>
-
-                                <li data-category="Services">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/services.jpg?raw=true" />
-                                   <span>Services</span>
-                                </li>
-
-                                <li data-category="Cars4Rent">
-                                   <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/cars.jpg?raw=true" />
-                                   <span>cars4rent</span>
-                                </li>
-                            </ul>
-                     </div>
-
-                     <!-- LISTINGS -->
-                     <div class="listings">
-                         <div class="grid">
-                     </div>
+            <div class="market-container">
+                <!-- SIDEBAR -->
+                <div class="sidebar">
+                    <h5>Post an ad for free. Click Post Ad button or send advert details with photos to info@growthbase.net</h5>
+                    <h5>Categories</h5>
+                    <ul class="category-list">
+                        <li data-category="Animals">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/german%20shepherd%20dog%20images.jpg?raw=true" />
+                            <span>Animals</span>
+                        </li>
+                        <li data-category="Airbnb">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/airbnb%20photo.jpg?raw=true" />
+                            <span>Airbnb</span>
+                        </li>
+                        <li data-category="Electronics">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/electronics%20images.jpg?raw=true" />
+                            <span>Electronics</span>
+                        </li>
+                        <li data-category="Equipment">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/heavy%20equipment%20farm%20tractor%20images.jpg?raw=true" />
+                            <span>Equipment</span>
+                        </li>
+                        <li data-category="Fashion">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/fashion.jpg?raw=true" />
+                            <span>Fashion</span>
+                        </li>
+                        <li data-category="Food">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/food%20green%20vegetables%20photo.jpg?raw=true" />
+                            <span>Food</span>
+                        </li>
+                        <li data-category="For Kids">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/for%20kids.jpeg?raw=true" />
+                            <span>For Kids</span>
+                        </li>
+                        <li data-category="Home">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/home.jpg?raw=true" />
+                            <span>Home</span>
+                        </li>
+                        <li data-category="Jobs">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/laptops.jpg?raw=true" />
+                            <span>Jobs</span>
+                        </li>
+                        <li data-category="Leisure">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/hotel%20pool%20kilifi%20photo.jpg?raw=true" />
+                            <span>Leisure</span>
+                        </li>
+                        <li data-category="Cars">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/cars%20for%20sale%20kenya.jpeg?raw=true" />
+                            <span>Cars&Trucks</span>
+                        </li>
+                        <li data-category="Onions">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/onions.jpeg?raw=true" />
+                            <span>Onions</span>
+                        </li>
+                        <li data-category="Properties">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/property%20photo.jpg?raw=true" />
+                            <span>Properties</span>
+                        </li>
+                        <li data-category="ChickenProducts">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/chickens%20images.jpg?raw=true" />
+                            <span>ChickenPlace</span>
+                        </li>
+                        <li data-category="Services">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/services.jpg?raw=true" />
+                            <span>Services</span>
+                        </li>
+                        <li data-category="Cars4Rent">
+                            <img src="https://github.com/HKW875/TRX/blob/main/categoryListImages/cars.jpg?raw=true" />
+                            <span>cars4rent</span>
+                        </li>
+                    </ul>
                 </div>
+
+                <!-- LISTINGS -->
+                <div class="listings">
+                    <div class="grid">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="footer">
-        © 2026 GrowthBase Marketplace
+            © 2026 GrowthBase Marketplace
         </div>
-           
+    </div>
+</div>
+
+<!-- Ad Post Modal -->
 <div class="ad-modal-overlay" id="adModal">
     <div class="ad-modal-content">
         <h3>Post a New Advertisement</h3>
+        <!-- FIX #2: Removed onsubmit from form tag; submission is handled via one JS event listener only -->
         <form id="adForm">
             <input name="title" type="text" id="adTitle" placeholder="Title" required style="width:100%; margin-bottom:10px;">
             <select name="category" id="adCategory" required style="width:100%; margin-bottom:10px;"></select>
+            <!-- FIX #3: Added name="condition" field that was missing but referenced in JS -->
+            <select name="condition" id="adCondition" style="width:100%; margin-bottom:10px;">
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+                <option value="Refurbished">Refurbished</option>
+            </select>
             <textarea name="description" id="adDesc" placeholder="Description (max 40 words)" required style="width:100%; height:80px; margin-bottom:10px;"></textarea>
             <input name="price" type="number" id="adPrice" placeholder="Price" required style="width:100%; margin-bottom:10px;">
             <input name="location" type="text" id="adLocation" placeholder="Location/Address" required style="width:100%; margin-bottom:10px;">
-            <input name="contact" type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
+            <!-- FIX #3: Added name="phone" to match adForm.phone.value reference in JS -->
+            <input name="phone" type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
            
             <label>Upload Images (JPEG, JPG, PNG):</label>
             <input type="file" id="imageInput" multiple accept="image/*" style="margin-bottom:10px;">
@@ -1361,9 +1322,71 @@
         </form>
     </div>
 </div>
+
+<!-- FIX #11: Added missing Inactivity Warning Modal HTML -->
+<div id="inactivityWarningModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); align-items:center; justify-content:center; z-index:9000;">
+    <div class="modal-content" style="text-align:center;">
+        <h3 style="color:#1e3a5f;">Session Timeout Warning</h3>
+        <p>You have been inactive. You will be logged out in <strong id="countdownTimer">60</strong> seconds.</p>
+        <p id="countdownText" style="display:none;">60</p>
+        <button onclick="resetInactivityTimer()" style="background:#28a745;">Stay Logged In</button>
+        <button onclick="logout()" style="background:#dc3545;">Log Out Now</button>
+    </div>
+</div>
+
+<!-- FIX #11: Added missing BodaGo Payment Modal HTML -->
+<div id="bodaGoPaymentModal" class="payment-modal-overlay">
+    <div class="payment-modal-content">
+        <h3 style="color:#1e3a5f;">BodaGo Plan - M-Pesa Payment</h3>
+        <div id="monthlyOption" class="payment-option" onclick="selectPaymentOption('monthly')">
+            <strong>Monthly - KES 200</strong>
+        </div>
+        <div id="yearlyOption" class="payment-option" onclick="selectPaymentOption('yearly')">
+            <strong>Yearly - KES 1,200</strong>
+        </div>
+        <label style="margin-top:15px;">M-Pesa Phone Number</label>
+        <input type="tel" id="mpesaPhone" placeholder="07xxxxxxxx" style="width:100%; margin-bottom:10px;">
+        <p id="paymentStatus" style="font-weight:600; min-height:24px;"></p>
+        <button onclick="initiateMpesaSTKPush()" style="background:#28a745;">Pay Now</button>
+        <button onclick="closePaymentModal()" style="background:#dc3545;">Cancel</button>
+    </div>
+</div>
+
+<!-- FIX #11: Added missing Premium Payment Modal HTML -->
+<div id="premiumPaymentModal" class="payment-modal-overlay">
+    <div class="payment-modal-content">
+        <h3 style="color:#1e3a5f;">Premium Plan - M-Pesa Payment</h3>
+        <div id="premiumMonthlyOption" class="payment-option" onclick="selectPremiumOption('monthly')">
+            <strong>Monthly - KES 500</strong>
+        </div>
+        <div id="premiumYearlyOption" class="payment-option" onclick="selectPremiumOption('yearly')">
+            <strong>Yearly - KES 5,000</strong>
+        </div>
+        <label style="margin-top:15px;">M-Pesa Phone Number</label>
+        <input type="tel" id="premiumMpesaPhone" placeholder="07xxxxxxxx" style="width:100%; margin-bottom:10px;">
+        <p id="premiumPaymentStatus" style="font-weight:600; min-height:24px;"></p>
+        <button onclick="initiatePremiumSTKPush()" style="background:#28a745;">Pay Now</button>
+        <button onclick="closePremiumModal()" style="background:#dc3545;">Cancel</button>
+    </div>
+</div>
+
+<!-- FIX #11: Added missing Lifetime Payment Modal HTML -->
+<div id="lifetimePaymentModal" class="payment-modal-overlay">
+    <div class="payment-modal-content">
+        <h3 style="color:#1e3a5f;">Lifetime Plan - M-Pesa Payment</h3>
+        <p><strong>One-time payment: KES 50,000</strong></p>
+        <label style="margin-top:15px;">M-Pesa Phone Number</label>
+        <input type="tel" id="lifetimeMpesaPhone" placeholder="07xxxxxxxx" style="width:100%; margin-bottom:10px;">
+        <p id="lifetimePaymentStatus" style="font-weight:600; min-height:24px;"></p>
+        <button onclick="initiateLifetimeSTKPush()" style="background:#28a745;">Pay Now</button>
+        <button onclick="closeLifetimeModal()" style="background:#dc3545;">Cancel</button>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
+
 // Global variables
 let currentToken = null;
 let currentLoggedInEmail = null;
@@ -1376,11 +1399,13 @@ let uploadedDocuments = [];
 let documentRows = [];
 let selectedBodaGoPlan = null;
 let selectedPremiumPlan = null;
+
 // ==================== INACTIVITY TIMEOUT ====================
 let inactivityTimer;
 let warningTimer;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const WARNING_TIME = 60 * 1000;
+
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
@@ -1390,68 +1415,7 @@ function resetInactivityTimer() {
     }, INACTIVITY_LIMIT);
 }
 
-async function handleLogin() {
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const pass = document.getElementById("password").value.trim();
-    const msg = document.getElementById("authMessage");
-    const spinner = document.getElementById("loginSpinner");
-    const verifyingText = document.getElementById("verifyingText");
-    if (!email || !pass) {
-        msg.textContent = "Email and password are required.";
-        return;
-    }
-    spinner.classList.add("show");
-    verifyingText.style.display = "block";
-    try {
-        const response = await fetch(`${API_BASE}/api/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            msg.style.color = "#dc3545";
-            msg.textContent = data.msg || "Incorrect email or password.";
-            return;
-        }
-        currentToken = data.token;
-        currentLoggedInEmail = email;
-        sessionStorage.setItem("fd_token", currentToken);
-        sessionStorage.setItem("fd_logged_email", email);
-        document.getElementById("authScreen").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
-        if (isNewUser) {
-            switchTab(0);
-            disableBeneficiariesAndDocuments();
-        } else {
-            loadProfile();
-        }
-        resetInactivityTimer();
-        setupInactivityListeners();
-        requestGeolocation(); // NEW: Request geolocation after login
-        setTimeout(loadOccupationChart, 800); // NEW: Load pie chart
-    } catch (err) {
-        msg.style.color = "";
-        msg.textContent = "";
-    } finally {
-        spinner.classList.remove("show");
-        verifyingText.style.display = "none";
-    }
-}
-function logout() {
-    clearTimeout(inactivityTimer);
-    clearTimeout(warningTimer);
-    currentToken = null;
-    currentLoggedInEmail = null;
-    isNewUser = false;
-    hasStartedPlan = false;
-    sessionStorage.clear();
-    document.getElementById("mainApp").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-    document.getElementById("inactivityWarningModal").style.display = "none";
-}
-   
-// Compress images so that they dont hit the 4.5MB Vercel limit or the 16MB MongoDB document limit, we will add a Client-Side Image Compressor.
+// Compress images to avoid hitting the 4.5MB Vercel limit or the 16MB MongoDB document limit
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
     return new Promise((resolve) => {
         const reader = new FileReader();
@@ -1463,19 +1427,14 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-
-                // Resize logic: Keep aspect ratio
                 if (width > maxWidth) {
                     height = (maxWidth / width) * height;
                     width = maxWidth;
                 }
-
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-
-                // Convert to compressed Base64 JPEG
                 const dataUrl = canvas.toDataURL('image/jpeg', quality);
                 resolve(dataUrl);
             };
@@ -1483,377 +1442,419 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
     });
 }
 
-   
-// WRAP THE NEW FEATURE IN A DOMCONTENTLOADED BLOCK....MODAL LOGIC
+// ==================== MODAL LOGIC (wrapped in DOMContentLoaded) ====================
 document.addEventListener('DOMContentLoaded', () => {
     let selectedFiles = [];
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
-    const modal = document.getElementById('adModal'); // Ensure this ID exists in HTML
-    const closeModal = document.getElementById('closeModal');
+    const modal = document.getElementById('adModal');
     const adForm = document.getElementById('adForm');
     const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // FIX #10: Single renderPreviews definition
     function renderPreviews() {
-        const preview = document.getElementById('previewContainer');
-        if (!preview) return;
-
-        preview.innerHTML = '';
-
-        selectedFiles.forEach(file => {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.style.width = "80px";
-            preview.appendChild(img);
+        if (!previewContainer) return;
+        previewContainer.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}">
+                    <span class="remove-img" data-index="${index}">&times;</span>
+                `;
+                previewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
         });
     }
 
-    // 2. Add the click event listener
+    // Delegate remove-img clicks to avoid stale index closures
+    if (previewContainer) {
+        previewContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-img')) {
+                const idx = parseInt(e.target.getAttribute('data-index'), 10);
+                selectedFiles.splice(idx, 1);
+                renderPreviews();
+            }
+        });
+    }
+
+    // Populate categories from the sidebar
+    const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
+    const categorySelect = document.getElementById('adCategory');
+    if (categorySelect) {
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            categorySelect.appendChild(opt);
+        });
+    }
+
+    if (postBtn && modal) {
+        postBtn.addEventListener('click', () => modal.style.display = 'flex');
+    }
+
+    // FIX #2 & #9: Single close handler, no form.reset() conflict
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', (event) => {
-            // Prevent any default form behavior
             event.preventDefault();
-       
-            // Hide the modal
             modal.style.display = 'none';
-       
-            // Optional: Clear the image preview container
-            const preview = document.getElementById('previewContainer');
-            if (preview) preview.innerHTML = '';
-       
-            console.log("Modal closed successfully");
-        });
-    } else {
-        console.error("Cancel button or Modal not found in DOM");
-    }
-
-// Populate categories from the sidebar
-const categories = Array.from(document.querySelectorAll('.category-list li')).map(li => li.textContent.trim());
-const categorySelect = document.getElementById('adCategory');
-categories.forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    categorySelect.appendChild(opt);
-});
-
-postBtn.addEventListener('click', () => modal.style.display = 'flex');
-closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    adForm.reset();
-    selectedFiles = [];
-    renderPreviews();
-});
-
-// =========================
-// IMAGE PREVIEW LOGIC
-// =========================
-imageInput.addEventListener('change', (e) => {
-    const files = Array.from(e.target.files);
-    selectedFiles = [...selectedFiles, ...files];
-    renderPreviews();
-});
-
-
-// =========================
-// FORM SUBMIT LOGIC
-// =========================
-if (adForm) {
-    adForm.onsubmit = async function (e) {
-        if (e) e.preventDefault();
-
-        try {
-            const submitBtn = adForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Processing...";
-
-            // =========================
-            // 1. SEND TO BACKEND
-            // =========================
-            const formData = new FormData();
-
-            formData.append('category', adForm.category.value);
-            formData.append('price', adForm.price.value);
-            formData.append('description', adForm.description.value);
-            formData.append('locationName', adForm.location.value);
-            formData.append('phone', adForm.phone.value);
-            formData.append('condition', adForm.condition.value);
-
-            selectedFiles.forEach(file => {
-                formData.append('images', file);
-            });
-
-            const response = await fetch(
-                'https://trx-infosec-backend-vvrq.onrender.com/api/ads/create',
-                {
-                    method: 'POST',
-                    body: formData
-                }
-            );
-
-            const result = await response.json();
-            console.log(result);
-
-            // =========================
-            // 2. INSTANT UI PREVIEW
-            // =========================
-            const overlay = document.getElementById('ad-overlay');
-
-            const card = document.createElement('div');
-            card.className = 'ad-card';
-
-            card.innerHTML = `
-                <p>${adForm.category.value}</p>
-                <h3>${adForm.title.value || ''}</h3>
-                <p>${adForm.description.value}</p>
-                <p>${adForm.price.value}</p>
-                <p>${adForm.location.value}</p>
-            `;
-
-            if (selectedFiles.length > 0) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(selectedFiles[0]);
-                img.style.width = "150px";
-                card.appendChild(img);
-            }
-
-            overlay.appendChild(card);
-
-            // =========================
-            // 3. REFRESH FROM SERVER
-            // =========================
-            fetchAds();
-
-            alert("Ad posted successfully!");
-
-            document.getElementById('adModal').style.display = 'none';
-            adForm.reset();
+            if (adForm) adForm.reset();
             selectedFiles = [];
             renderPreviews();
-
-        } catch (err) {
-            console.error(err);
-        } finally {
-            const submitBtn = adForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Submit Advert";
-        }
-
-        return false;
-    };
-}
-
-function renderPreviews() {
-    previewContainer.innerHTML = '';
-    selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `
-                <img src="${e.target.result}">
-                <span class="remove-img" onclick="removeImage(${index})">&times;</span>
-            `;
-            previewContainer.appendChild(div);
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-window.removeImage = (index) => {
-    selectedFiles.splice(index, 1);
-    renderPreviews();
-};
-
-//  Form Submission and Card Creation
-adForm.addEventListener('submit', async (e) => {
-    // CRITICAL: This stops the page from reloading/logging you out
-    e.preventDefault();
-   
-    console.log("Submission started without reloading the page...");
-
-    try {
-        // ... Your compression and data gathering logic ...
-        const adData = { /* your data */ };
-
-        // 2. Send data in the background
-        const response = await fetch('/api/ads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(adData)
         });
-
-        if (response.ok) {
-            alert("Advert Posted!");
-            // 3. Close the modal manually instead of letting the page refresh
-            document.getElementById('adOverlay').style.display = 'none';
-            adForm.reset();
-        }
-    } catch (error) {
-        console.error("Submission failed", error);
     }
-});
 
-function createOrUpdateCard(data) {
-    const grid = document.querySelector('.listings .grid');
-    const cardHTML = `
-        <div class="ad-card" data-id="${data.id}">
-            <div class="card-images">
-                ${data.images.map(img => `<img src="${img}">`).join('')}
-            </div>
-            <div class="card-body">
-                <h4>${data.title}</h4>
-                <p class="card-price">$${data.price}</p>
-                <p>${data.description}</p>
-                <p><small>📍 ${data.locationName}</small></p>
-                <p><small>📞 ${data.phone}</small></p>
-            </div>
-        </div>
-    `;
-   
-    // Logic to replace or add
-    grid.insertAdjacentHTML('afterbegin', cardHTML);
-}
-
-
-async function fetchAds() {
-    const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
-    const result = await response.json();
-    const grid = document.querySelector('.listings .grid');
-    grid.innerHTML = ''; // Clear existing
-
-    result.data.forEach(ad => {
-        const cardHTML = `
-            <div class="ad-card">
-                <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
-                    ${ad.images.map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
-                </div>
-                <div class="card-body" style="padding:15px;">
-                    <h4>${ad.title}</h4>
-                    <p style="color:green; font-weight:bold;">$${ad.price}</p>
-                    <p>${ad.description}</p>
-                    <small>📍 ${ad.location} | 📞 ${ad.phone}</small>
-                </div>
-            </div>`;
-        grid.insertAdjacentHTML('beforeend', cardHTML);
-    });
-}
-
-// Call fetchAds when the page loads
-document.addEventListener('DOMContentLoaded', fetchAds);    
-
-
-   
-
-// DYNAMICALLY ASSIGN IDS TO CATEGORY LISTINGS
-
-
-
-function renderAds(ads) {
-  const container = document.getElementById('ad-overlay');
-  container.innerHTML = ''; // Clear existing
-
-  ads.forEach((ad, index) => {
-    const cardId = `ad-card-${index + 1}`; // Create the ID: ad-card-1, ad-card-2, etc.
-   
-    const cardHTML = `
-      <div id="${cardId}" class="ad-card">
-        <strong>${ad.title}</strong>
-        <p>${ad.description}</p>
-        <div class="price">${ad.price}</div>
-      </div>
-    `;
-    container.insertAdjacentHTML('beforeend', cardHTML);
-  });
-}
-
-// DYNAMICALLY SEND ADS TO SPECIFIC SLOTS
-function updateCardContent(cardNumber, newData) {
-  const card = document.getElementById(`ad-card-${cardNumber}`);
-  if (card) {
-    card.querySelector('strong').textContent = newData.title;
-    card.querySelector('.price').textContent = newData.price;
-  }
-}
-
-// Example: Send a new listing to slot 2
-updateCardContent(2, { title: "Luxury Villa", price: "$500,000" });
-   
-   
-(function() {
-    const categoryList = document.querySelector('ul.category-list');
-    const marketContainer = document.querySelector('.market-container');
-
-    if (!categoryList || !marketContainer) return;
-
-    categoryList.addEventListener('click', function(event) {
-        const targetLi = event.target.closest('li');
-        if (!targetLi) return;
-
-        // Remove old overlay if it exists
-        const existingOverlay = document.getElementById('ad-overlay');
-        if (existingOverlay) existingOverlay.remove();
-
-        const categoryName = targetLi.innerText.trim();
-        const rect = marketContainer.getBoundingClientRect();
-
-        // Create the new screen
-        const overlay = document.createElement('div');
-        overlay.id = 'ad-overlay';
-       
-        // Match dimensions and position 10px below market container
-        Object.assign(overlay.style, {
-            position: 'absolute',
-            top: `${window.scrollY + rect.bottom + 10}px`,
-            left: `${window.scrollX + rect.left}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
-            backgroundColor: '#ffffff',
-            border: '1px solid #ccc',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
-            zIndex: '2000',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gridTemplateRows: '1fr 1fr',
-            gap: '12px',
-            padding: '12px',
-            boxSizing: 'border-box',
-            borderRadius: '4px'
+    if (imageInput) {
+        imageInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            selectedFiles = [...selectedFiles, ...files];
+            renderPreviews();
         });
+    }
 
-        // Generate 4 Adverts
-        for (let i = 1; i <= 4; i++) {
-            const ad = document.createElement('div');
-            Object.assign(ad.style, {
-                border: '1px solid #eee',
-                padding: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                backgroundColor: '#fdfdfd'
+    // FIX #2: Single submit handler only (removed duplicate adForm.onsubmit assignment)
+    if (adForm) {
+        adForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = adForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Processing...";
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('title', adForm.title ? adForm.title.value : '');
+                formData.append('category', adForm.category.value);
+                formData.append('price', adForm.price.value);
+                formData.append('description', adForm.description.value);
+                formData.append('locationName', adForm.location.value);
+                // FIX #3: adForm.phone.value now works because input has name="phone"
+                formData.append('phone', adForm.phone.value);
+                // FIX #3: adForm.condition.value now works because select has name="condition"
+                formData.append('condition', adForm.condition.value);
+
+                selectedFiles.forEach(file => {
+                    formData.append('images', file);
+                });
+
+                const response = await fetch(
+                    'https://trx-infosec-backend-vvrq.onrender.com/api/ads/create',
+                    { method: 'POST', body: formData }
+                );
+
+                const result = await response.json();
+                console.log(result);
+
+                // Instant UI preview card
+                const grid = document.querySelector('.listings .grid');
+                if (grid) {
+                    const card = document.createElement('div');
+                    card.className = 'ad-card';
+                    card.innerHTML = `
+                        <div class="card-body">
+                            <p>${adForm.category.value}</p>
+                            <h4>${adForm.title ? adForm.title.value : ''}</h4>
+                            <p>${adForm.description.value}</p>
+                            <p class="card-price">KES ${adForm.price.value}</p>
+                            <p><small>📍 ${adForm.location.value}</small></p>
+                            <p><small>📞 ${adForm.phone.value}</small></p>
+                        </div>
+                    `;
+                    if (selectedFiles.length > 0) {
+                        const imgWrap = document.createElement('div');
+                        imgWrap.className = 'card-images';
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(selectedFiles[0]);
+                        imgWrap.appendChild(img);
+                        card.prepend(imgWrap);
+                    }
+                    grid.insertAdjacentElement('afterbegin', card);
+                }
+
+                // Refresh from server
+                fetchAds();
+
+                alert("Ad posted successfully!");
+                modal.style.display = 'none';
+                adForm.reset();
+                selectedFiles = [];
+                renderPreviews();
+
+            } catch (err) {
+                console.error("Ad submission error:", err);
+                alert("Failed to post ad. Please try again.");
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Advert";
+                }
+            }
+        });
+    }
+
+    // FIX #4: fetchAds called once here inside DOMContentLoaded (removed nested duplicate call)
+    fetchAds();
+
+    // Category overlay click handler
+    (function() {
+        const categoryList = document.querySelector('ul.category-list');
+        const marketContainer = document.querySelector('.market-container');
+        if (!categoryList || !marketContainer) return;
+
+        categoryList.addEventListener('click', function(event) {
+            const targetLi = event.target.closest('li');
+            if (!targetLi) return;
+
+            const existingOverlay = document.getElementById('ad-overlay');
+            if (existingOverlay) existingOverlay.remove();
+
+            const categoryName = targetLi.innerText.trim();
+            const rect = marketContainer.getBoundingClientRect();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'ad-overlay';
+           
+            Object.assign(overlay.style, {
+                position: 'absolute',
+                top: `${window.scrollY + rect.bottom + 10}px`,
+                left: `${window.scrollX + rect.left}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
+                backgroundColor: '#ffffff',
+                border: '1px solid #ccc',
+                boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
+                zIndex: '2000',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gridTemplateRows: '1fr 1fr',
+                gap: '12px',
+                padding: '12px',
+                boxSizing: 'border-box',
+                borderRadius: '4px'
             });
 
-            ad.innerHTML = `
-                <div style="width:100%; height:140px; background:#ddd; margin-bottom:8px;"></div>
-                <strong style="font-size:14px;">${categoryName} Ad ${i}</strong>
-                <p style="font-size:11px; margin: 4px 0; flex-grow:1;">Premium selection of ${categoryName}.</p>
-                <div style="font-size:12px; font-weight:bold; color:navy;">$${(Math.random()*200).toFixed(2)}</div>
-                <div style="font-size:10px; color:#555;">📍 North Road ${10+i}, Bldg ${i*5}</div>
-                <div style="font-size:10px; color:#555;">📞 555-019${i}</div>
-                <div style="font-size:10px; font-weight:bold; color:green;">New Condition</div>
-            `;
-            overlay.appendChild(ad);
-        }
+            for (let i = 1; i <= 4; i++) {
+                const ad = document.createElement('div');
+                Object.assign(ad.style, {
+                    border: '1px solid #eee',
+                    padding: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    backgroundColor: '#fdfdfd'
+                });
+                ad.innerHTML = `
+                    <div style="width:100%; height:140px; background:#ddd; margin-bottom:8px;"></div>
+                    <strong style="font-size:14px;">${categoryName} Ad ${i}</strong>
+                    <p style="font-size:11px; margin: 4px 0; flex-grow:1;">Premium selection of ${categoryName}.</p>
+                    <div style="font-size:12px; font-weight:bold; color:navy;">KES ${(Math.random()*200).toFixed(2)}</div>
+                    <div style="font-size:10px; color:#555;">📍 North Road ${10+i}, Bldg ${i*5}</div>
+                    <div style="font-size:10px; color:#555;">📞 555-019${i}</div>
+                    <div style="font-size:10px; font-weight:bold; color:green;">New Condition</div>
+                `;
+                overlay.appendChild(ad);
+            }
+            document.body.appendChild(overlay);
+        });
+    })();
 
-        document.body.appendChild(overlay);
+    window.addEventListener('resize', () => {
+        const existingOverlay = document.getElementById('ad-overlay');
+        if (existingOverlay) existingOverlay.remove();
     });
-})();
 
- window.addEventListener('resize', () => {
-    const existingOverlay = document.getElementById('ad-overlay');
-    if (existingOverlay) existingOverlay.remove();
-});  
-   
+    // Listings scroller
+    (function() {
+        const authScreen = document.getElementById('authScreen');
+        const backgroundCanvas = document.getElementById('background-canvas');
+        const originalCategoryList = document.querySelector('.category-list');
+       
+        if (!authScreen || !originalCategoryList) return;
 
-   
+        const newScreen = document.createElement('div');
+        newScreen.id = 'listings-scroller-screen';
+       
+        Object.assign(newScreen.style, {
+            position: 'absolute',
+            height: '140px',
+            backgroundColor: '#ffffff',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            boxSizing: 'border-box',
+            zIndex: '2000',
+            boxShadow: '0 -5px 15px rgba(0,0,0,0.1)',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+        });
+
+        const updatePosition = () => {
+            const authRect = authScreen.getBoundingClientRect();
+            const canvasRect = backgroundCanvas ? backgroundCanvas.getBoundingClientRect() : {left: 0, width: window.innerWidth};
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            newScreen.style.top = (scrollY + authRect.bottom - 40) + 'px';
+            newScreen.style.left = canvasRect.left + 'px';
+            newScreen.style.width = canvasRect.width + 'px';
+        };
+
+        const clonedList = originalCategoryList.cloneNode(true);
+        clonedList.classList.add('cloned-list');
+       
+        Object.assign(clonedList.style, {
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            gap: '15px',
+            padding: '0 20px',
+            margin: '0',
+            listStyle: 'none'
+        });
+
+        Array.from(clonedList.children).forEach(li => {
+            Object.assign(li.style, {
+                flex: '0 0 auto',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '110px'
+            });
+            const img = li.querySelector('img');
+            if (img) {
+                Object.assign(img.style, {
+                    width: '88px',
+                    height: '88px',
+                    objectFit: 'cover',
+                    borderRadius: '12px',
+                    marginBottom: '0px'
+                });
+            }
+            const span = li.querySelector('span');
+            if (span) {
+                Object.assign(span.style, {
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    transform: 'translateY(-6px)'
+                });
+            }
+        });
+
+        newScreen.appendChild(clonedList);
+        document.body.appendChild(newScreen);
+
+        const createArrow = (side) => {
+            const arrow = document.createElement('div');
+            arrow.id = `scroll-arrow-${side}`;
+            arrow.innerHTML = side === 'left' ? '&#10094;' : '&#10095;';
+           
+            Object.assign(arrow.style, {
+                position: 'absolute',
+                width: '45px',
+                height: '45px',
+                backgroundColor: 'rgba(30, 58, 95, 0.8)',
+                color: 'white',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                cursor: 'pointer',
+                zIndex: '3000',
+                transition: 'opacity 0.3s'
+            });
+
+            arrow.onclick = () => {
+                const direction = side === 'left' ? -200 : 200;
+                newScreen.scrollBy({ left: direction, behavior: 'smooth' });
+            };
+
+            document.body.appendChild(arrow);
+            return arrow;
+        };
+
+        const leftArr = createArrow('left');
+        const rightArr = createArrow('right');
+
+        const syncLayout = () => {
+            updatePosition();
+            const rect = newScreen.getBoundingClientRect();
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const midPoint = scrollY + rect.top + (rect.height / 2);
+
+            leftArr.style.top = rightArr.style.top = midPoint + 'px';
+            leftArr.style.left = (rect.left + 15) + 'px';
+            rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
+
+            leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
+            leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
+           
+            const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
+            rightArr.style.opacity = atEnd ? '0' : '1';
+            rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
+        };
+
+        window.addEventListener('resize', syncLayout);
+        window.addEventListener('scroll', syncLayout);
+        newScreen.addEventListener('scroll', syncLayout);
+        syncLayout();
+
+        // Scroller visibility manager
+        const mainApp = document.getElementById('mainApp');
+        if (authScreen && mainApp) {
+            const updateVisibility = () => {
+                const isAuthVisible = !authScreen.classList.contains('hidden') &&
+                                     window.getComputedStyle(authScreen).display !== 'none';
+                if (isAuthVisible) {
+                    newScreen.style.display = 'flex';
+                    leftArr.style.display = 'block';
+                    rightArr.style.display = 'block';
+                } else {
+                    newScreen.style.display = 'none';
+                    leftArr.style.display = 'none';
+                    rightArr.style.display = 'none';
+                }
+            };
+
+            const observer = new MutationObserver(updateVisibility);
+            observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
+            observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
+            updateVisibility();
+        }
+    })();
+
+    // Tab click handlers (inline style approach preserved)
+    const tabMap = {
+        'tab-plans': document.getElementById('plansPage'),
+        'tab-profile': document.getElementById('profilePage'),
+        'tab-services': document.getElementById('servicesPage'),
+        'tab-adverts': document.getElementById('advertsPage')
+    };
+    const tabElements = document.querySelectorAll('.tabs > div');
+    tabElements.forEach(tabElement => {
+        tabElement.addEventListener('click', () => {
+            Object.values(tabMap).forEach(page => {
+                if (page) page.style.display = 'none';
+            });
+            tabElements.forEach(el => {
+                el.style.backgroundColor = '#f1f1f1';
+                el.style.fontWeight = 'normal';
+            });
+            const targetPage = tabMap[tabElement.id];
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                tabElement.style.backgroundColor = 'white';
+                tabElement.style.fontWeight = 'bold';
+            }
+        });
+    });
+});
+
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
 const canvas = document.getElementById('background-canvas');
 const ctx = canvas.getContext('2d');
@@ -1861,6 +1862,7 @@ let width, height, particles = [];
 const numParticles = 80;
 const connectionDistance = 150;
 const maxSpeed = 0.8;
+
 class Particle {
     constructor() {
         this.x = Math.random() * width;
@@ -1897,242 +1899,6 @@ class Particle {
     }
 }
 
-function validateRegisterInputs() {
-    const mobile = document.getElementById("mobileNumber").value.trim();
-    const occupation = document.getElementById("occupationInput").value.trim();
-    const secret = document.getElementById("regSecretCode").value.trim();
-
-    return mobile !== "" && occupation !== "" && secret !== "";
-}
-
-function showSpinner() {
-    document.getElementById("loginSpinner").classList.add("show");
-}
-
-function hideSpinner() {
-    document.getElementById("loginSpinner").classList.remove("show");
-}
-
-   
-
-(function() {
-    // 1. Setup Elements
-    const authScreen = document.getElementById('authScreen');
-    const backgroundCanvas = document.getElementById('background-canvas');
-    const originalCategoryList = document.querySelector('.category-list');
-   
-    if (!authScreen || !originalCategoryList) return;
-
-    // 2. Create the Screen Container
-    const newScreen = document.createElement('div');
-    newScreen.id = 'listings-scroller-screen';
-   
-    // 3. Apply Consolidated Styles
-    Object.assign(newScreen.style, {
-        position: 'absolute',
-        height: '140px', // Final height after requested increases
-        backgroundColor: '#ffffff',
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        boxSizing: 'border-box',
-        zIndex: '2000',
-        boxShadow: '0 -5px 15px rgba(0,0,0,0.1)', // Overlap shadow
-        scrollbarWidth: 'none', // Hide scrollbar (Firefox)
-        msOverflowStyle: 'none'
-    });
-
-    // 4. Position & Width Logic (Relative to Auth Screen and Background Canvas)
-    const updatePosition = () => {
-        const authRect = authScreen.getBoundingClientRect();
-        const canvasRect = backgroundCanvas ? backgroundCanvas.getBoundingClientRect() : {left: 0, width: window.innerWidth};
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-       
-        // Move 40px UP into the authScreen for overlap
-        newScreen.style.top = (scrollY + authRect.bottom - 40) + 'px';
-        newScreen.style.left = canvasRect.left + 'px';
-        newScreen.style.width = canvasRect.width + 'px';
-    };
-
-    // 5. Clone and Style the Listings
-    const clonedList = originalCategoryList.cloneNode(true);
-    clonedList.classList.add('cloned-list');
-   
-    Object.assign(clonedList.style, {
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        gap: '15px',
-        padding: '0 20px',
-        margin: '0',
-        listStyle: 'none'
-    });
-
-    Array.from(clonedList.children).forEach(li => {
-        Object.assign(li.style, {
-            flex: '0 0 auto',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '110px' // Wider to fit larger images
-        });
-
-        const img = li.querySelector('img');
-        if (img) {
-            Object.assign(img.style, {
-                width: '88px', // 25% larger than original
-                height: '88px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                marginBottom: '0px' // Moved text up
-            });
-        }
-
-        const span = li.querySelector('span');
-        if (span) {
-            Object.assign(span.style, {
-                fontSize: '12px',
-                fontWeight: 'bold',
-                transform: 'translateY(-6px)' // Nudged text up
-            });
-        }
-    });
-
-    newScreen.appendChild(clonedList);
-    document.body.appendChild(newScreen);
-
-    // 6. Create Navigation Arrows
-    const createArrow = (side) => {
-        const arrow = document.createElement('div');
-        arrow.id = `scroll-arrow-${side}`;
-        arrow.innerHTML = side === 'left' ? '&#10094;' : '&#10095;';
-       
-        Object.assign(arrow.style, {
-            position: 'absolute',
-            width: '45px',
-            height: '45px',
-            backgroundColor: 'rgba(30, 58, 95, 0.8)',
-            color: 'white',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '24px',
-            cursor: 'pointer',
-            zIndex: '3000',
-            transition: 'opacity 0.3s'
-        });
-
-        arrow.onclick = () => {
-            const direction = side === 'left' ? -200 : 200;
-            newScreen.scrollBy({ left: direction, behavior: 'smooth' });
-        };
-
-        document.body.appendChild(arrow);
-        return arrow;
-    };
-
-    const leftArr = createArrow('left');
-    const rightArr = createArrow('right');
-
-    // 7. Dynamic Sync (Scroll & Resize)
-    const syncLayout = () => {
-        updatePosition();
-        const rect = newScreen.getBoundingClientRect();
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        const midPoint = scrollY + rect.top + (rect.height / 2);
-
-        // Position Arrows
-        leftArr.style.top = rightArr.style.top = midPoint + 'px';
-        leftArr.style.left = (rect.left + 15) + 'px';
-        rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
-
-        // Visibility Logic
-        leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
-        leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
-       
-        const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
-        rightArr.style.opacity = atEnd ? '0' : '1';
-        rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
-    };
-
-    window.addEventListener('resize', syncLayout);
-    window.addEventListener('scroll', syncLayout);
-    newScreen.addEventListener('scroll', syncLayout);
-   
-    syncLayout(); // Initial run
-})();
-
-
-
-   
-
-/* Wrap existing function safely */
-const originalHandleRegister = window.handleRegister;
-
-window.handleRegister = function () {
-
-    if (!validateRegisterInputs()) {
-        alert("Please fill Mobile Number, Occupation and Secret Code");
-        return;
-    }
-
-    showSpinner();
-
-    setTimeout(() => {
-        hideSpinner();
-
-        if (typeof originalHandleRegister === "function") {
-            originalHandleRegister();
-        } else {
-            console.log("Account created (placeholder)");
-        }
-
-    }, 2000);
-};
-   
-function resizeCanvas() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-}
-   
-// Select all tabs and pages
-const tabs = {
-    'tab-plans': document.getElementById('plansPage'),
-    'tab-profile': document.getElementById('profilePage'),
-    'tab-services': document.getElementById('servicesPage'),
-    'tab-adverts': document.getElementById('advertsPage')
-};
-
-const tabElements = document.querySelectorAll('.tabs > div');
-
-tabElements.forEach(tabElement => {
-    tabElement.addEventListener('click', () => {
-        // 1. Hide all pages
-        Object.values(tabs).forEach(page => {
-            page.style.display = 'none';
-        });
-
-        // 2. Reset all tab styles
-        tabElements.forEach(el => {
-            el.style.backgroundColor = '#f1f1f1';
-            el.style.fontWeight = 'normal';
-        });
-
-        // 3. Show the clicked page
-        const targetPage = tabs[tabElement.id];
-        if (targetPage) {
-            targetPage.style.display = 'block';
-           
-            // 4. Highlight the active tab
-            tabElement.style.backgroundColor = 'white';
-            tabElement.style.fontWeight = 'bold';
-        }
-    });
-});
 function connectParticles() {
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -2151,6 +1917,7 @@ function connectParticles() {
         }
     }
 }
+
 function animateBackground() {
     ctx.fillStyle = 'rgba(10, 10, 31, 0.12)';
     ctx.fillRect(0, 0, width, height);
@@ -2161,6 +1928,7 @@ function animateBackground() {
     connectParticles();
     requestAnimationFrame(animateBackground);
 }
+
 function initBackground() {
     resizeCanvas();
     particles = [];
@@ -2169,6 +1937,14 @@ function initBackground() {
     }
     animateBackground();
 }
+
+function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+}
+
 window.addEventListener('resize', () => {
     resizeCanvas();
     particles.forEach(p => {
@@ -2176,12 +1952,14 @@ window.addEventListener('resize', () => {
         p.y = Math.random() * height;
     });
 });
+
 let mouseX = 0, mouseY = 0;
 window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 });
-// ==================== PASSWORD TOGGLE FUNCTION ====================
+
+// ==================== PASSWORD TOGGLE FUNCTIONS ====================
 function togglePassword() {
     const passwordField = document.getElementById("password");
     const toggleIcon = document.querySelector(".toggle-password");
@@ -2193,7 +1971,7 @@ function togglePassword() {
         toggleIcon.textContent = "👁";
     }
 }
-// ==================== NEW PASSWORD TOGGLE FOR FORGOT SECTION ====================
+
 function toggleNewPassword() {
     const passField = document.getElementById("newPassword");
     const icon = passField.parentElement.querySelector(".toggle-password");
@@ -2205,11 +1983,10 @@ function toggleNewPassword() {
         icon.textContent = "👁";
     }
 }
-// ==================== IMPROVED FORGOT PASSWORD FUNCTIONS ====================
+
+// ==================== FORGOT PASSWORD FUNCTIONS ====================
 function showForgotPassword() {
     const msg = document.getElementById("authMessage");
- 
-    // Hide only the login/register specific fields cleanly
     document.getElementById("password").parentElement.style.display = "none";
     document.getElementById("confirmLabel").classList.add("hidden");
     document.getElementById("confirmPassword").classList.add("hidden");
@@ -2219,12 +1996,11 @@ function showForgotPassword() {
     document.getElementById("regSecretCode").classList.add("hidden");
     document.getElementById("forgotPasswordSection").classList.remove("hidden");
     document.querySelector("h2").textContent = "Reset Password";
- 
     msg.style.color = "#1e3a5f";
     msg.textContent = "Enter your details to reset password";
 }
+
 function backToLogin() {
-    // Restore original login/register fields
     document.getElementById("password").parentElement.style.display = "block";
     document.getElementById("confirmLabel").classList.add("hidden");
     document.getElementById("confirmPassword").classList.add("hidden");
@@ -2232,17 +2008,15 @@ function backToLogin() {
     document.getElementById("mobileNumber").classList.add("hidden");
     document.getElementById("secretLabel").classList.add("hidden");
     document.getElementById("regSecretCode").classList.add("hidden");
- 
     document.getElementById("forgotPasswordSection").classList.add("hidden");
     document.getElementById("newPasswordFields").classList.add("hidden");
     document.getElementById("resetPasswordBtn").classList.add("hidden");
- 
     document.querySelector("h2").textContent = "Login / Register";
     document.getElementById("authMessage").textContent = "";
     document.getElementById("authMessage").style.color = "#dc3545";
 }
-// ==================== YOUR ORIGINAL JAVASCRIPT CODE (100% UNCHANGED) ====================
 
+// ==================== INACTIVITY WARNING ====================
 function showInactivityWarning() {
     let timeLeft = 60;
     const countdownTimerEl = document.getElementById("countdownTimer");
@@ -2250,132 +2024,91 @@ function showInactivityWarning() {
     document.getElementById("inactivityWarningModal").style.display = "flex";
     warningTimer = setInterval(() => {
         timeLeft--;
-        countdownTimerEl.textContent = timeLeft;
-        countdownTextEl.textContent = timeLeft;
+        if (countdownTimerEl) countdownTimerEl.textContent = timeLeft;
+        if (countdownTextEl) countdownTextEl.textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(warningTimer);
             logout();
         }
     }, 1000);
 }
+
 function setupInactivityListeners() {
     const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
     events.forEach(event => {
         document.addEventListener(event, resetInactivityTimer, { passive: true });
     });
 }
-// ==================== BENEFICIARY FUNCTIONS ====================
-function renderBeneficiaries() {
-    const container = document.getElementById("beneficiariesContainer");
-    container.innerHTML = "";
-    beneficiaries.forEach((ben, index) => {
-        const div = document.createElement("div");
-        div.className = "beneficiary-item";
-        div.innerHTML = `
-            <div class="beneficiary-header">Beneficiary ${index + 1}</div>
-            <label>Beneficiary Full Name</label>
-            <input type="text" id="ben-name-${index}" value="${ben.fullName || ''}" ${isEditing ? '' : 'disabled'}>
-            <label>Beneficiary Email</label>
-            <input type="email" id="ben-email-${index}" value="${ben.email || ''}" ${isEditing ? '' : 'disabled'}>
-            <label>Beneficiary Phone Number</label>
-            <input type="tel" id="ben-phone-${index}" value="${ben.phone || ''}" ${isEditing ? '' : 'disabled'}>
-            <label>Relationship</label>
-            <input type="text" id="ben-relation-${index}" value="${ben.relation || ''}" ${isEditing ? '' : 'disabled'}>
-        `;
-        container.appendChild(div);
-    });
-}
-function addBeneficiaryField() {
-    if (!isEditing) {
-        alert("Please click 'Edit My Profile' first and complete verification.");
+
+// ==================== AUTH FUNCTIONS ====================
+async function handleLogin() {
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const pass = document.getElementById("password").value.trim();
+    const msg = document.getElementById("authMessage");
+    const spinner = document.getElementById("loginSpinner");
+    const verifyingText = document.getElementById("verifyingText");
+
+    if (!email || !pass) {
+        msg.textContent = "Email and password are required.";
         return;
     }
-    beneficiaries.push({ fullName: "", email: "", phone: "", relation: "" });
-    renderBeneficiaries();
-}
-function getBeneficiariesData() {
-    const data = [];
-    beneficiaries.forEach((_, index) => {
-        const nameInput = document.getElementById(`ben-name-${index}`);
-        const emailInput = document.getElementById(`ben-email-${index}`);
-        const phoneInput = document.getElementById(`ben-phone-${index}`);
-        const relationInput = document.getElementById(`ben-relation-${index}`);
-        if (nameInput && nameInput.value.trim()) {
-            data.push({
-                fullName: nameInput.value.trim(),
-                email: emailInput ? emailInput.value.trim() : "",
-                phone: phoneInput ? phoneInput.value.trim() : "",
-                relation: relationInput ? relationInput.value.trim() : ""
-            });
-        }
-    });
-    return data;
-}
-// ==================== NEW: Occupation & Geolocation Functions ====================
-let userOccupation = "";
-let userLocation = { latitude: null, longitude: null };
-function requestGeolocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                userLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    timestamp: new Date().toISOString()
-                };
-                // Send to backend (you will handle this endpoint in backend)
-                try {
-                    await fetch(`${API_BASE}/api/save-location`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${currentToken}`
-                        },
-                        body: JSON.stringify(userLocation)
-                    });
-                } catch(e) {}
-            },
-            () => { console.log("Geolocation permission denied or unavailable"); }
-        );
-    }
-}
-// NEW: Fetch occupation statistics and render pie chart
-let occupationChart;
-async function loadOccupationChart() {
+
+    spinner.classList.add("show");
+    verifyingText.style.display = "block";
+
     try {
-        const res = await fetch(`${API_BASE}/api/occupations-stats`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
+        const response = await fetch(`${API_BASE}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
         });
-        const data = await res.json();
-        const ctx = document.getElementById('occupationPieChart');
-        if (occupationChart) occupationChart.destroy();
-       
-        occupationChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    data: data.percentages,
-                    backgroundColor: [
-                        '#1e3a5f', '#28a745', '#ffc107', '#dc3545',
-                        '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15, font: { size: 11 } } },
-                    title: { display: true, text: 'Occupation Distribution of GrowthBase Users (%)', font: { size: 14 } }
-                }
-            }
-        });
-    } catch(e) {
-        console.log("Could not load occupation chart");
+        const data = await response.json();
+        if (!response.ok) {
+            msg.style.color = "#dc3545";
+            msg.textContent = data.msg || "Incorrect email or password.";
+            return;
+        }
+        currentToken = data.token;
+        currentLoggedInEmail = email;
+        sessionStorage.setItem("fd_token", currentToken);
+        sessionStorage.setItem("fd_logged_email", email);
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        // FIX #8: isNewUser flag is properly set based on server response
+        if (data.isNewUser) {
+            isNewUser = true;
+            switchTab(0);
+            disableBeneficiariesAndDocuments();
+        } else {
+            isNewUser = false;
+            loadProfile();
+        }
+        resetInactivityTimer();
+        setupInactivityListeners();
+        requestGeolocation();
+        setTimeout(loadOccupationChart, 800);
+    } catch (err) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Server error. Please try again.";
+    } finally {
+        spinner.classList.remove("show");
+        verifyingText.style.display = "none";
     }
 }
-// ==================== AUTH FUNCTIONS ====================
+
+function logout() {
+    clearTimeout(inactivityTimer);
+    clearTimeout(warningTimer);
+    currentToken = null;
+    currentLoggedInEmail = null;
+    isNewUser = false;
+    hasStartedPlan = false;
+    sessionStorage.clear();
+    document.getElementById("mainApp").classList.add("hidden");
+    document.getElementById("authScreen").classList.remove("hidden");
+    document.getElementById("inactivityWarningModal").style.display = "none";
+}
+
 async function handleRegister() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
@@ -2384,7 +2117,8 @@ async function handleRegister() {
     const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
-    // STEP 1: FIRST CLICK SHOWS FIELDS ONLY (NO REGISTRATION YET)
+
+    // STEP 1: FIRST CLICK SHOWS FIELDS ONLY
     if (document.getElementById("mobileNumber").classList.contains("hidden")) {
         document.getElementById("mobileNumber").classList.remove("hidden");
         document.getElementById("confirmPassword").classList.remove("hidden");
@@ -2398,6 +2132,7 @@ async function handleRegister() {
         msg.textContent = "Complete registration form below.";
         return;
     }
+
     // STEP 2: VALIDATION
     if (!email || !pass || !mobile || !occupation || !confirmPass || !secretCode) {
         msg.style.color = "#dc3545";
@@ -2409,6 +2144,7 @@ async function handleRegister() {
         msg.textContent = "Passwords do not match.";
         return;
     }
+
     try {
         const response = await fetch(`${API_BASE}/api/register`, {
             method: 'POST',
@@ -2422,10 +2158,6 @@ async function handleRegister() {
                 secretCode: secretCode
             })
         });
-        if (!occupation || occupation.trim() === "") {
-            alert("Occupation is required");
-            return;
-        }
         const data = await response.json();
         if (!response.ok) {
             msg.style.color = "#dc3545";
@@ -2440,12 +2172,13 @@ async function handleRegister() {
     }
 }
 
-// ==================== FORGOT PASSWORD FUNCTIONS ====================
+// ==================== FORGOT PASSWORD VERIFY & RESET ====================
 async function verifyForgotDetails() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const phone = document.getElementById("forgotPhone").value.trim();
     const secretCode = document.getElementById("forgotSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
+
     if (!email || !phone || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "Email, Phone and Secret Code are required.";
@@ -2472,11 +2205,13 @@ async function verifyForgotDetails() {
         msg.textContent = "Server error. Please try again.";
     }
 }
+
 async function resetPassword() {
     const email = document.getElementById("forgotEmail").value.trim().toLowerCase();
     const newPass = document.getElementById("newPassword").value.trim();
     const confirmNewPass = document.getElementById("confirmNewPassword").value.trim();
     const msg = document.getElementById("authMessage");
+
     if (newPass !== confirmNewPass) {
         msg.style.color = "#dc3545";
         msg.textContent = "New passwords do not match.";
@@ -2502,21 +2237,25 @@ async function resetPassword() {
         msg.textContent = "Server error.";
     }
 }
+
 // ==================== PLAN FUNCTIONS ====================
 let isNewUser = false;
 let hasStartedPlan = false;
+
 function disableBeneficiariesAndDocuments() {
-    const beneficiaries = document.getElementById("beneficiariesSection");
-    const documents = document.getElementById("documentsSection");
-    if (beneficiaries) beneficiaries.classList.add("disabled-section");
-    if (documents) documents.classList.add("disabled-section");
+    const benEl = document.getElementById("beneficiariesSection");
+    const docEl = document.getElementById("documentsSection");
+    if (benEl) benEl.classList.add("disabled-section");
+    if (docEl) docEl.classList.add("disabled-section");
 }
+
 function enableBeneficiariesAndDocuments() {
-    const beneficiaries = document.getElementById("beneficiariesSection");
-    const documents = document.getElementById("documentsSection");
-    if (beneficiaries) beneficiaries.classList.remove("disabled-section");
-    if (documents) documents.classList.remove("disabled-section");
+    const benEl = document.getElementById("beneficiariesSection");
+    const docEl = document.getElementById("documentsSection");
+    if (benEl) benEl.classList.remove("disabled-section");
+    if (docEl) docEl.classList.remove("disabled-section");
 }
+
 function startFreePlan() {
     hasStartedPlan = true;
     isNewUser = false;
@@ -2525,6 +2264,7 @@ function startFreePlan() {
     loadProfile();
     alert("Free Plan activated!");
 }
+
 function upgradeToPremium() {
     selectedPremiumPlan = null;
     document.getElementById("premiumMonthlyOption").classList.remove("selected");
@@ -2533,6 +2273,7 @@ function upgradeToPremium() {
     document.getElementById("premiumMpesaPhone").value = "";
     document.getElementById("premiumPaymentModal").style.display = "flex";
 }
+
 function upgradeToBodaGo() {
     selectedBodaGoPlan = null;
     document.getElementById("monthlyOption").classList.remove("selected");
@@ -2541,20 +2282,24 @@ function upgradeToBodaGo() {
     document.getElementById("mpesaPhone").value = "";
     document.getElementById("bodaGoPaymentModal").style.display = "flex";
 }
+
 function chooseLifetimePlan() {
     document.getElementById("lifetimeMpesaPhone").value = "";
     document.getElementById("lifetimePaymentStatus").textContent = "";
     document.getElementById("lifetimePaymentModal").style.display = "flex";
 }
+
 // ==================== M-PESA PAYMENT FUNCTIONS ====================
 function selectPaymentOption(option) {
     selectedBodaGoPlan = option;
     document.getElementById("monthlyOption").classList.toggle("selected", option === "monthly");
     document.getElementById("yearlyOption").classList.toggle("selected", option === "yearly");
 }
+
 function closePaymentModal() {
     document.getElementById("bodaGoPaymentModal").style.display = "none";
 }
+
 async function initiateMpesaSTKPush() {
     const phone = document.getElementById("mpesaPhone").value.trim();
     const statusEl = document.getElementById("paymentStatus");
@@ -2575,16 +2320,8 @@ async function initiateMpesaSTKPush() {
     try {
         const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                phone: phone,
-                amount: amount,
-                planType: planType,
-                accountReference: "BodaGoPlan"
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+            body: JSON.stringify({ phone, amount, planType, accountReference: "BodaGoPlan" })
         });
         const data = await response.json();
         if (response.ok) {
@@ -2606,14 +2343,17 @@ async function initiateMpesaSTKPush() {
         statusEl.textContent = "Network error. Please try again.";
     }
 }
+
 function selectPremiumOption(option) {
     selectedPremiumPlan = option;
     document.getElementById("premiumMonthlyOption").classList.toggle("selected", option === "monthly");
     document.getElementById("premiumYearlyOption").classList.toggle("selected", option === "yearly");
 }
+
 function closePremiumModal() {
     document.getElementById("premiumPaymentModal").style.display = "none";
 }
+
 async function initiatePremiumSTKPush() {
     const phone = document.getElementById("premiumMpesaPhone").value.trim();
     const statusEl = document.getElementById("premiumPaymentStatus");
@@ -2634,16 +2374,8 @@ async function initiatePremiumSTKPush() {
     try {
         const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                phone: phone,
-                amount: amount,
-                planType: planType,
-                accountReference: "PremiumPlan"
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+            body: JSON.stringify({ phone, amount, planType, accountReference: "PremiumPlan" })
         });
         const data = await response.json();
         if (response.ok) {
@@ -2665,9 +2397,11 @@ async function initiatePremiumSTKPush() {
         statusEl.textContent = "Network error. Please try again.";
     }
 }
+
 function closeLifetimeModal() {
     document.getElementById("lifetimePaymentModal").style.display = "none";
 }
+
 async function initiateLifetimeSTKPush() {
     const phone = document.getElementById("lifetimeMpesaPhone").value.trim();
     const statusEl = document.getElementById("lifetimePaymentStatus");
@@ -2683,16 +2417,8 @@ async function initiateLifetimeSTKPush() {
     try {
         const response = await fetch(`${API_BASE}/api/mpesa/stkpush`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                phone: phone,
-                amount: amount,
-                planType: planType,
-                accountReference: "LifetimePlan"
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+            body: JSON.stringify({ phone, amount, planType, accountReference: "LifetimePlan" })
         });
         const data = await response.json();
         if (response.ok) {
@@ -2714,6 +2440,7 @@ async function initiateLifetimeSTKPush() {
         statusEl.textContent = "Network error. Please try again.";
     }
 }
+
 // ==================== PROFILE FUNCTIONS ====================
 async function searchProfiles() {
     const term = document.getElementById("searchTerm").value.trim();
@@ -2725,9 +2452,7 @@ async function searchProfiles() {
     try {
         const response = await fetch(`${API_BASE}/api/search?term=${encodeURIComponent(term)}`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${currentToken}`
-            }
+            headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         const data = await response.json();
         if (!response.ok || !data.length) {
@@ -2747,8 +2472,7 @@ async function searchProfiles() {
                 <p><strong>Secret Code Usage:</strong></p>
                 <ul>
                 ${profile.secretCodeLogs.map(log => `<li>${new Date(log.date).toLocaleString()}</li>`).join("")}
-                </ul>
-` : ""}
+                </ul>` : ""}
             `;
             resultsDiv.appendChild(div);
         });
@@ -2756,6 +2480,7 @@ async function searchProfiles() {
         resultsDiv.innerHTML = "<p class='no-results'>Error searching profiles.</p>";
     }
 }
+
 async function loadProfile() {
     if (!currentToken) return;
     try {
@@ -2801,6 +2526,7 @@ async function loadProfile() {
         console.error("Profile load error:", err);
     }
 }
+
 async function saveProfile() {
     if (!isEditing || !currentToken) {
         alert("Please click 'Edit My Profile' and verify first.");
@@ -2816,10 +2542,10 @@ async function saveProfile() {
     }
     document.getElementById("saveSpinnerContainer").style.display = "flex";
     const profileData = {
-        fullName: fullName,
-        nationalID: nationalID,
+        fullName,
+        nationalID,
         address: document.getElementById("profileAddress").value.trim(),
-        phone: phone,
+        phone,
         properties: getPropertyData(),
         bankAccounts: getBankAccountsData(),
         beneficiaries: getBeneficiariesData(),
@@ -2834,10 +2560,7 @@ async function saveProfile() {
     try {
         const response = await fetch(`${API_BASE}/api/profile`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
             body: JSON.stringify(profileData)
         });
         const data = await response.json();
@@ -2854,6 +2577,7 @@ async function saveProfile() {
         document.getElementById("saveSpinnerContainer").style.display = "none";
     }
 }
+
 function renderPropertyFields() {
     const container = document.getElementById("propertiesContainer");
     container.innerHTML = "";
@@ -2867,6 +2591,7 @@ function renderPropertyFields() {
         container.appendChild(div);
     });
 }
+
 function addPropertyField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -2875,6 +2600,7 @@ function addPropertyField() {
     propertyFields.push("");
     renderPropertyFields();
 }
+
 function getPropertyData() {
     const data = [];
     propertyFields.forEach((_, index) => {
@@ -2883,6 +2609,7 @@ function getPropertyData() {
     });
     return data;
 }
+
 function renderBankAccounts() {
     const container = document.getElementById("bankAccountsContainer");
     container.innerHTML = "";
@@ -2896,6 +2623,7 @@ function renderBankAccounts() {
         container.appendChild(div);
     });
 }
+
 function addBankAccountField() {
     if (!isEditing) {
         alert("Please click 'Edit My Profile' first and complete verification.");
@@ -2904,6 +2632,7 @@ function addBankAccountField() {
     bankAccounts.push("");
     renderBankAccounts();
 }
+
 function getBankAccountsData() {
     const data = [];
     bankAccounts.forEach((_, index) => {
@@ -2912,24 +2641,73 @@ function getBankAccountsData() {
     });
     return data;
 }
-function editMyProfile() {
+
+// ==================== BENEFICIARY FUNCTIONS ====================
+function renderBeneficiaries() {
+    const container = document.getElementById("beneficiariesContainer");
+    container.innerHTML = "";
+    beneficiaries.forEach((ben, index) => {
+        const div = document.createElement("div");
+        div.className = "beneficiary-item";
+        div.innerHTML = `
+            <div class="beneficiary-header">Beneficiary ${index + 1}</div>
+            <label>Beneficiary Full Name</label>
+            <input type="text" id="ben-name-${index}" value="${ben.fullName || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Beneficiary Email</label>
+            <input type="email" id="ben-email-${index}" value="${ben.email || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Beneficiary Phone Number</label>
+            <input type="tel" id="ben-phone-${index}" value="${ben.phone || ''}" ${isEditing ? '' : 'disabled'}>
+            <label>Relationship</label>
+            <input type="text" id="ben-relation-${index}" value="${ben.relation || ''}" ${isEditing ? '' : 'disabled'}>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function addBeneficiaryField() {
+    if (!isEditing) {
+        alert("Please click 'Edit My Profile' first and complete verification.");
+        return;
+    }
+    beneficiaries.push({ fullName: "", email: "", phone: "", relation: "" });
+    renderBeneficiaries();
+}
+
+function getBeneficiariesData() {
+    const data = [];
+    beneficiaries.forEach((_, index) => {
+        const nameInput = document.getElementById(`ben-name-${index}`);
+        const emailInput = document.getElementById(`ben-email-${index}`);
+        const phoneInput = document.getElementById(`ben-phone-${index}`);
+        const relationInput = document.getElementById(`ben-relation-${index}`);
+        if (nameInput && nameInput.value.trim()) {
+            data.push({
+                fullName: nameInput.value.trim(),
+                email: emailInput ? emailInput.value.trim() : "",
+                phone: phoneInput ? phoneInput.value.trim() : "",
+                relation: relationInput ? relationInput.value.trim() : ""
+            });
+        }
+    });
+    return data;
+}
+
+// FIX #1: editMyProfile rewritten using async/await so response.ok is in correct scope
+async function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
         return;
     }
     const secret = prompt("Enter your secret code to unlock profile editing:");
     if (!secret) return;
-    fetch(`${API_BASE}/api/verify-secret`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-        },
-        body: JSON.stringify({ secretCode: secret })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.msg === 'Secret code verified successfully' || response.ok) {
+    try {
+        const response = await fetch(`${API_BASE}/api/verify-secret`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+            body: JSON.stringify({ secretCode: secret })
+        });
+        const data = await response.json();
+        if (response.ok && (data.msg === 'Secret code verified successfully' || response.ok)) {
             isEditing = true;
             document.getElementById("profileContentArea").classList.remove("blurred");
             enableEditing();
@@ -2937,9 +2715,11 @@ function editMyProfile() {
         } else {
             alert(data.msg || "Incorrect secret code.");
         }
-    })
-    .catch(() => alert("Verification failed. Please try again."));
+    } catch (err) {
+        alert("Verification failed. Please try again.");
+    }
 }
+
 function enableEditing() {
     const fields = ["profileFullName","profileID","profileAddress","profilePhone","profileEmail","secretCodeInput","referredBy","businessType","totalCapitalRequired","purposeOfCapital"];
     fields.forEach(id => {
@@ -2950,6 +2730,7 @@ function enableEditing() {
     renderBankAccounts();
     renderBeneficiaries();
 }
+
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
     const pages = ['plansPage', 'profilePage', 'servicesPage', 'advertsPage'];
@@ -2957,14 +2738,17 @@ function switchTab(tabIndex) {
         const pageEl = document.getElementById(id);
         if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
     });
-    if (tabIndex === 2) { // Services tab
+    if (tabIndex === 2) {
         setTimeout(loadOccupationChart, 300);
     }
 }
+
+// ==================== DOCUMENT FUNCTIONS ====================
 function initDocumentUploadForm() {
     documentRows = [];
     addDocumentRow();
 }
+
 function addDocumentRow() {
     const container = document.getElementById("dynamicDocumentsContainer");
     const rowId = 'doc-row-' + Date.now();
@@ -2978,6 +2762,7 @@ function addDocumentRow() {
     container.insertAdjacentHTML('beforeend', rowHTML);
     documentRows.push(rowId);
 }
+
 function removeDocumentRow(rowId) {
     if (documentRows.length <= 1) {
         alert("You must have at least one document row.");
@@ -2987,11 +2772,9 @@ function removeDocumentRow(rowId) {
     if (row) row.remove();
     documentRows = documentRows.filter(id => id !== rowId);
 }
+
 async function uploadDocuments() {
-    if (!currentToken) {
-        alert("You must be logged in.");
-        return;
-    }
+    if (!currentToken) { alert("You must be logged in."); return; }
     const formData = new FormData();
     let hasFiles = false;
     for (let rowId of documentRows) {
@@ -3000,19 +2783,13 @@ async function uploadDocuments() {
         const docName = nameInput ? nameInput.value.trim() : '';
         const file = fileInput && fileInput.files[0];
         if (file) {
-            if (!docName) {
-                alert("Please provide a name for every document you upload.");
-                return;
-            }
+            if (!docName) { alert("Please provide a name for every document you upload."); return; }
             formData.append('documentNames', docName);
             formData.append('documents', file);
             hasFiles = true;
         }
     }
-    if (!hasFiles) {
-        alert("Please select at least one file to upload.");
-        return;
-    }
+    if (!hasFiles) { alert("Please select at least one file to upload."); return; }
     try {
         const response = await fetch(`${API_BASE}/api/documents/upload`, {
             method: 'POST',
@@ -3033,6 +2810,7 @@ async function uploadDocuments() {
         alert("Error uploading documents.");
     }
 }
+
 function renderSavedDocuments() {
     const container = document.getElementById("savedDocumentsList");
     container.innerHTML = "";
@@ -3056,9 +2834,147 @@ function renderSavedDocuments() {
         container.appendChild(div);
     });
 }
+
 async function viewDocument(docId) { alert("View document functionality"); }
 async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
-function analyze(){} function printReport(){} function toggleFields(){} function toggleAnnualReporting(){} function toggleBeneficiariesSection(){} function generateBeneficiaryFields(){} function handleFileUpload(e){} function renderDocumentList(){} function removeDocument(i){} function handleSubmitFileUpload(e){} function renderSubmitDocumentList(){} function removeSubmitDoc(i){} function toggleDeathDate(){} function submitNewInformation(){} function showMyProfileInNewWindow(){}
+
+// ==================== ADS FETCH & RENDER ====================
+// FIX #5: updateCardContent only runs if card exists (safe guard added)
+function renderAds(ads) {
+    const container = document.getElementById('ad-overlay');
+    if (!container) return;
+    container.innerHTML = '';
+    ads.forEach((ad, index) => {
+        const cardId = `ad-card-${index + 1}`;
+        const cardHTML = `
+            <div id="${cardId}" class="ad-card">
+                <strong>${ad.title}</strong>
+                <p>${ad.description}</p>
+                <div class="price">${ad.price}</div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHTML);
+    });
+}
+
+function updateCardContent(cardNumber, newData) {
+    // FIX #5: Guard against non-existent element
+    const card = document.getElementById(`ad-card-${cardNumber}`);
+    if (!card) return;
+    const strongEl = card.querySelector('strong');
+    const priceEl = card.querySelector('.price');
+    if (strongEl) strongEl.textContent = newData.title;
+    if (priceEl) priceEl.textContent = newData.price;
+}
+
+async function fetchAds() {
+    try {
+        const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
+        if (!response.ok) return;
+        const result = await response.json();
+        const grid = document.querySelector('.listings .grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        result.data.forEach(ad => {
+            const cardHTML = `
+                <div class="ad-card">
+                    <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
+                        ${(ad.images || []).map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
+                    </div>
+                    <div class="card-body" style="padding:15px;">
+                        <h4>${ad.title || ''}</h4>
+                        <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
+                        <p>${ad.description || ''}</p>
+                        <small>📍 ${ad.location || ''} | 📞 ${ad.phone || ''}</small>
+                    </div>
+                </div>`;
+            grid.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    } catch (err) {
+        console.error("fetchAds error:", err);
+    }
+}
+
+// ==================== GEOLOCATION & OCCUPATION CHART ====================
+let userOccupation = "";
+let userLocation = { latitude: null, longitude: null };
+
+function requestGeolocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                userLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    timestamp: new Date().toISOString()
+                };
+                try {
+                    await fetch(`${API_BASE}/api/save-location`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+                        body: JSON.stringify(userLocation)
+                    });
+                } catch(e) {}
+            },
+            () => { console.log("Geolocation permission denied or unavailable"); }
+        );
+    }
+}
+
+let occupationChart;
+async function loadOccupationChart() {
+    try {
+        const res = await fetch(`${API_BASE}/api/occupations-stats`, {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        const chartCanvas = document.getElementById('occupationPieChart');
+        if (!chartCanvas) return;
+        if (occupationChart) occupationChart.destroy();
+        occupationChart = new Chart(chartCanvas, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.percentages,
+                    backgroundColor: [
+                        '#1e3a5f', '#28a745', '#ffc107', '#dc3545',
+                        '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15, font: { size: 11 } } },
+                    title: { display: true, text: 'Occupation Distribution of GrowthBase Users (%)', font: { size: 14 } }
+                }
+            }
+        });
+    } catch(e) {
+        console.log("Could not load occupation chart");
+    }
+}
+
+// ==================== STUB FUNCTIONS (preserved from original) ====================
+function analyze(){} 
+function printReport(){} 
+function toggleFields(){} 
+function toggleAnnualReporting(){} 
+function toggleBeneficiariesSection(){} 
+function generateBeneficiaryFields(){} 
+function handleFileUpload(e){} 
+function renderDocumentList(){} 
+function removeDocument(i){} 
+function handleSubmitFileUpload(e){} 
+function renderSubmitDocumentList(){} 
+function removeSubmitDoc(i){} 
+function toggleDeathDate(){} 
+function submitNewInformation(){} 
+function showMyProfileInNewWindow(){}
+
+// ==================== PAGE INIT ====================
 window.onload = function() {
     const token = sessionStorage.getItem("fd_token");
     const email = sessionStorage.getItem("fd_logged_email");
@@ -3074,57 +2990,13 @@ window.onload = function() {
         setTimeout(loadOccupationChart, 1000);
     }
     setTimeout(() => {
-        if (document.getElementById("dynamicDocumentsContainer")) {
+        const dynDocContainer = document.getElementById("dynamicDocumentsContainer");
+        if (dynDocContainer) {
             initDocumentUploadForm();
         }
     }, 800);
     initBackground();
 };
-
-/**
- * Scroller Visibility Manager
- * Automatically hides/shows the listings scroller based on login state.
- */
-(function() {
-    // 1. Reference all relevant elements
-    const authScreen = document.getElementById('authScreen');
-    const mainApp = document.getElementById('mainApp');
-    const scroller = document.getElementById('listings-scroller-screen');
-    const arrowLeft = document.getElementById('scroll-arrow-left');
-    const arrowRight = document.getElementById('scroll-arrow-right');
-
-    // 2. Safety check: ensure the main screens exist
-    if (!authScreen || !mainApp) return;
-
-    // 3. Logic to update visibility
-    const updateVisibility = () => {
-        // We determine if the user is logged out by checking if authScreen is visible
-        const isAuthVisible = !authScreen.classList.contains('hidden') &&
-                             window.getComputedStyle(authScreen).display !== 'none';
-
-        if (isAuthVisible) {
-            // Logged Out -> Show the scroller elements
-            if (scroller) scroller.style.display = 'flex';
-            if (arrowLeft) arrowLeft.style.display = 'block';
-            if (arrowRight) arrowRight.style.display = 'block';
-        } else {
-            // Logged In -> Hide the scroller elements
-            if (scroller) scroller.style.display = 'none';
-            if (arrowLeft) arrowLeft.style.display = 'none';
-            if (arrowRight) arrowRight.style.display = 'none';
-        }
-    };
-
-    // 4. Set up an observer to watch for class/style changes on login/logout
-    const observer = new MutationObserver(updateVisibility);
-   
-    // Watch for attribute changes on the two main screen containers
-    observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
-    observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
-
-    // 5. Run once immediately to set the correct initial state
-    updateVisibility();
-})();
 </script>
 </body>
 </html>
