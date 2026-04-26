@@ -1601,10 +1601,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     { method: 'POST', body: formData }
                 );
 
-                // ✅ NEW: check if server actually succeeded
-                if (!response.ok) {
-                    throw new Error("Server error");
-                }
+                // Replace the catch block at line 1603 with this:
+                .catch(async (error) => {
+                   console.error("Full Error Object:", error);
+                    // Try to extract JSON error from the server response if it exists
+                    if (error.response) {
+                        const errorData = await error.response.json();
+                        alert(`Server Error: ${errorData.error || 'Unknown backend error'}`);
+                    } else {
+                        alert("Failed to post ad. Check your internet or if the backend is awake.");
+                    }
+                });
 
                 const result = await response.json();
                 console.log(result);
