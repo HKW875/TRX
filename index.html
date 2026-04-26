@@ -1622,12 +1622,12 @@ document.addEventListener('DOMContentLoaded', () => {
            
             Object.assign(overlay.style, {
                 position: 'absolute',
-                top: `${window.scrollY + rect.bottom + 10}px`,
-                left: `${window.scrollX + rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
+                top: 0px,
+                left: 0px,
+                width: 0px,
+                height: 0px,
                 backgroundColor: '#ffffff',
-                border: '1px solid #ccc',
+                border: '0px solid #ccc',
                 boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
                 zIndex: '2000',
                 display: 'grid',
