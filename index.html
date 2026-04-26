@@ -1608,38 +1608,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const marketContainer = document.querySelector('.market-container');
         if (!categoryList || !marketContainer) return;
 
-        categoryList.addEventListener('click', function(event) {
-            const targetLi = event.target.closest('li');
-            if (!targetLi) return;
-
-            const existingOverlay = document.getElementById('ad-overlay');
-            if (existingOverlay) existingOverlay.remove();
-
-            const categoryName = targetLi.innerText.trim();
-            const rect = marketContainer.getBoundingClientRect();
-
-            const overlay = document.createElement('div');
-            overlay.id = 'ad-overlay';
-           
-            Object.assign(overlay.style, {
-                position: 'absolute',
-                top: `${window.scrollY + rect.bottom + 10}px`,
-                left: `${window.scrollX + rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                backgroundColor: '#ffffff',
-                border: '1px solid #ccc',
-                boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
-                zIndex: '2000',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: '1fr 1fr',
-                gap: '12px',
-                padding: '12px',
-                boxSizing: 'border-box',
-                borderRadius: '4px'
-            });
-
             for (let i = 1; i <= 4; i++) {
                 const ad = document.createElement('div');
                 Object.assign(ad.style, {
