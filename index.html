@@ -1537,11 +1537,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.textContent = "Processing...";
             }
 
-            if (userLat && userLng) {
-                formData.append('lat', userLat);
-                formData.append('lng', userLng);
-            }
-
             try {
                 const formData = new FormData();
                 formData.append('title', adForm.title ? adForm.title.value : '');
@@ -1549,8 +1544,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('price', adForm.price.value);
                 formData.append('description', adForm.description.value);
                 formData.append('locationName', adForm.location.value);
-                formData.append('lat', userLat);
-                formData.append('lng', userLng);
+                // ✅ STEP 3: SAFE GEO ADD
+                if (userLat && userLng) {
+                   formData.append('lat', userLat);
+                   formData.append('lng', userLng);
+                }
                 // FIX #3: adForm.phone.value now works because input has name="phone"
                 formData.append('phone', adForm.phone.value);
                 // FIX #3: adForm.condition.value now works because select has name="condition"
@@ -1566,11 +1564,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
 
                 // ✅ NEW: check if server actually succeeded
-                if (!response.ok) {
-                    throw new Error("Server error");
-                }
-
-                // ✅ Check if server actually succeeded
                 if (!response.ok) {
                     throw new Error("Server error");
                 }
