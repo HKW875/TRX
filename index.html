@@ -1589,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // FIX #3: adForm.phone.value now works because input has name="phone"
                 formData.append('phone', adForm.phone.value);
                 // FIX #3: adForm.condition.value now works because select has name="condition"
-                formData.append('condition', adForm.condition.value);
+                formData.append('condition', adForm.condition.value.toLowerCase());
 
                 for (const file of selectedFiles) {
                     const compressed = await compressImage(file, 0.4);
