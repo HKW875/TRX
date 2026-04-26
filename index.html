@@ -1490,7 +1490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    
+   
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('adModal');
@@ -1601,17 +1601,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     { method: 'POST', body: formData }
                 );
 
-                // Replace the catch block at line 1603 with this:
-                .catch(async (error) => {
-                   console.error("Full Error Object:", error);
-                    // Try to extract JSON error from the server response if it exists
-                    if (error.response) {
-                        const errorData = await error.response.json();
-                        alert(`Server Error: ${errorData.error || 'Unknown backend error'}`);
-                    } else {
-                        alert("Failed to post ad. Check your internet or if the backend is awake.");
-                    }
-                });
+                // ✅ NEW: check if server actually succeeded
+                if (!response.ok) {
+                    throw new Error("Server error");
+                }
 
                 const result = await response.json();
                 console.log(result);
@@ -2942,15 +2935,13 @@ async function fetchAds() {
             const cardHTML = `
                 <div class="ad-card">
                     <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
-                        ${(ad.images || []).map(img =>
-                              `<img src="https://trx-infosec-backend-vvrq.onrender.com${img}" style="flex:0 0 100%; object-fit:cover;">`
-                          ).join('')}
+                        ${(ad.images || []).map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
                     </div>
                     <div class="card-body" style="padding:15px;">
                         <h4>${ad.title || ''}</h4>
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
-                        <p style="font-size:10px;">${ad.description || ''}</p>
-                        <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+                        <p>${ad.description || ''}</p>
+                        <small>📍 ${ad.location || ''} | 📞 ${ad.phone || ''}</small>
                     </div>
                 </div>`;
             grid.insertAdjacentHTML('beforeend', cardHTML);
@@ -3023,20 +3014,20 @@ async function loadOccupationChart() {
 }
 
 // ==================== STUB FUNCTIONS (preserved from original) ====================
-function analyze(){} 
-function printReport(){} 
-function toggleFields(){} 
-function toggleAnnualReporting(){} 
-function toggleBeneficiariesSection(){} 
-function generateBeneficiaryFields(){} 
-function handleFileUpload(e){} 
-function renderDocumentList(){} 
-function removeDocument(i){} 
-function handleSubmitFileUpload(e){} 
-function renderSubmitDocumentList(){} 
-function removeSubmitDoc(i){} 
-function toggleDeathDate(){} 
-function submitNewInformation(){} 
+function analyze(){}
+function printReport(){}
+function toggleFields(){}
+function toggleAnnualReporting(){}
+function toggleBeneficiariesSection(){}
+function generateBeneficiaryFields(){}
+function handleFileUpload(e){}
+function renderDocumentList(){}
+function removeDocument(i){}
+function handleSubmitFileUpload(e){}
+function renderSubmitDocumentList(){}
+function removeSubmitDoc(i){}
+function toggleDeathDate(){}
+function submitNewInformation(){}
 function showMyProfileInNewWindow(){}
 
 // ==================== PAGE INIT ====================
