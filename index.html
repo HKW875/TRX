@@ -2935,13 +2935,15 @@ async function fetchAds() {
             const cardHTML = `
                 <div class="ad-card">
                     <div class="card-images" style="display:flex; overflow-x:auto; height:200px;">
-                        ${(ad.images || []).map(img => `<img src="${img}" style="flex:0 0 100%; object-fit:cover;">`).join('')}
+                        ${(ad.images || []).map(img =>
+                              `<img src="https://trx-infosec-backend-vvrq.onrender.com${img}" style="flex:0 0 100%; object-fit:cover;">`
+                          ).join('')}
                     </div>
                     <div class="card-body" style="padding:15px;">
                         <h4>${ad.title || ''}</h4>
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
                         <p>${ad.description || ''}</p>
-                        <small>📍 ${ad.location || ''} | 📞 ${ad.phone || ''}</small>
+                        <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
                     </div>
                 </div>`;
             grid.insertAdjacentHTML('beforeend', cardHTML);
