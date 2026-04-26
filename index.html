@@ -1444,6 +1444,15 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
 
 // ==================== MODAL LOGIC (wrapped in DOMContentLoaded) ====================
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ✅ ADD THIS HERE (GLOBAL FOR WHOLE PAGE)
+    let userLat = null;
+    let userLng = null;
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        userLat = position.coords.latitude;
+        userLng = position.coords.longitude;
+    });
     let selectedFiles = [];
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
@@ -1526,6 +1535,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.textContent = "Processing...";
+            }
+
+            if (userLat && userLng) {
+                formData.append('lat', userLat);
+                formData.append('lng', userLng);
             }
 
             try {
