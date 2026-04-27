@@ -1662,65 +1662,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIX #4: fetchAds called once here inside DOMContentLoaded (removed nested duplicate call)
     fetchAds();
 
-    // Category overlay click handler
-    (function() {
-        const categoryList = document.querySelector('ul.category-list');
-        const marketContainer = document.querySelector('.market-container');
-        if (!categoryList || !marketContainer) return;
-            categoryList.addEventListener('click', function(event) {
-            const targetLi = event.target.closest('li');
-            if (!targetLi) return;
+// ✅ CATEGORY FILTER CLICK new
+(function() {
+    const categoryList = document.querySelector('ul.category-list');
+    if (!categoryList) return;
 
-            const existingOverlay = document.getElementById('ad-overlay');
-            if (existingOverlay) existingOverlay.remove();
+    categoryList.addEventListener('click', function(event) {
+        const targetLi = event.target.closest('li');
+        if (!targetLi) return;
 
-            const categoryName = targetLi.innerText.trim();
-            const rect = marketContainer.getBoundingClientRect();
+        // ✅ GET CATEGORY FROM data-category (IMPORTANT)
+        const category = targetLi.getAttribute('data-category');
 
+        // If no category (safety)
+        if (!category) return;
 
-           
-            Object.assign(overlay.style, {
-                position: 'absolute',
-                top: `${window.scrollY + rect.bottom + 10}px`,
-                left: `${window.scrollX + rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                backgroundColor: '#ffffff',
-                border: '1px solid #ccc',
-                boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
-                zIndex: '2000',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: '1fr 1fr',
-                gap: '12px',
-                padding: '12px',
-                boxSizing: 'border-box',
-                borderRadius: '4px'
-            });
+        console.log("Filtering by:", category);
 
-            for (let i = 1; i <= 0; i++) {
-                const ad = document.createElement('div');
-                Object.assign(ad.style, {
-                    border: '1px solid #eee',
-                    padding: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    backgroundColor: '#fdfdfd'
-                });
-                ad.innerHTML = `
-                    <div style="width:100%; height:140px; background:#ddd; margin-bottom:8px;"></div>
-                    <strong style="font-size:14px;">${categoryName} Ad ${i}</strong>
-                    <p style="font-size:11px; margin: 4px 0; flex-grow:1;">Premium selection of ${categoryName}.</p>
-                    <div style="font-size:12px; font-weight:bold; color:navy;">KES ${(Math.random()*200).toFixed(2)}</div>
-                    <div style="font-size:10px; color:#555;">📍 North Road ${10+i}, Bldg ${i*5}</div>
-                    <div style="font-size:10px; color:#555;">📞 555-019${i}</div>
-                    <div style="font-size:10px; font-weight:bold; color:green;">New Condition</div>
-                `;
-                overlay.appendChild(ad);
-            }
-            document.body.appendChild(overlay);
-        });
-    })();
+        // ✅ CALL fetchAds WITH FILTER
+        fetchAds(category);
+    });
+})();
 
     window.addEventListener('resize', () => {
         const existingOverlay = document.getElementById('ad-overlay');
@@ -2931,18 +2893,28 @@ function updateCardContent(cardNumber, newData) {
 //         Without this, the browser requests them from the frontend domain → 404.
 // FIX 2: ad.locationName used instead of ad.location (matches the Advert schema field name).
 // FIX 3: ad.phone used directly (removed markdown link corruption).
-async function fetchAds() {
+async function fetchAds(filterCategory = null) {
     const BACKEND_URL = 'https://trx-infosec-backend-vvrq.onrender.com';
+
     try {
         const response = await fetch(`${BACKEND_URL}/api/ads`);
         if (!response.ok) return;
+
         const result = await response.json();
         const grid = document.querySelector('.listings .grid');
         if (!grid) return;
+
         grid.innerHTML = '';
+
         (result.data || []).forEach(ad => {
-            // FIX 1: Prepend BACKEND_URL to each image path so the browser
-            // fetches from the correct server, not the frontend domain.
+
+            // ✅ CATEGORY FILTER (case-insensitive)
+            if (filterCategory && ad.category && 
+                ad.category.toLowerCase() !== filterCategory.toLowerCase()) {
+                return;
+            }
+
+            // FIX 1: Correct image paths
             const imagesHTML = (ad.images || []).map(img => {
                 const src = img.startsWith('http') ? img : `${BACKEND_URL}${img}`;
                 return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
@@ -2954,14 +2926,18 @@ async function fetchAds() {
                         ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
                     </div>
                     <div class="card-body" style="padding:15px;">
+                        <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
                         <h4>${ad.title || ''}</h4>
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
                         <p>${ad.description || ''}</p>
                         <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
                     </div>
-                </div>`;
+                </div>
+            `;
+
             grid.insertAdjacentHTML('beforeend', cardHTML);
         });
+
     } catch (err) {
         console.error("fetchAds error:", err);
     }
