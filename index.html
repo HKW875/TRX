@@ -2113,40 +2113,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Instant UI preview card
                 const grid = document.querySelector('.listings .grid');
                 if (grid) {
+                    const isGB = adForm.phone.value.trim() === "0708253594";
+
                     const card = document.createElement('div');
                     card.className = 'ad-card';
+
                     card.innerHTML = `
                         <div class="card-body">
-                            <p>${adForm.category.value}</p>
-                            <h4>${adForm.title ? adForm.title.value : ''}</h4>
-                            <p>${adForm.description.value}</p>
-                            <p class="card-price">KES ${adForm.price.value}</p>
-                            <p><small>📍 ${adForm.location.value}</small></p>
+                             <p>${adForm.category.value}</p>
+                             <h4>${adForm.title ? adForm.title.value : ''}</h4>
+                             <p>${adForm.description.value}</p>
+                             <p class="card-price">KES ${adForm.price.value}</p>
+                             <p><small>📍 ${adForm.location.value}</small></p>
+                             <p><small>📞 ${adForm.phone.value}</small></p>
 
-                            
-                            const isGB = adForm.phone.value.trim() === "0708253594";
-
-                            card.innerHTML = `
-                                <div class="card-body">
-                                    <p>${adForm.category.value}</p>
-                                    <h4>${adForm.title || ''}</h4>
-                                    <p>${adForm.description.value}</p>
-                                    <p class="card-price">KES ${adForm.price.value}</p>
-                                    <p><small>📍 ${adForm.location.value}</small></p>
-                                    <p><small>📞 ${adForm.phone.value}</small></p>
-
-                                    ${isGB ? `
-                                        <div style="
-                                            margin-top:6px;
-                                            color:#00c896;
-                                            font-weight:bold;
-                                            font-size:13px;
-                                        ">
-                                            🟢🄶🄱 Points Apply
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `;
+                             ${isGB ? `
+                                 <div style="
+                                     margin-top:6px;
+                                     color:#00c896;
+                                     font-weight:bold;
+                                     font-size:13px;
+                                 ">
+                                     🟢🄶🄱 Points Apply
+                                 </div>
+                             ` : ''}
+                         </div>
+                    `;
                     if (selectedFiles.length > 0) {
                         const imgWrap = document.createElement('div');
                         imgWrap.className = 'card-images';
