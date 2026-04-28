@@ -2113,7 +2113,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Instant UI preview card
                 const grid = document.querySelector('.listings .grid');
                 if (grid) {
-                    const isGB = adForm.phone.value.trim() === "0708253594";
+                    
+
+                    const phoneClean = (adForm.phone.value || '')
+                        .replace(/\s+/g, '')   // remove spaces
+                        .replace(/^\+254/, '0') // convert +254 to 0
+                        .trim();
+
+                    const isGB = phoneClean === "0708253594";
 
                     const card = document.createElement('div');
                     card.className = 'ad-card';
