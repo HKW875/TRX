@@ -1265,6 +1265,14 @@
    
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
+
+    <label style="margin-top:15px;">Referred By</label>
+    <input type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
+
+    <label>Their Number</label>
+    <input type="tel" id="referralPhone" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}" disabled>
+
+
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
 
@@ -1525,6 +1533,9 @@
             <div class="market-container">
                 <!-- SIDEBAR -->
                 <div class="sidebar">
+                    <h5 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
+                        Your Points: 0
+                    </h5>
                     <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
@@ -1797,6 +1808,53 @@ let inactivityTimer;
 let warningTimer;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const WARNING_TIME = 60 * 1000;
+
+async function loadUserPoints() {
+    try {
+        const res = await fetch('/api/points', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        const data = await res.json();
+
+        document.getElementById('userPointsDisplay').innerText =
+            "Your Points: " + (data.points || 0);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function showPointsPopup(text) {
+    const popup = document.createElement("div");
+    popup.innerText = text;
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.background = "#28a745";
+    popup.style.color = "white";
+    popup.style.padding = "15px 25px";
+    popup.style.borderRadius = "10px";
+    popup.style.fontSize = "20px";
+    popup.style.fontWeight = "bold";
+    popup.style.zIndex = "9999";
+    popup.style.opacity = "1";
+    popup.style.transition = "all 0.8s ease";
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        popup.style.opacity = "0";
+        popup.style.transform = "translate(-50%, -80%)";
+    }, 300);
+
+    setTimeout(() => {
+        popup.remove();
+    }, 1000);
+}
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
@@ -2603,6 +2661,11 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
+        document.getElementById('userPointsDisplay').innerText =
+            "Your Points: " + (data.points || 0);
+
+        // Optional animation trigger
+        showPointsPopup("+1");
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         if (data.isNewUser) {
