@@ -2122,7 +2122,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>${adForm.description.value}</p>
                             <p class="card-price">KES ${adForm.price.value}</p>
                             <p><small>📍 ${adForm.location.value}</small></p>
-                            <p><small>📞 ${adForm.phone.value}</small></p>
+                            const isGB = adForm.phone.value.trim() === "0708253594";
+
+                            card.innerHTML = `
+                                <div class="card-body">
+                                    <p>${adForm.category.value}</p>
+                                    <h4>${adForm.title || ''}</h4>
+                                    <p>${adForm.description.value}</p>
+                                    <p class="card-price">KES ${adForm.price.value}</p>
+                                    <p><small>📍 ${adForm.location.value}</small></p>
+                                    <p><small>📞 ${adForm.phone.value}</small></p>
+
+                                    ${isGB ? `
+                                        <div style="
+                                            margin-top:6px;
+                                            color:#00c896;
+                                            font-weight:bold;
+                                            font-size:13px;
+                                        ">
+                                            🟢🄶🄱 Points Apply
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
                         </div>
                     `;
                     if (selectedFiles.length > 0) {
@@ -3429,13 +3451,35 @@ function renderAds(ads) {
     container.innerHTML = '';
     ads.forEach((ad, index) => {
         const cardId = `ad-card-${index + 1}`;
+
+        const isGB = (ad.phone || '').trim() === "0708253594";
+
         const cardHTML = `
-            <div id="${cardId}" class="ad-card">
-                <strong>${ad.title}</strong>
-                <p>${ad.description}</p>
-                <div class="price">${ad.price}</div>
+            <div class="ad-card">
+                <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
+                    ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
+                </div>
+                <div class="card-body" style="padding:15px;">
+                    <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
+                    <h4>${ad.title || ''}</h4>
+                    <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
+                    <p>${ad.description || ''}</p>
+
+                    <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+
+                    ${isGB ? `
+                        <div style="
+                            margin-top:6px;
+                            color:#00c896;
+                            font-weight:bold;
+                            font-size:13px;
+                        ">
+                            🟢🄶🄱 Points Apply
+                        </div>
+                    ` : ''}
+                </div>
             </div>
-        `;
+        `;        
         container.insertAdjacentHTML('beforeend', cardHTML);
     });
 }
