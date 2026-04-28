@@ -2122,6 +2122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>${adForm.description.value}</p>
                             <p class="card-price">KES ${adForm.price.value}</p>
                             <p><small>📍 ${adForm.location.value}</small></p>
+
+                            
                             const isGB = adForm.phone.value.trim() === "0708253594";
 
                             card.innerHTML = `
@@ -2145,8 +2147,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                     ` : ''}
                                 </div>
                             `;
-                        </div>
-                    `;
                     if (selectedFiles.length > 0) {
                         const imgWrap = document.createElement('div');
                         imgWrap.className = 'card-images';
