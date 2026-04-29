@@ -2312,133 +2312,130 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
         // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-        const leftArr = createArrow('left');
-        const rightArr = createArrow('right');
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
+const leftArr = createArrow('left');
+const rightArr = createArrow('right');
 
-        const syncLayout = () => {
-            updatePosition();
-            const rect = newScreen.getBoundingClientRect();
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const midPoint = scrollY + rect.top + (rect.height / 2);
+const syncLayout = () => {
+    updatePosition();
+    const rect = newScreen.getBoundingClientRect();
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const midPoint = scrollY + rect.top + (rect.height / 2);
 
-            leftArr.style.top = rightArr.style.top = midPoint + 'px';
-            leftArr.style.left = (rect.left + 15) + 'px';
-            rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
+    leftArr.style.top = rightArr.style.top = midPoint + 'px';
+    leftArr.style.left = (rect.left + 15) + 'px';
+    rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
 
-            leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
-            leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
+    leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
+    leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
    
-            const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
-            rightArr.style.opacity = atEnd ? '0' : '1';
-            rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
-        };
+    const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
+    rightArr.style.opacity = atEnd ? '0' : '1';
+    rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
+};
 
-        window.addEventListener('resize', syncLayout);
-        newScreen.addEventListener('scroll', syncLayout);
-        syncLayout();
+window.addEventListener('resize', syncLayout);
+newScreen.addEventListener('scroll', syncLayout);
+syncLayout();
 
-        // ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
-        const fixScrollerAndTickerPosition = () => {
-            const scroller = document.getElementById('listings-scroller-screen');
-            const ticker = document.getElementById('dynamic-listings-ticker');
+// ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
+const fixScrollerAndTickerPosition = () => {
+    const scroller = document.getElementById('listings-scroller-screen');
+    const ticker = document.getElementById('dynamic-listings-ticker');
 
-            if (!scroller || !ticker) return;
+    if (!scroller || !ticker) return;
 
-            const bottomOffset = 20; // distance from bottom of screen
+    const bottomOffset = 20;
 
-            scroller.style.position = 'fixed';
-            scroller.style.bottom = (bottomOffset + 54) + 'px';   // Scroller above ticker
-            scroller.style.left = '50%';
-            scroller.style.transform = 'translateX(-50%)';
-            scroller.style.width = '380px';
-            scroller.style.zIndex = '2000';
-            scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
+    scroller.style.position = 'fixed';
+    scroller.style.bottom = (bottomOffset + 54) + 'px';
+    scroller.style.left = '50%';
+    scroller.style.transform = 'translateX(-50%)';
+    scroller.style.width = '380px';
+    scroller.style.zIndex = '2000';
+    scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
 
-            ticker.style.position = 'fixed';
-            ticker.style.bottom = bottomOffset + 'px';
-            ticker.style.left = '50%';
-            ticker.style.transform = 'translateX(-50%)';
-            ticker.style.width = '380px';
-            ticker.style.zIndex = '1999';
-        };
+    ticker.style.position = 'fixed';
+    ticker.style.bottom = bottomOffset + 'px';
+    ticker.style.left = '50%';
+    ticker.style.transform = 'translateX(-50%)';
+    ticker.style.width = '380px';
+    ticker.style.zIndex = '1999';
+};
 
-        // Call once after elements are created
-        fixScrollerAndTickerPosition();
-        window.addEventListener('resize', fixScrollerAndTickerPosition);
+fixScrollerAndTickerPosition();
+window.addEventListener('resize', fixScrollerAndTickerPosition);
 
-        // ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER =====
-        const ticker = document.createElement('div');
-        ticker.id = 'dynamic-listings-ticker';
+// ===== DYNAMIC LISTINGS TICKER =====
+const ticker = document.createElement('div');
+ticker.id = 'dynamic-listings-ticker';
 
-        const tickerLabel = document.createElement('div');
-        tickerLabel.className = 'ticker-label';
-        tickerLabel.textContent = '🔥 LIVE';
+const tickerLabel = document.createElement('div');
+tickerLabel.className = 'ticker-label';
+tickerLabel.textContent = '🔥 LIVE';
 
-        const trackWrapper = document.createElement('div');
-        trackWrapper.className = 'ticker-track-wrapper';
+const trackWrapper = document.createElement('div');
+trackWrapper.className = 'ticker-track-wrapper';
 
-        const track = document.createElement('div');
-        track.id = 'ticker-track';
-        trackWrapper.appendChild(track);
+const track = document.createElement('div');
+track.id = 'ticker-track';
+trackWrapper.appendChild(track);
 
-        ticker.appendChild(tickerLabel);
-        ticker.appendChild(trackWrapper);
-        document.body.appendChild(ticker);
+ticker.appendChild(tickerLabel);
+ticker.appendChild(trackWrapper);
+document.body.appendChild(ticker);
 
-        // ==================== IMPROVED TICKER WITH IMAGES & GB BADGE ====================
-        const populateTicker = (ads) => {
-            if (!ads || ads.length === 0) {
-                track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
-                return;
-            }
+// ==================== IMPROVED TICKER WITH IMAGES & GB BADGE ====================
+const populateTicker = (ads) => {
+    if (!ads || ads.length === 0) {
+        track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
+        return;
+    }
 
-            let itemsHTML = '';
+    let itemsHTML = '';
 
-            ads.forEach(ad => {
-                const phone = String(ad.phone || '').trim();
-                const isGB = phone === "0708253594" || 
-                             phone === "254708253594" || 
-                             phone === "+254708253594";
+    ads.forEach(ad => {
+        const phone = String(ad.phone || '').trim();
+        const isGB = phone === "0708253594" || phone === "254708253594" || phone === "+254708253594";
 
-                const imageUrl = (ad.images && ad.images.length > 0) 
-                    ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
-                    : 'https://via.placeholder.com/40x40/1e3a5f/ffffff?text=Ad';
+        const imageUrl = (ad.images && ad.images.length > 0) 
+            ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
+            : 'https://via.placeholder.com/40x40/1e3a5f/ffffff?text=Ad';
 
-                itemsHTML += `
-                    <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
-                        <img src="${imageUrl}" 
-                             style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" 
-                             onerror="this.style.display='none';">
-                        <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                           ${ad.title || 'Untitled Ad'}
-                        </span>
-                        <span class="ticker-price">KES ${ad.price || '–'}</span>
-                        <span class="ticker-cat">${ad.category || ''}</span>
-                        ${isGB ? `<span style="color:#00c896; font-weight:bold; margin-left:4px;">🟢GB</span>` : ''}
-                    </span>
-                `;
-            });
+        itemsHTML += `
+            <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
+                <img src="${imageUrl}" style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" onerror="this.style.display='none';">
+                <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    ${ad.title || 'Untitled Ad'}
+                </span>
+                <span class="ticker-price">KES ${ad.price || '–'}</span>
+                <span class="ticker-cat">${ad.category || ''}</span>
+                ${isGB ? `<span style="color:#00c896; font-weight:bold; margin-left:4px;">🟢GB</span>` : ''}
+            </span>
+        `;
+    });
 
-            track.innerHTML = itemsHTML + itemsHTML; // seamless loop
+    track.innerHTML = itemsHTML + itemsHTML;
 
-            const duration = Math.max(18, ads.length * 2.5);
-            track.style.animationDuration = `${duration}s`;
-        };
+    const duration = Math.max(18, ads.length * 2.5);
+    track.style.animationDuration = `${duration}s`;
+};
 
-        // Fetch ads for ticker
-        const refreshTicker = async () => {
-            try {
-                const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
-                if (!res.ok) return;
-                const result = await res.json();
-                populateTicker(result.data || []);
-            } catch (e) {
-                console.log("Ticker refresh failed");
-            }
-        };
+// Refresh ticker
+const refreshTicker = async () => {
+    try {
+        const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
+        if (res.ok) {
+            const result = await res.json();
+            populateTicker(result.data || []);
+        }
+    } catch (e) {
+        console.log("Ticker refresh failed");
+    }
+};
 
-        refreshTicker();
-        setInterval(refreshTicker, 60000);
+refreshTicker();
+setInterval(refreshTicker, 60000);
 
     // Tab click handlers
     const tabMap = {
