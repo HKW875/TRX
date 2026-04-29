@@ -16,7 +16,7 @@
 
         /* Added in <style> section */
         .ticker-item img {
-            width: 200px !important;      /* CHANGED: Increased to 200px for proportionality */
+            width: 200px !important;
             height: 100px !important;
             object-fit: cover;
             border-radius: 6px;
@@ -255,13 +255,14 @@
             display: flex;
             align-items: center;
             z-index: 2000;
+            top: auto;
         }
 
         
-        /* 2. Ticker Images Size Increased to 100px x 100px */
+        /* 2. Ticker Images */
         .ticker-item img {
-            width: 200px !important;      /* CHANGED: Increased to 200px */
-            height: 100px !important;     /* CHANGED: Increased from ~32px to 100px */
+            width: 200px !important;
+            height: 100px !important;
             object-fit: cover;
             border-radius: 6px;
             margin-right: 8px;
@@ -274,7 +275,8 @@
             left: 0;
             right: 0;
             width: 380px;
-            height: 130px;
+            height: 350px;
+            top: 100px;
             background: linear-gradient(90deg, #1e3a5f 0%, #2a5298 50%, #1e3a5f 100%);
             display: flex;
             align-items: center;
@@ -300,13 +302,13 @@
             flex: 1;
             overflow: hidden;
             position: relative;
-            height: 220px;               /* CHANGED: Increased to 220px */
+            height: 350px;
         }
 
         #ticker-track {
             display: flex;
             align-items: center;
-            height: 220px;               /* CHANGED: Increased to 220px */
+            height: 350px;
             white-space: nowrap;
             animation: tickerScroll 2s linear infinite;
             gap: 0;
@@ -326,7 +328,7 @@
             white-space: nowrap;
             cursor: pointer;
             border-right: 1px solid rgba(255,255,255,0.15);
-            height: 220px;               /* CHANGED: Increased to 220px */
+            height: 350px;
             transition: background 0.2s, color 0.2s;
         }
 
@@ -724,16 +726,13 @@
         }
 
         .auth-container button {
-            width: 100%;
-            max-width: 380px;
+            width: 40%;
             border-radius: 10px;
             padding: 13px;
             font-size: 15px;
             transition: 0.2s ease;
-            margin: 6px 0;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 6px 4px;
+            display: inline-block;
         }
 
         .auth-container button:hover {
@@ -1424,9 +1423,10 @@
     <!-- Blue Circular Login Spinner -->
     <div id="loginSpinner" class="login-spinner"></div>
     <div id="verifyingText" style="display:none; color:#1e3a5f; font-weight:600; margin-top:8px;">Verifying</div>
-    <div style="margin-top: 25px;">
+    <div style="margin-top: 25px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
         <button onclick="handleLogin()">Login</button>
-        <button onclick="handleRegister()">Create Account</button>
+        <button onclick="showRegisterFields()">Create Account</button>
+        <button id="goBackBtn" onclick="hideRegisterFields()" style="display:none; background:#6c757d;">← Go Back</button>
     </div>
     <div style="margin-top: 15px;">
         <a href="#" onclick="showForgotPassword(); return false;" style="color: #1e3a5f; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
@@ -1642,7 +1642,7 @@
             <div class="market-header">
                 <!-- Search column: search input on top, My Goal button below -->
                 <div class="market-header-search-col">
-                    <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)">
+                    <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)" style="width:130%;">
                     <button type="button" class="my-goal-btn" onclick="openMyGoalModal()">🎯 My Goal</button>
                 </div>
                 <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
@@ -1650,9 +1650,9 @@
             <div class="market-container">
                 <!-- SIDEBAR -->
                 <div class="sidebar">
-                    <h5 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
+                    <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
                         Your Points: 0
-                    </h5>
+                    </h4>
                     <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
@@ -3712,19 +3712,17 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                         <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
                         <h4>${ad.title || ''}</h4>
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
+                        ${(ad.phone || '').replace(/\s/g,'') === '0708253594' ? '<div style="color:#ff4d01; font-size:16px; font-weight:300; margin-top:6px;">Use 🟢🄶🄱GrowthBase Points Discount</div>' : ''}
 
-                        
-                        <!-- Hidden elements -->
-                        <p class="description">${ad.description || ''}</p>   <!-- Now hidden via CSS -->
-                        <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>  <!-- Now hidden via CSS -->
+                        <!-- Hidden elements revealed by View Details -->
+                        <p class="description" style="display:none;">${ad.description || ''}</p>
+                        <small class="ad-details" style="display:none;">📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
 
-                        <!-- New button added -->
+                        <!-- View Details button -->
                         <button class="view-details-btn" 
-                                onclick="alert('...')">
+                                onclick="handleViewDetails(this, '${ad._id}')">
                             View Details
                         </button>
-                        
-                        ${(ad.phone || '').replace(/\s/g,'') === '0708253594' ? '<p style="color:#00c896; font-size:12px; font-weight:700; margin-top:6px;">Use 🟢🄶🄱GrowthBase Points Discount</p>' : ''}
                     </div>
                 </div>
             `;
@@ -3866,6 +3864,66 @@ function removeSubmitDoc(i){}
 function toggleDeathDate(){}
 function submitNewInformation(){}
 function showMyProfileInNewWindow(){}
+
+// ==================== VIEW DETAILS TOGGLE + VIEW COUNT ====================
+async function handleViewDetails(btn, adId) {
+    const card = btn.closest('.card-body');
+    const desc = card.querySelector('.description');
+    const details = card.querySelector('.ad-details');
+    const isHidden = desc.style.display === 'none';
+
+    if (isHidden) {
+        desc.style.display = 'block';
+        details.style.display = 'block';
+        btn.textContent = 'Hide Details';
+
+        // Record view in MongoDB
+        try {
+            await fetch(`${API_BASE}/api/ads/${adId}/view`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+        } catch (e) { /* silent fail */ }
+    } else {
+        desc.style.display = 'none';
+        details.style.display = 'none';
+        btn.textContent = 'View Details';
+    }
+}
+
+// ==================== AUTH SCREEN REGISTER TOGGLE ====================
+function showRegisterFields() {
+    // Show registration-only fields
+    ['confirmLabel','confirmPassword','mobileLabel','mobileNumber',
+     'occupationLabel','occupationInput','referredByLabel','referredByInput',
+     'referralPhoneLabel','referralPhoneInput','secretLabel','regSecretCode']
+        .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        });
+    // Show Go Back, hide Create Account is still visible but Go Back appears
+    document.getElementById('goBackBtn').style.display = 'inline-block';
+    // Wire Create Account button to actually register now
+    document.querySelector('[onclick="showRegisterFields()"]').setAttribute('onclick','handleRegister()');
+    document.querySelector('[onclick="handleRegister()"]').textContent = 'Submit';
+}
+
+function hideRegisterFields() {
+    ['confirmLabel','confirmPassword','mobileLabel','mobileNumber',
+     'occupationLabel','occupationInput','referredByLabel','referredByInput',
+     'referralPhoneLabel','referralPhoneInput','secretLabel','regSecretCode']
+        .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
+    document.getElementById('goBackBtn').style.display = 'none';
+    // Reset Create Account button
+    const btn = document.querySelector('[onclick="handleRegister()"]');
+    if (btn) {
+        btn.setAttribute('onclick','showRegisterFields()');
+        btn.textContent = 'Create Account';
+    }
+}
 
 // ==================== PAGE INIT ====================
 window.onload = function() {
