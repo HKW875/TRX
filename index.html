@@ -1260,11 +1260,13 @@
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
 
-    <label class="hidden" style="margin-top:15px;">Referred By</label>
-    <input class="hidden" type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
+    <!-- NEW: Referred By and Their Number fields -->
+    <label id="referredByLabel" class="hidden">Referred By</label>
+    <input type="text" id="referredByInput" class="hidden" placeholder="Full names of person who referred you">
 
-    <label class="hidden">Their Number</label>
-    <input class="hidden" type="tel" id="referralPhone" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}" disabled>
+    <label id="referralPhoneLabel" class="hidden">Their Number</label>
+    <input type="tel" id="referralPhoneInput" class="hidden" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}">
+
 
 
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
@@ -1522,7 +1524,7 @@
                     <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)">
                     <button type="button" class="my-goal-btn" onclick="openMyGoalModal()">🎯 My Goal</button>
                 </div>
-                <button type="button" class="post-btn">+ Post Ad</button>
+                <button type="button" class="post-btn" onclick="postNewAd()">+ Post Ad</button>
             </div>
             <div class="market-container">
                 <!-- SIDEBAR -->
@@ -2624,6 +2626,7 @@ function setupInactivityListeners() {
 }
 
 // ==================== AUTH FUNCTIONS ====================
+// ==================== AUTH FUNCTIONS ====================
 async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
@@ -2646,22 +2649,33 @@ async function handleLogin() {
             body: JSON.stringify({ email, password: pass })
         });
         const data = await response.json();
+
         if (!response.ok) {
             msg.style.color = "#dc3545";
             msg.textContent = data.msg || "Incorrect email or password.";
             return;
         }
+
+        // Success - Store token and email
         currentToken = data.token;
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
+
+        
+
+        // Update points display immediately from login response
         document.getElementById('userPointsDisplay').innerText =
-            "Your Points: " + (data.points || 0);
+            `Your Points: ${data.points || 0}`;
 
         // Optional animation trigger
         showPointsPopup("+1");
+
+        // Hide auth screen and show main app
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
+
+        // Handle new user vs existing user flow
         if (data.isNewUser) {
             isNewUser = true;
             switchTab(0);
@@ -2670,16 +2684,42 @@ async function handleLogin() {
             isNewUser = false;
             loadProfile();
         }
+
+        // Setup app features
         resetInactivityTimer();
         setupInactivityListeners();
         requestGeolocation();
         setTimeout(loadOccupationChart, 800);
+
+        // Refresh points from server (extra safety)
+        setTimeout(refreshUserPoints, 1000);
+
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error. Please try again.";
+        console.error("Login error:", err);
     } finally {
         spinner.classList.remove("show");
         verifyingText.style.display = "none";
+    }
+}
+
+// Helper function to refresh user points from server
+async function refreshUserPoints() {
+    if (!currentToken) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/points`, {
+            headers: { 
+                'Authorization': `Bearer ${currentToken}` 
+            }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            document.getElementById('userPointsDisplay').innerText = 
+                `Your Points: ${data.points || 0}`;
+        }
+    } catch (e) {
+        console.log("Could not refresh points:", e);
     }
 }
 
@@ -2701,11 +2741,17 @@ async function handleRegister() {
     const pass = document.getElementById("password").value.trim();
     const mobile = document.getElementById("mobileNumber").value.trim();
     const occupation = document.getElementById("occupationInput").value.trim();
+    
+    // NEW: Get referred by data
+    const referredBy = document.getElementById("referredByInput").value.trim();
+    const referralPhone = document.getElementById("referralPhoneInput").value.trim();
+
     const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
 
     if (document.getElementById("mobileNumber").classList.contains("hidden")) {
+        // First click - show all fields including new ones
         document.getElementById("mobileNumber").classList.remove("hidden");
         document.getElementById("confirmPassword").classList.remove("hidden");
         document.getElementById("regSecretCode").classList.remove("hidden");
@@ -2714,6 +2760,13 @@ async function handleRegister() {
         document.getElementById("secretLabel").classList.remove("hidden");
         document.getElementById("occupationLabel").classList.remove("hidden");
         document.getElementById("occupationInput").classList.remove("hidden");
+        
+        // Show new fields
+        document.getElementById("referredByLabel").classList.remove("hidden");
+        document.getElementById("referredByInput").classList.remove("hidden");
+        document.getElementById("referralPhoneLabel").classList.remove("hidden");
+        document.getElementById("referralPhoneInput").classList.remove("hidden");
+
         msg.style.color = "#1e3a5f";
         msg.textContent = "Complete registration form below.";
         return;
@@ -2739,6 +2792,8 @@ async function handleRegister() {
                 password: pass,
                 mobileNumber: mobile,
                 occupation,
+                referredBy,           // NEW
+                referralPhone,        // NEW
                 confirmPassword: confirmPass,
                 secretCode: secretCode
             })
@@ -3519,6 +3574,57 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
 
     } catch (err) {
         console.error("fetchAds error:", err);
+    }
+}
+
+// ==================== POST NEW ADVERT + AWARD POINTS ====================
+// This is the function that will be called when user clicks "+ Post Ad"
+
+async function postNewAd() {
+    // TODO: Collect form data from modal or form (you can expand this later)
+    // For now, this is a basic implementation. You can connect it to your ad modal later.
+
+    const adData = {
+        category: "General",           // You can make this dynamic
+        title: prompt("Enter Ad Title:") || "Untitled Listing",
+        price: prompt("Enter Price (KES):") || "0",
+        description: prompt("Enter Description:") || "",
+        locationName: prompt("Enter Location:") || "Nairobi",
+        phone: prompt("Enter Contact Phone:") || "",
+        condition: "new"
+    };
+
+    if (!adData.title || !adData.description) {
+        alert("Title and description are required.");
+        return;
+    }
+
+    try {
+        const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(adData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("✅ Ad posted successfully! You earned 4 points.");
+            
+            // THIS IS THE IMPORTANT LINE:
+            refreshUserPoints();        // Updates the "Your Points: X" display in real time
+
+            // Refresh the listings
+            fetchAds();
+        } else {
+            alert(result.message || "Failed to post ad.");
+        }
+    } catch (err) {
+        console.error("Post ad error:", err);
+        alert("Error posting advertisement. Please try again.");
     }
 }
 
