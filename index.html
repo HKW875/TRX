@@ -3494,18 +3494,19 @@ function updateCardContent(cardNumber, newData) {
 }
 
 // ==================== FETCH ADS - WITH SEARCH SUPPORT ====================
+// ==================== FETCH ADS - WITH GB POINTS BADGE ====================
 async function fetchAds(filterCategory = null, searchTerm = null) {
     const BACKEND_URL = 'https://trx-infosec-backend-vvrq.onrender.com';
 
     try {
-        // Build query params
         const params = new URLSearchParams();
         if (filterCategory) params.append('category', filterCategory);
         if (searchTerm) params.append('search', searchTerm);
 
         const url = `${BACKEND_URL}/api/ads${params.toString() ? '?' + params.toString() : ''}`;
+        
         const response = await fetch(url);
-        if (!response.ok) return;
+        if (!response.ok) throw new Error('Failed to fetch ads');
 
         const result = await response.json();
         const grid = document.querySelector('.listings .grid');
@@ -3515,7 +3516,7 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
 
         let ads = result.data || [];
 
-        // Client-side search fallback if backend doesn't support search param
+        // Client-side fallback search
         if (searchTerm && ads.length > 0) {
             const lowerTerm = searchTerm.toLowerCase();
             ads = ads.filter(ad =>
@@ -3527,26 +3528,28 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
         }
 
         if (ads.length === 0) {
-            grid.innerHTML = `<div style="padding:30px; color:#888; font-style:italic; grid-column:1/-1;">No listings found${searchTerm ? ` for "${searchTerm}"` : ''}${filterCategory ? ` in "${filterCategory}"` : ''}.</div>`;
+            grid.innerHTML = `<div style="padding:40px; color:#888; font-style:italic; grid-column:1/-1; text-align:center;">
+                No listings found${searchTerm ? ` for "${searchTerm}"` : ''}${filterCategory ? ` in "${filterCategory}"` : ''}.
+            </div>`;
             return;
         }
 
         ads.forEach(ad => {
-            // Category filter (applied server-side via query param, but keep client guard)
-            if (filterCategory && !searchTerm && ad.category &&
-                ad.category.toLowerCase() !== filterCategory.toLowerCase()) {
-                return;
-            }
+            const phone = String(ad.phone || '').trim();
+            const isGB = phone === "0708253594" || 
+                         phone === "254708253594" || 
+                         phone === "+254708253594";
 
             const imagesHTML = (ad.images || []).map(img => {
                 const src = img.startsWith('http') ? img : `${BACKEND_URL}${img}`;
                 return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
-            }).join('');
+            }).join('') || 
+                '<div style="width:100%; height:200px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:13px;">No Image</div>';
 
             const cardHTML = `
                 <div class="ad-card">
                     <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
-                        ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
+                        ${imagesHTML}
                     </div>
                     <div class="card-body" style="padding:15px;">
                         <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
@@ -3554,6 +3557,12 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
                         <p>${ad.description || ''}</p>
                         <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+
+                        ${isGB ? `
+                            <div style="margin-top:8px; padding:6px 10px; background:#e6f7ef; border-radius:6px; color:#00c896; font-weight:bold; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+                                🟢 🄶🄱 Points Apply
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -3563,6 +3572,10 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
 
     } catch (err) {
         console.error("fetchAds error:", err);
+        const grid = document.querySelector('.listings .grid');
+        if (grid) {
+            grid.innerHTML = `<div style="padding:30px; color:#dc3545; text-align:center;">Failed to load advertisements. Please try again later.</div>`;
+        }
     }
 }
 
