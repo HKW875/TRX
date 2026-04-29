@@ -14,6 +14,76 @@
             transform: translateY(12px);
         }
 
+        /* Added in <style> section */
+        .ticker-item img {
+            width: 100px !important;
+            height: 100px !important;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Hide description and contact number */
+        .card-body p.description,
+        .card-body small {
+            display: none !important;   /* CHANGED: Hidden as requested */
+        }
+
+        .view-details-btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+         }
+
+         .view-details-btn:hover {
+             background: #2a5298;
+        }
+
+        /* 5. Sidebar Categories - Horizontal on Desktop */
+        .category-list {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            padding: 0;
+            font-size: 11.2px;
+        }
+
+        .growthbase-discount {
+            color: #ff4d01 !important;        /* CHANGED: Was #00c896, now orange */
+            font-size: 12px; 
+            font-weight: 600; 
+            margin-top: 6px;
+        }
+
+        /* 6. Auth Screen - Keep same appearance on desktop as mobile */
+        .auth-container {
+            max-width: 420px;
+            margin: 80px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            transform: scale(0.85);           /* CHANGED: Consistent scaling */
+            transform-origin: center top;
+        }
+
+        /* 4. GrowthBase Points Discount Text - Color Changed */
+        .growthbase-discount {
+            color: #ff4d01 !important;        /* CHANGED: Was #00c896, now #ff4d01 */
+            font-size: 12px; 
+            font-weight: 600; 
+            margin-top: 6px;
+        }
+
         /* Modal Styling */
         .ad-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -95,18 +165,46 @@
         .ad-card {
             border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff;
             display: flex; flex-direction: column; margin-bottom: 20px;
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background: #fff;
         }
         .card-images img:first-child {
             display: block;
         }
         .card-images {
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 200px;
+            display: flex; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            height: 200px;
         }
         .card-images img {
             flex: 0 0 100%; object-fit: cover; scroll-snap-align: start;
         }
         .card-body { padding: 15px; }
         .card-price { font-weight: bold; color: green; font-size: 0.8em; }
+        
+        /* New View Details Button */
+        .view-details-btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+    
+        /* Hide description and contact number */
+        .card-body p.description,
+        .card-body small {
+            display: none !important;   /* CHANGED: Hidden as requested */
+        }
 
         /* Target a specific slot by ID */
         #ad-card-1 {
@@ -159,6 +257,17 @@
             z-index: 2000;
         }
 
+        
+        /* 2. Ticker Images Size Increased to 100px x 100px */
+        .ticker-item img {
+            width: 100px !important;      /* CHANGED: Increased from ~32px to 100px */
+            height: 100px !important;     /* CHANGED: Increased from ~32px to 100px */
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
         /* ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER ===== */
         #dynamic-listings-ticker {
             position: absolute;
@@ -199,7 +308,7 @@
             align-items: center;
             height: 100%;
             white-space: nowrap;
-            animation: tickerScroll 10s linear infinite;
+            animation: tickerScroll 2s linear infinite;
             gap: 0;
         }
 
@@ -1005,9 +1114,13 @@
             }
 
             .auth-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                transform: scale(0.85);           /* CHANGED: Consistent scaling */
+                transform-origin: center top;
+            }
+
+            .auth-container {
+                transform: scale(0.65);
+                padding: 30px 20px;
             }
 
             .auth-container input[type="email"],
@@ -1215,6 +1328,30 @@
             transform: translateY(-1px);
             background: linear-gradient(90deg, #00c896, #00a87a);
         }
+        .category-list {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            padding: 0;
+            font-size: 11.2px;
+        }
+
+        /* NEW MEDIA QUERY */
+        @media (min-width: 1024px) {
+           .category-list {
+           display: flex !important;
+           flex-direction: row !important;
+           flex-wrap: nowrap !important;
+           overflow-x: auto;
+           gap: 15px;
+           padding: 10px 0;
+        }
+    
+        .category-list li {
+           min-width: 110px;
+           flex: 0 0 auto;
+        }
+        
 
         #goalSuccessMsg {
             text-align: center;
@@ -1229,6 +1366,7 @@
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 
 <!-- Flags Container - US | Kenya | Ghana -->
+    
 <!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
     <a href="/">
@@ -1313,6 +1451,7 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+    
  
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
@@ -2379,7 +2518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? (ad.images[0].startsWith('http') ? ad.images[0] : BACKEND_URL_TICKER + ad.images[0])
                     : '';
                 const imgTag = imgSrc
-                    ? `<img src="${imgSrc}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;margin-right:7px;flex-shrink:0;" onerror="this.style.display='none'">`
+                    ? `<img src="${imgSrc}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;margin-right:7px;flex-shrink:0;">`
                     : '';
                 return `
                 <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})">
@@ -3592,8 +3731,18 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                         <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
                         <h4>${ad.title || ''}</h4>
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
-                        <p>${ad.description || ''}</p>
-                        <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+
+                        
+                        <!-- Hidden elements -->
+                        <p class="description">${ad.description || ''}</p>   <!-- Now hidden via CSS -->
+                        <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>  <!-- Now hidden via CSS -->
+
+                        <!-- New button added -->
+                        <button class="view-details-btn" 
+                                onclick="alert('...')">
+                            View Details
+                        </button>
+                        
                         ${(ad.phone || '').replace(/\s/g,'') === '0708253594' ? '<p style="color:#00c896; font-size:12px; font-weight:700; margin-top:6px;">Use 🟢🄶🄱GrowthBase Points Discount</p>' : ''}
                     </div>
                 </div>
