@@ -3584,49 +3584,49 @@ async function postNewAd() {
     // TODO: Collect form data from modal or form (you can expand this later)
     // For now, this is a basic implementation. You can connect it to your ad modal later.
 
+    const adData = {
+        category: "General",           // You can make this dynamic
+        title: prompt("Enter Ad Title:") || "Untitled Listing",
+        price: prompt("Enter Price (KES):") || "0",
+        description: prompt("Enter Description:") || "",
+        locationName: prompt("Enter Location:") || "Nairobi",
+        phone: prompt("Enter Contact Phone:") || "",
+        condition: "new"
+    };
 
+    if (!adData.title || !adData.description) {
+        alert("Title and description are required.");
+        return;
+    }
 
+    try {
+        const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(adData)
+        });
 
+        const result = await response.json();
 
+        if (response.ok) {
+            alert("✅ Ad posted successfully! You earned 4 points.");
+            
+            // THIS IS THE IMPORTANT LINE:
+            refreshUserPoints();        // Updates the "Your Points: X" display in real time
 
-
-
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+            // Refresh the listings
+            fetchAds();
+        } else {
+            alert(result.message || "Failed to post ad.");
+        }
+    } catch (err) {
+        console.error("Post ad error:", err);
+        alert("Error posting advertisement. Please try again.");
+    }
+}
 
 // ==================== GEOLOCATION & OCCUPATION CHART ====================
 let userOccupation = "";
