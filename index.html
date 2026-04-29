@@ -2310,6 +2310,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return arrow;
         };
 
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
         const leftArr = createArrow('left');
         const rightArr = createArrow('right');
 
@@ -2325,20 +2326,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
             leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
             leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
-           
+   
             const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
             rightArr.style.opacity = atEnd ? '0' : '1';
             rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
         };
 
         window.addEventListener('resize', syncLayout);
-        window.addEventListener('scroll', syncLayout);
         newScreen.addEventListener('scroll', syncLayout);
         syncLayout();
+
+        // ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping up/down) =====
+        const fixScrollerAndTickerPosition = () => {
+            const scroller = document.getElementById('listings-scroller-screen');
+            const ticker = document.getElementById('dynamic-listings-ticker');
+
+            if (!scroller || !ticker) return;
+
+            const bottomOffset = 20; // px from bottom of screen
+
+            // Fix Scroller
+            scroller.style.position = 'fixed';
+            scroller.style.bottom = (bottomOffset + 54) + 'px';   // Scroller sits above ticker
+            scroller.style.left = '50%';
+            scroller.style.transform = 'translateX(-50%)';
+            scroller.style.width = '380px';
+            scroller.style.zIndex = '2000';
+            scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
+
+            // Fix Ticker
+            ticker.style.position = 'fixed';
+            ticker.style.bottom = bottomOffset + 'px';
+            ticker.style.left = '50%';
+            ticker.style.transform = 'translateX(-50%)';
+            ticker.style.width = '380px';
+            ticker.style.zIndex = '1999';
+        };
+
+        // Call once after elements are created
+        fixScrollerAndTickerPosition();
+
+        // Also handle resize
+        window.addEventListener('resize', fixScrollerAndTickerPosition);
 
         // ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER =====
         const ticker = document.createElement('div');
         ticker.id = 'dynamic-listings-ticker';
+
+        // ... (keep the rest of your existing ticker creation code: tickerLabel, trackWrapper, track, etc.)
 
         const tickerLabel = document.createElement('div');
         tickerLabel.className = 'ticker-label';
@@ -2362,12 +2397,50 @@ document.addEventListener('DOMContentLoaded', () => {
             ticker.style.left = newScreen.style.left;
             ticker.style.width = newScreen.style.width;
         };
+        
 
+        // ==================== IMPROVED TICKER WITH IMAGES ====================
         const populateTicker = (ads) => {
             if (!ads || ads.length === 0) {
                 track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
                 return;
             }
+
+            // Build items × 2 for seamless infinite scroll
+            let itemsHTML = '';
+
+            ads.forEach(ad => {
+                const phone = String(ad.phone || '').trim();
+                const isGB = phone === "0708253594" || 
+                             phone === "254708253594" || 
+                             phone === "+254708253594";
+
+                const imageUrl = ad.images && ad.images.length > 0 
+                    ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
+                    : 'https://via.placeholder.com/60x60/1e3a5f/ffffff?text=Ad';
+
+                itemsHTML += `
+                    <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px;">
+                        <img src="${imageUrl}" 
+                             style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" 
+                             onerror="this.style.display='none'">
+                        <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${ad.title || 'Untitled Ad'}
+                        </span>
+                        <span class="ticker-price">KES ${ad.price || '–'}</span>
+                        <span class="ticker-cat">${ad.category || ''}</span>
+                        ${isGB ? `<span style="color:#00c896; font-size:11px; margin-left:4px;">🟢GB</span>` : ''}
+                    </span>
+                `;
+            });
+
+            track.innerHTML = itemsHTML + itemsHTML;   // Duplicate for seamless loop
+
+            // Adjust animation speed based on number of items
+            const duration = Math.max(15, ads.length * 2.2);
+            track.style.animationDuration = duration + 's';
+        };
+            
 
             // Build items × 2 for seamless loop
             const itemsHTML = ads.map(ad => `
