@@ -1535,7 +1535,7 @@
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Referral 5 points </h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Post a listing 2 points </h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase owned and listed products and services (10 points = Kes 500/= off).</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase listed products and services (10 points = Kes 100).</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px; ">Post ads for free. Click +Post Ad button or send advert details with photos to info@growthbase.net</h6>
                     <h5>Categories</h5>
                     <ul class="category-list">
@@ -2113,37 +2113,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Instant UI preview card
                 const grid = document.querySelector('.listings .grid');
                 if (grid) {
-                    
-
-                    const phoneClean = (adForm.phone.value || '')
-                        .replace(/\s+/g, '')   // remove spaces
-                        .replace(/^\+254/, '0') // convert +254 to 0
-                        .trim();
-
-                    const isGB = phoneClean === "0708253594";
-
                     const card = document.createElement('div');
                     card.className = 'ad-card';
-
                     card.innerHTML = `
                         <div class="card-body">
-                             <p>${adForm.category.value}</p>
-                             <h4>${adForm.title ? adForm.title.value : ''}</h4>
-                             <p>${adForm.description.value}</p>
-                             <p class="card-price">KES ${adForm.price.value}</p>
-                             <p><small>📍 ${adForm.location.value}</small></p>
-                             <p><small>📞 ${adForm.phone.value}</small></p>
-                             ${isGB ? `
-                                 <div style="
-                                     margin-top:6px;
-                                     color:#00c896;
-                                     font-weight:bold;
-                                     font-size:13px;
-                                 ">
-                                     🟢🄶🄱 Points Apply
-                                 </div>
-                             ` : ''}
-                         </div>
+                            <p>${adForm.category.value}</p>
+                            <h4>${adForm.title ? adForm.title.value : ''}</h4>
+                            <p>${adForm.description.value}</p>
+                            <p class="card-price">KES ${adForm.price.value}</p>
+                            <p><small>📍 ${adForm.location.value}</small></p>
+                            <p><small>📞 ${adForm.phone.value}</small></p>
+                        </div>
                     `;
                     if (selectedFiles.length > 0) {
                         const imgWrap = document.createElement('div');
@@ -2310,132 +2290,126 @@ document.addEventListener('DOMContentLoaded', () => {
             return arrow;
         };
 
-        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-const leftArr = createArrow('left');
-const rightArr = createArrow('right');
+        const leftArr = createArrow('left');
+        const rightArr = createArrow('right');
 
-const syncLayout = () => {
-    updatePosition();
-    const rect = newScreen.getBoundingClientRect();
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    const midPoint = scrollY + rect.top + (rect.height / 2);
+        const syncLayout = () => {
+            updatePosition();
+            const rect = newScreen.getBoundingClientRect();
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const midPoint = scrollY + rect.top + (rect.height / 2);
 
-    leftArr.style.top = rightArr.style.top = midPoint + 'px';
-    leftArr.style.left = (rect.left + 15) + 'px';
-    rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
+            leftArr.style.top = rightArr.style.top = midPoint + 'px';
+            leftArr.style.left = (rect.left + 15) + 'px';
+            rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
 
-    leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
-    leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
-   
-    const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
-    rightArr.style.opacity = atEnd ? '0' : '1';
-    rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
-};
+            leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
+            leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
+           
+            const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
+            rightArr.style.opacity = atEnd ? '0' : '1';
+            rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
+        };
 
-window.addEventListener('resize', syncLayout);
-newScreen.addEventListener('scroll', syncLayout);
-syncLayout();
+        window.addEventListener('resize', syncLayout);
+        window.addEventListener('scroll', syncLayout);
+        newScreen.addEventListener('scroll', syncLayout);
+        syncLayout();
 
-// ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
-const fixScrollerAndTickerPosition = () => {
-    const scroller = document.getElementById('listings-scroller-screen');
-    const ticker = document.getElementById('dynamic-listings-ticker');
+        // ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER =====
+        const ticker = document.createElement('div');
+        ticker.id = 'dynamic-listings-ticker';
 
-    if (!scroller || !ticker) return;
+        const tickerLabel = document.createElement('div');
+        tickerLabel.className = 'ticker-label';
+        tickerLabel.textContent = '🔥 LIVE';
 
-    const bottomOffset = 20;
+        const trackWrapper = document.createElement('div');
+        trackWrapper.className = 'ticker-track-wrapper';
 
-    scroller.style.position = 'fixed';
-    scroller.style.bottom = (bottomOffset + 54) + 'px';
-    scroller.style.left = '50%';
-    scroller.style.transform = 'translateX(-50%)';
-    scroller.style.width = '380px';
-    scroller.style.zIndex = '2000';
-    scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
+        const track = document.createElement('div');
+        track.id = 'ticker-track';
+        trackWrapper.appendChild(track);
 
-    ticker.style.position = 'fixed';
-    ticker.style.bottom = bottomOffset + 'px';
-    ticker.style.left = '50%';
-    ticker.style.transform = 'translateX(-50%)';
-    ticker.style.width = '380px';
-    ticker.style.zIndex = '1999';
-};
+        ticker.appendChild(tickerLabel);
+        ticker.appendChild(trackWrapper);
+        document.body.appendChild(ticker);
 
-fixScrollerAndTickerPosition();
-window.addEventListener('resize', fixScrollerAndTickerPosition);
+        const updateTickerPosition = () => {
+            const scrollerRect = newScreen.getBoundingClientRect();
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            ticker.style.top = (scrollY + scrollerRect.bottom) + 'px';
+            ticker.style.left = newScreen.style.left;
+            ticker.style.width = newScreen.style.width;
+        };
 
-// ===== DYNAMIC LISTINGS TICKER =====
-const ticker = document.createElement('div');
-ticker.id = 'dynamic-listings-ticker';
+        const populateTicker = (ads) => {
+            if (!ads || ads.length === 0) {
+                track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
+                return;
+            }
 
-const tickerLabel = document.createElement('div');
-tickerLabel.className = 'ticker-label';
-tickerLabel.textContent = '🔥 LIVE';
-
-const trackWrapper = document.createElement('div');
-trackWrapper.className = 'ticker-track-wrapper';
-
-const track = document.createElement('div');
-track.id = 'ticker-track';
-trackWrapper.appendChild(track);
-
-ticker.appendChild(tickerLabel);
-ticker.appendChild(trackWrapper);
-document.body.appendChild(ticker);
-
-// ==================== IMPROVED TICKER WITH IMAGES & GB BADGE ====================
-const populateTicker = (ads) => {
-    if (!ads || ads.length === 0) {
-        track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
-        return;
-    }
-
-    let itemsHTML = '';
-
-    ads.forEach(ad => {
-        const phone = String(ad.phone || '').trim();
-        const isGB = phone === "0708253594" || phone === "254708253594" || phone === "+254708253594";
-
-        const imageUrl = (ad.images && ad.images.length > 0) 
-            ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
-            : 'https://via.placeholder.com/40x40/1e3a5f/ffffff?text=Ad';
-
-        itemsHTML += `
-            <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
-                <img src="${imageUrl}" style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" onerror="this.style.display='none';">
-                <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    ${ad.title || 'Untitled Ad'}
+            // Build items × 2 for seamless loop
+            const itemsHTML = ads.map(ad => `
+                <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})">
+                    ${ad.title || 'Untitled'}
+                    <span class="ticker-price">KES ${ad.price || '–'}</span>
+                    <span class="ticker-cat">${ad.category || ''}</span>
                 </span>
-                <span class="ticker-price">KES ${ad.price || '–'}</span>
-                <span class="ticker-cat">${ad.category || ''}</span>
-                ${isGB ? `<span style="color:#00c896; font-weight:bold; margin-left:4px;">🟢GB</span>` : ''}
-            </span>
-        `;
-    });
+            `).join('');
+            track.innerHTML = itemsHTML + itemsHTML;
 
-    track.innerHTML = itemsHTML + itemsHTML;
+            // Adjust animation speed based on content width
+            const itemCount = ads.length;
+            const duration = Math.max(2, itemCount *1);
+            track.style.animationDuration = duration + 's';
+        };
 
-    const duration = Math.max(18, ads.length * 2.5);
-    track.style.animationDuration = `${duration}s`;
-};
+        // Fetch ads for ticker (separate lightweight call)
+        const refreshTicker = async () => {
+            try {
+                const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
+                if (!res.ok) return;
+                const result = await res.json();
+                populateTicker(result.data || []);
+            } catch (e) {
+                // silently fail
+            }
+        };
 
-// Refresh ticker
-const refreshTicker = async () => {
-    try {
-        const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
-        if (res.ok) {
-            const result = await res.json();
-            populateTicker(result.data || []);
+        refreshTicker();
+        // Refresh ticker every 60 seconds
+        setInterval(refreshTicker, 60000);
+
+        window.addEventListener('resize', updateTickerPosition);
+        window.addEventListener('scroll', updateTickerPosition);
+        updateTickerPosition();
+
+        // Scroller + ticker visibility manager
+        const mainApp = document.getElementById('mainApp');
+        if (authScreen && mainApp) {
+            const updateVisibility = () => {
+                const isAuthVisible = !authScreen.classList.contains('hidden') &&
+                                     window.getComputedStyle(authScreen).display !== 'none';
+                if (isAuthVisible) {
+                    newScreen.style.display = 'flex';
+                    leftArr.style.display = 'block';
+                    rightArr.style.display = 'block';
+                    ticker.style.display = 'flex';
+                } else {
+                    newScreen.style.display = 'none';
+                    leftArr.style.display = 'none';
+                    rightArr.style.display = 'none';
+                    ticker.style.display = 'none';
+                }
+            };
+
+            const observer = new MutationObserver(updateVisibility);
+            observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
+            observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
+            updateVisibility();
         }
-    } catch (e) {
-        console.log("Ticker refresh failed");
-    }
-};
-
-refreshTicker();
-setInterval(refreshTicker, 60000);
+    })();
 
     // Tab click handlers
     const tabMap = {
@@ -3453,39 +3427,15 @@ function renderAds(ads) {
     const container = document.getElementById('ad-overlay');
     if (!container) return;
     container.innerHTML = '';
-
     ads.forEach((ad, index) => {
         const cardId = `ad-card-${index + 1}`;
-        const phone = (ad.phone || '').trim();
-        const isGB = phone === "0708253594" || phone === "254708253594" || phone === "+254708253594";
-
-        // Build images safely inside the loop
-        const imagesHTML = (ad.images || []).map(img => {
-            const src = img.startsWith('http') ? img : `https://trx-infosec-backend-vvrq.onrender.com${img}`;
-            return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
-        }).join('') || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;height:200px;">No Image</div>';
-
         const cardHTML = `
-            <div class="ad-card" id="${cardId}">
-                <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
-                    ${imagesHTML}
-                </div>
-                <div class="card-body" style="padding:15px;">
-                    <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
-                    <h4>${ad.title || ''}</h4>
-                    <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
-                    <p>${ad.description || ''}</p>
-                    <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
-
-                    ${isGB ? `
-                        <div style="margin-top:6px; color:#00c896; font-weight:bold; font-size:13px;">
-                            🟢🄶🄱 Points Apply
-                        </div>
-                    ` : ''}
-                </div>
+            <div id="${cardId}" class="ad-card">
+                <strong>${ad.title}</strong>
+                <p>${ad.description}</p>
+                <div class="price">${ad.price}</div>
             </div>
         `;
-
         container.insertAdjacentHTML('beforeend', cardHTML);
     });
 }
@@ -3500,19 +3450,18 @@ function updateCardContent(cardNumber, newData) {
 }
 
 // ==================== FETCH ADS - WITH SEARCH SUPPORT ====================
-// ==================== FETCH ADS - WITH GB POINTS BADGE ====================
 async function fetchAds(filterCategory = null, searchTerm = null) {
     const BACKEND_URL = 'https://trx-infosec-backend-vvrq.onrender.com';
 
     try {
+        // Build query params
         const params = new URLSearchParams();
         if (filterCategory) params.append('category', filterCategory);
         if (searchTerm) params.append('search', searchTerm);
 
         const url = `${BACKEND_URL}/api/ads${params.toString() ? '?' + params.toString() : ''}`;
-        
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch ads');
+        if (!response.ok) return;
 
         const result = await response.json();
         const grid = document.querySelector('.listings .grid');
@@ -3522,7 +3471,7 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
 
         let ads = result.data || [];
 
-        // Client-side fallback search
+        // Client-side search fallback if backend doesn't support search param
         if (searchTerm && ads.length > 0) {
             const lowerTerm = searchTerm.toLowerCase();
             ads = ads.filter(ad =>
@@ -3534,28 +3483,26 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
         }
 
         if (ads.length === 0) {
-            grid.innerHTML = `<div style="padding:40px; color:#888; font-style:italic; grid-column:1/-1; text-align:center;">
-                No listings found${searchTerm ? ` for "${searchTerm}"` : ''}${filterCategory ? ` in "${filterCategory}"` : ''}.
-            </div>`;
+            grid.innerHTML = `<div style="padding:30px; color:#888; font-style:italic; grid-column:1/-1;">No listings found${searchTerm ? ` for "${searchTerm}"` : ''}${filterCategory ? ` in "${filterCategory}"` : ''}.</div>`;
             return;
         }
 
         ads.forEach(ad => {
-            const phone = String(ad.phone || '').trim();
-            const isGB = phone === "0708253594" || 
-                         phone === "254708253594" || 
-                         phone === "+254708253594";
+            // Category filter (applied server-side via query param, but keep client guard)
+            if (filterCategory && !searchTerm && ad.category &&
+                ad.category.toLowerCase() !== filterCategory.toLowerCase()) {
+                return;
+            }
 
             const imagesHTML = (ad.images || []).map(img => {
                 const src = img.startsWith('http') ? img : `${BACKEND_URL}${img}`;
                 return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
-            }).join('') || 
-                '<div style="width:100%; height:200px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:13px;">No Image</div>';
+            }).join('');
 
             const cardHTML = `
                 <div class="ad-card">
                     <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
-                        ${imagesHTML}
+                        ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
                     </div>
                     <div class="card-body" style="padding:15px;">
                         <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
@@ -3563,12 +3510,6 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
                         <p>${ad.description || ''}</p>
                         <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
-
-                        ${isGB ? `
-                            <div style="margin-top:8px; padding:6px 10px; background:#e6f7ef; border-radius:6px; color:#00c896; font-weight:bold; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
-                                🟢 🄶🄱 Points Apply
-                            </div>
-                        ` : ''}
                     </div>
                 </div>
             `;
@@ -3578,10 +3519,6 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
 
     } catch (err) {
         console.error("fetchAds error:", err);
-        const grid = document.querySelector('.listings .grid');
-        if (grid) {
-            grid.innerHTML = `<div style="padding:30px; color:#dc3545; text-align:center;">Failed to load advertisements. Please try again later.</div>`;
-        }
     }
 }
 
