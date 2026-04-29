@@ -3596,34 +3596,37 @@ async function postNewAd() {
 
     
 
-    try {
-        const response = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify(adData)
-        });
 
-        const result = await response.json();
 
-        if (response.ok) {
-            alert("✅ Ad posted successfully! You earned 4 points.");
-            
-            // THIS IS THE IMPORTANT LINE:
-            refreshUserPoints();        // Updates the "Your Points: X" display in real time
 
-            // Refresh the listings
-            fetchAds();
-        } else {
-            alert(result.message || "Failed to post ad.");
-        }
-    } catch (err) {
-        console.error("Post ad error:", err);
-        alert("Error posting advertisement. Please try again.");
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 // ==================== GEOLOCATION & OCCUPATION CHART ====================
 let userOccupation = "";
