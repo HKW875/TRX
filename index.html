@@ -2418,7 +2418,8 @@ const populateTicker = (ads) => {
     const duration = Math.max(18, ads.length * 2.5);
     track.style.animationDuration = `${duration}s`;
 };
-
+// ←←← ADD THESE TWO LINES HERE (this closes the big IIFE)
+        
 // Refresh ticker
 const refreshTicker = async () => {
     try {
