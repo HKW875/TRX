@@ -10,21 +10,72 @@
         .sidebar {
             overflow: visible;
         }
+        button.post-btn {
+            transform: translateY(12px);
+        }
 
         /* Modal Styling */
         .ad-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000;
         }
+
+        /* ===== BEAUTIFUL AD MODAL CONTENT ===== */
         .ad-modal-content {
-            background: white; padding: 25px; border-radius: 12px; width: 95%; max-width: 500px;
-            max-height: 90vh; overflow-y: auto;
+            background: linear-gradient(135deg, #f8faff 0%, #ffffff 60%, #f0f7ff 100%);
+            padding: 28px 28px 22px 28px;
+            border-radius: 18px;
+            width: 95%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(30,58,95,0.18), 0 4px 20px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(30,58,95,0.10);
+        }
+        .ad-modal-content h3 {
+            color: #1e3a5f;
+            font-size: 1.25em;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8f0fb;
+            letter-spacing: 0.01em;
+        }
+        .ad-modal-content input,
+        .ad-modal-content select,
+        .ad-modal-content textarea {
+            border: 1.5px solid #d0daea;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.97em;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            color: #1e3a5f;
+        }
+        .ad-modal-content input:focus,
+        .ad-modal-content select:focus,
+        .ad-modal-content textarea:focus {
+            border-color: #1e3a5f;
+            box-shadow: 0 0 0 3px rgba(30,58,95,0.10);
+        }
+        .ad-modal-content label {
+            font-size: 0.85em;
+            color: #4a6080;
+            font-weight: 600;
+            margin-bottom: 3px;
+            margin-top: 4px;
+            display: block;
         }
         .preview-container {
-            display: flex; gap: 10px; overflow-x: auto; margin: 10px 0; padding: 10px; border: 2px dashed #eee;
+            display: flex; gap: 10px; overflow-x: auto; margin: 10px 0; padding: 10px; border: 2px dashed #c5d5e8;
+            border-radius: 8px; background: #f4f8ff;
         }
         .preview-item { position: relative; flex: 0 0 80px; height: 80px; }
-        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
        
         /* Card Styling */
         .custom-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; background: white; margin-bottom: 20px; }
@@ -36,11 +87,6 @@
             border: 1px solid #ccc;
             padding: 10px;
         }
-
-        /* FIX #14: Removed duplicate .ad-modal-overlay block (was defined twice) */
-        /* FIX #14: Removed duplicate .ad-modal-content block (was defined twice) */
-        /* FIX #14: Removed duplicate .preview-container block (was defined twice) */
-        /* FIX #14: Removed duplicate .preview-item block (was defined twice) */
 
         .remove-img {
             position: absolute; top: -5px; right: -5px; background: red; color: white;
@@ -112,6 +158,91 @@
             align-items: center;
             z-index: 2000;
         }
+
+        /* ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER ===== */
+        #dynamic-listings-ticker {
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 380px;
+            height: 44px;
+            background: linear-gradient(90deg, #1e3a5f 0%, #2a5298 50%, #1e3a5f 100%);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 1999;
+            box-shadow: 0 3px 12px rgba(30,58,95,0.25);
+        }
+
+        #dynamic-listings-ticker .ticker-label {
+            flex: 0 0 auto;
+            background: #00c896;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        #dynamic-listings-ticker .ticker-track-wrapper {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+
+        #ticker-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: tickerScroll 10s linear infinite;
+            gap: 0;
+        }
+
+        #ticker-track:hover {
+            animation-play-state: paused;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 18px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            border-right: 1px solid rgba(255,255,255,0.15);
+            height: 100%;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .ticker-item:hover {
+            background: rgba(255,255,255,0.12);
+            color: #00c896;
+        }
+
+        .ticker-item .ticker-price {
+            color: #00c896;
+            font-weight: 700;
+            margin-left: 6px;
+            font-size: 11px;
+        }
+
+        .ticker-item .ticker-cat {
+            color: rgba(255,255,255,0.55);
+            font-size: 10px;
+            margin-left: 5px;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
        
         .page {
             min-height: 60vh;
@@ -167,11 +298,13 @@
             z-index: 1000;
             box-sizing: border-box;
             width: 100%;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .market-header input {
             height: 26px;
-            width: 52%;
+            width: 146%;
             padding-top: 0px;
             padding-bottom: 0px;
             padding: 10px;
@@ -189,6 +322,40 @@
             font-weight: bold;
             top: 4px;
             right: 5px;
+        }
+
+        /* My Goal button - same style as post-btn, specific size */
+        .my-goal-btn {
+            background: #00c896;
+            width: 146.64px;
+            height: 26px;
+            border-radius: 8px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            padding: 0;
+            margin-top: 0;
+        }
+
+        .market-header-search-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .market-header-search-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
         }
 
         /* LAYOUT */
@@ -355,8 +522,6 @@
         }
         #logoutBtn:hover { background: #9b2c2c; }
 
-        /* Tabs */
-        /* FIX #12: Added missing semicolon after width:100% */
         .tabs {
             width: 100%;
             box-sizing: border-box;
@@ -439,7 +604,6 @@
             transform-origin: center top;
         }
    
-        /* FIX #14: Removed invalid .password-container& selector, corrected to .password-container */
         .password-container {
             width: 198.4px;
             margin-left: auto;
@@ -708,7 +872,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* FIX #11: Added missing modal styles for inactivity warning */
         #inactivityWarningModal {
             position: fixed;
             top: 0; left: 0;
@@ -796,7 +959,6 @@
            border-radius: 8px;
         }
 
-        /* FIX #11: Payment modal styles */
         .payment-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 5000;
@@ -838,7 +1000,6 @@
 
             .category-list img {
                 max-width: 100%;
-                /* FIX #13: Changed Max-height to max-height (was invalid CSS) */
                 max-height: 100%;
                 margin-bottom: 6px;
             }
@@ -861,7 +1022,7 @@
                 border-radius: 10px;
                 border: 2px solid #d6dbe6;
                 outline: none;
-                font-size: 15px;
+                font-size: 21px;
                 transition: all 0.25s ease;
                 box-sizing: border-box;
             }
@@ -914,18 +1075,160 @@
                 transform: translateY(-2px);
             }
         }
+
+        /* ===== MY GOAL MODAL ===== */
+        #myGoalModal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        #myGoalModal .goal-modal-content {
+            width: 322px;
+            height: 590px;
+            background: linear-gradient(160deg, #f8faff 0%, #ffffff 50%, #eef4ff 100%);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(30,58,95,0.22), 0 4px 20px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(30,58,95,0.10);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .goal-modal-header {
+            background: linear-gradient(90deg, #1e3a5f, #2a5298);
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .goal-modal-header h4 {
+            color: white;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .goal-modal-close {
+            color: rgba(255,255,255,0.8);
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .goal-modal-close:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .goal-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 18px 12px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .goal-modal-body h5 {
+            color: #2a5298;
+            font-size: 11.5px;
+            line-height: 1.55;
+            margin: 0 0 14px 0;
+            background: linear-gradient(90deg, #eef4ff, #f0f8ff);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #00c896;
+            font-weight: 600;
+        }
+
+        .goal-field-group {
+            margin-bottom: 10px;
+        }
+
+        .goal-field-group label {
+            font-size: 11px;
+            color: #4a6080;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: block;
+        }
+
+        .goal-field-group input,
+        .goal-field-group select {
+            width: 100%;
+            height: 36px;
+            padding: 0 10px;
+            border: 1.5px solid #d0daea;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #fff;
+            color: #1e3a5f;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin: 0;
+            display: block;
+        }
+
+        .goal-field-group input:focus,
+        .goal-field-group select:focus {
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(30,58,95,0.10);
+        }
+
+        .goal-field-group input[type="date"] {
+            color: #4a6080;
+        }
+
+        .goal-submit-btn {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, #00c896, #00a87a);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 14px;
+            margin-bottom: 0;
+            letter-spacing: 0.03em;
+            transition: opacity 0.2s, transform 0.15s;
+            padding: 0;
+            box-shadow: 0 4px 14px rgba(0,200,150,0.25);
+        }
+        .goal-submit-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            background: linear-gradient(90deg, #00c896, #00a87a);
+        }
+
+        #goalSuccessMsg {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            min-height: 18px;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 
 <!-- Flags Container - US | Kenya | Ghana -->
-<div id="flags-container">
-    <img class="flag" src="https://flagcdn.com/w80/us.png" alt="Flag of USA" onclick="window.location.href='https://growthbase.net/us'" title="Go to GrowthBase US">
-    <img class="flag" src="https://flagcdn.com/w80/ke.png" alt="Flag of Kenya" onclick="window.location.href='https://growthbase.net'" title="Go to GrowthBase Kenya">
-    <img class="flag" src="https://flagcdn.com/w80/gh.png" alt="Flag of Ghana" onclick="window.location.href='https://growthbase.net/gh'" title="Go to GrowthBase Ghana">
-</div>
-
 <!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
     <a href="/">
@@ -934,7 +1237,7 @@
              width="250"
              height="50">
     </a>
-    <h4>Advertise For Free, Earn Points, Get Zero Interest Business Capital</h4>
+    <h4>Advertise For Free, Save Time & Money Shopping, Accomplish Goals, Earn Points, Get Zero Interest Business Capital</h4>
     <h2>Login / Register</h2>  
     <div class="auth-field">
         <label for="email">Email</label>
@@ -956,6 +1259,14 @@
    
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
+
+    <label class="hidden" style="margin-top:15px;">Referred By</label>
+    <input class="hidden" type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
+
+    <label class="hidden">Their Number</label>
+    <input class="hidden" type="tel" id="referralPhone" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}" disabled>
+
+
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
 
@@ -1030,9 +1341,10 @@
                         <li>Free profile creation</li>
                         <li>Access to zero interest revolving capital for business growth. Max Kes 10,000/= based on business factors.</li>
                         <li>Suitable for emergencies, projects and short term business capital needs.</li>
-                        <li>Security may or may not be required. No limit to number of assets or securities listed during applcation.</li>
+                        <li>150 GrowthBase points required to apply. Security may or may not be required. No limit to number of assets or securities listed during applcation.</li>
                         <li>Profile login can be securely shared with other partners, groups, family and beneficiaries.</li>
                         <li>Only profile owner or administrator can change, update information in profile even if login shared with others.</li>
+                        <li>Approval for capital is not guaranteed and depends on business factors and availability of capital.</li>
                     </ul>
                     <button style="background:#28a745;" onclick="startFreePlan()">Start Free</button>
                 </div>
@@ -1204,14 +1516,27 @@
         <!-- Adverts Page -->
         <div id="advertsPage" class="page">
             <!-- HEADER -->
-            <div class="market-header">          
-                <input type="text" placeholder="Search products, locations...">
+            <div class="market-header">
+                <!-- Search column: search input on top, My Goal button below -->
+                <div class="market-header-search-col">
+                    <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)">
+                    <button type="button" class="my-goal-btn" onclick="openMyGoalModal()">🎯 My Goal</button>
+                </div>
                 <button type="button" class="post-btn">+ Post Ad</button>
             </div>
             <div class="market-container">
                 <!-- SIDEBAR -->
                 <div class="sidebar">
-                    <h5>Post an ad for free. Click Post Ad button or send advert details with photos to info@growthbase.net</h5>
+                    <h5 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
+                        Your Points: 0
+                    </h5>
+                    <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Referral 5 points </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Post a listing 2 points </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase owned and listed products and services (10 points = Kes 500/= off).</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px; ">Post ads for free. Click +Post Ad button or send advert details with photos to info@growthbase.net</h6>
                     <h5>Categories</h5>
                     <ul class="category-list">
                         <li data-category="Animals">
@@ -1298,37 +1623,41 @@
 <!-- Ad Post Modal -->
 <div class="ad-modal-overlay" id="adModal">
     <div class="ad-modal-content">
-        <h3>Post a New Advertisement</h3>
-        <!-- FIX #2: Removed onsubmit from form tag; submission is handled via one JS event listener only -->
+        <h3>📢 Post a New Advertisement</h3>
         <form id="adForm">
-            <input name="title" type="text" id="adTitle" placeholder="Title" required style="width:100%; margin-bottom:10px;">
-            <select name="category" id="adCategory" required style="width:100%; margin-bottom:10px;"></select>
-            <!-- FIX #3: Added name="condition" field that was missing but referenced in JS -->
-            <select name="condition" id="adCondition" style="width:100%; margin-bottom:10px;">
+            <label>Ad Title</label>
+            <input name="title" type="text" id="adTitle" placeholder="Title" required>
+            <label>Category</label>
+            <select name="category" id="adCategory" required></select>
+            <label>Condition</label>
+            <select name="condition" id="adCondition">
                 <option value="New">New</option>
                 <option value="Used">Used</option>
                 <option value="Refurbished">Refurbished</option>
             </select>
-            <textarea name="description" id="adDesc" placeholder="Description (max 40 words)" required style="width:100%; height:80px; margin-bottom:10px;"></textarea>
-            <input name="price" type="number" id="adPrice" placeholder="Price" required style="width:100%; margin-bottom:10px;">
-            <input name="location" type="text" id="adLocation" placeholder="Location/Address" required style="width:100%; margin-bottom:10px;">
-            <!-- FIX #3: Added name="phone" to match adForm.phone.value reference in JS -->
-            <input name="phone" type="tel" id="adPhone" placeholder="Contact Phone" required style="width:100%; margin-bottom:10px;">
+            <label>Description <span style="color:#aaa; font-weight:400;">(max 40 words)</span></label>
+            <textarea name="description" id="adDesc" placeholder="Describe your item or service..." required style="height:72px; resize:none;"></textarea>
+            <label>Price (KES)</label>
+            <input name="price" type="number" id="adPrice" placeholder="Price" required>
+            <label>Location / Address</label>
+            <input name="location" type="text" id="adLocation" placeholder="Location/Address" required>
+            <label>Contact Phone</label>
+            <input name="phone" type="tel" id="adPhone" placeholder="Contact Phone" required>
            
-            <label>Upload Images (JPEG, JPG, PNG):</label>
-            <input type="file" id="imageInput" multiple accept="image/*" style="margin-bottom:10px;">
+            <label>Upload Images <span style="color:#aaa; font-weight:400;">(JPEG, JPG, PNG)</span></label>
+            <input type="file" id="imageInput" multiple accept="image/*">
             <div class="preview-container" id="previewContainer"></div>
-            <h6>Ensure your images have same name as "Title" above and send them to info@growthbase.net for moderation after submitting new advert.</h6>
+            <p style="font-size:11px; color:#888; margin:4px 0 8px 0;">Ensure images share the same name as your title and send to info@growthbase.net for moderation.</p>
            
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button type="submit" style="flex:1; padding:10px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Submit Advert</button>
-                <button type="button" id="closeModal" style="flex:1; padding:10px; background:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer;">Cancel</button>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button type="submit" style="flex:1; padding:10px; background: linear-gradient(90deg,#28a745,#20943b); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:14px;">Submit Advert</button>
+                <button type="button" id="closeModal" style="flex:1; padding:10px; background:#dc3545; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:14px;">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- FIX #11: Added missing Inactivity Warning Modal HTML -->
+<!-- Inactivity Warning Modal -->
 <div id="inactivityWarningModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); align-items:center; justify-content:center; z-index:9000;">
     <div class="modal-content" style="text-align:center;">
         <h3 style="color:#1e3a5f;">Session Timeout Warning</h3>
@@ -1339,7 +1668,7 @@
     </div>
 </div>
 
-<!-- FIX #11: Added missing BodaGo Payment Modal HTML -->
+<!-- BodaGo Payment Modal -->
 <div id="bodaGoPaymentModal" class="payment-modal-overlay">
     <div class="payment-modal-content">
         <h3 style="color:#1e3a5f;">BodaGo Plan - M-Pesa Payment</h3>
@@ -1357,7 +1686,7 @@
     </div>
 </div>
 
-<!-- FIX #11: Added missing Premium Payment Modal HTML -->
+<!-- Premium Payment Modal -->
 <div id="premiumPaymentModal" class="payment-modal-overlay">
     <div class="payment-modal-content">
         <h3 style="color:#1e3a5f;">Premium Plan - M-Pesa Payment</h3>
@@ -1375,7 +1704,7 @@
     </div>
 </div>
 
-<!-- FIX #11: Added missing Lifetime Payment Modal HTML -->
+<!-- Lifetime Payment Modal -->
 <div id="lifetimePaymentModal" class="payment-modal-overlay">
     <div class="payment-modal-content">
         <h3 style="color:#1e3a5f;">Lifetime Plan - M-Pesa Payment</h3>
@@ -1385,6 +1714,69 @@
         <p id="lifetimePaymentStatus" style="font-weight:600; min-height:24px;"></p>
         <button onclick="initiateLifetimeSTKPush()" style="background:#28a745;">Pay Now</button>
         <button onclick="closeLifetimeModal()" style="background:#dc3545;">Cancel</button>
+    </div>
+</div>
+
+<!-- ===== MY GOAL MODAL ===== -->
+<div id="myGoalModal">
+    <div class="goal-modal-content">
+        <div class="goal-modal-header">
+            <h4>🎯 My Goal</h4>
+            <span class="goal-modal-close" onclick="closeMyGoalModal()">✕</span>
+        </div>
+        <div class="goal-modal-body">
+            <h5>My Goal is a tool to help you save time and money by linking you to the best deals in the market.</h5>
+
+            <div class="goal-field-group">
+                <label>Product or service you are interested in</label>
+                <input type="text" id="goalProduct" placeholder="e.g. Solar panel, Laptop, Plumber...">
+            </div>
+
+            <div class="goal-field-group">
+                <label>Select a category</label>
+                <select id="goalCategory">
+                    <option value="">-- Select category --</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Airbnb">Airbnb</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Equipment">Equipment</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Food">Food</option>
+                    <option value="For Kids">For Kids</option>
+                    <option value="Home">Home</option>
+                    <option value="Jobs">Jobs</option>
+                    <option value="Leisure">Leisure</option>
+                    <option value="Cars">Cars &amp; Trucks</option>
+                    <option value="Onions">Onions</option>
+                    <option value="Properties">Properties</option>
+                    <option value="ChickenProducts">ChickenPlace</option>
+                    <option value="Services">Services</option>
+                    <option value="Cars4Rent">Cars4Rent</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="goal-field-group">
+                <label>Your budget (KES)</label>
+                <input type="number" id="goalBudget" placeholder="e.g. 15000">
+            </div>
+
+            <div class="goal-field-group">
+                <label>When would you like this product or service?</label>
+                <input type="date" id="goalDate">
+            </div>
+
+            <div class="goal-field-group">
+                <label>Contact or notify me when this deal is available</label>
+                <select id="goalNotify">
+                    <option value="yes">Yes – notify me</option>
+                    <option value="no">No – just save my goal</option>
+                </select>
+            </div>
+
+            <button class="goal-submit-btn" onclick="submitMyGoal()">Save My Goal</button>
+            <p id="goalSuccessMsg"></p>
+        </div>
     </div>
 </div>
 
@@ -1410,6 +1802,53 @@ let inactivityTimer;
 let warningTimer;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const WARNING_TIME = 60 * 1000;
+
+async function loadUserPoints() {
+    try {
+        const res = await fetch('/api/points', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+
+        const data = await res.json();
+
+        document.getElementById('userPointsDisplay').innerText =
+            "Your Points: " + (data.points || 0);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function showPointsPopup(text) {
+    const popup = document.createElement("div");
+    popup.innerText = text;
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.background = "#28a745";
+    popup.style.color = "white";
+    popup.style.padding = "15px 25px";
+    popup.style.borderRadius = "10px";
+    popup.style.fontSize = "20px";
+    popup.style.fontWeight = "bold";
+    popup.style.zIndex = "9999";
+    popup.style.opacity = "1";
+    popup.style.transition = "all 0.8s ease";
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        popup.style.opacity = "0";
+        popup.style.transform = "translate(-50%, -80%)";
+    }, 300);
+
+    setTimeout(() => {
+        popup.remove();
+    }, 1000);
+}
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
@@ -1447,10 +1886,78 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
     });
 }
 
+// ==================== MY GOAL MODAL FUNCTIONS ====================
+function openMyGoalModal() {
+    document.getElementById('myGoalModal').style.display = 'flex';
+}
+
+function closeMyGoalModal() {
+    document.getElementById('myGoalModal').style.display = 'none';
+    document.getElementById('goalSuccessMsg').textContent = '';
+}
+
+async function submitMyGoal() {
+    const product = document.getElementById('goalProduct').value.trim();
+    const category = document.getElementById('goalCategory').value;
+    const budget = document.getElementById('goalBudget').value.trim();
+    const date = document.getElementById('goalDate').value;
+    const notify = document.getElementById('goalNotify').value;
+    const msgEl = document.getElementById('goalSuccessMsg');
+
+    if (!product) {
+        msgEl.style.color = '#dc3545';
+        msgEl.textContent = 'Please enter a product or service.';
+        return;
+    }
+
+    const goalData = { product, category, budget, desiredDate: date, notifyMe: notify };
+
+    try {
+        const response = await fetch(`${API_BASE}/api/goals`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {})
+            },
+            body: JSON.stringify(goalData)
+        });
+
+        if (response.ok) {
+            msgEl.style.color = '#155724';
+            msgEl.textContent = '✅ Goal saved! We\'ll notify you when a match is found.';
+            // Clear form
+            document.getElementById('goalProduct').value = '';
+            document.getElementById('goalCategory').value = '';
+            document.getElementById('goalBudget').value = '';
+            document.getElementById('goalDate').value = '';
+            document.getElementById('goalNotify').value = 'yes';
+            setTimeout(closeMyGoalModal, 2200);
+        } else {
+            const data = await response.json();
+            msgEl.style.color = '#dc3545';
+            msgEl.textContent = data.msg || 'Failed to save goal. Please try again.';
+        }
+    } catch (err) {
+        msgEl.style.color = '#dc3545';
+        msgEl.textContent = 'Server error. Please try again.';
+    }
+}
+
+// ==================== SEARCH ADVERTS ON ENTER ====================
+function handleAdvertSearch(event) {
+    if (event.key === 'Enter') {
+        const term = document.getElementById('advertSearchInput').value.trim();
+        if (term) {
+            fetchAds(null, term);
+        } else {
+            fetchAds();
+        }
+    }
+}
+
 // ==================== MODAL LOGIC (wrapped in DOMContentLoaded) ====================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ✅ ADD THIS HERE (GLOBAL FOR WHOLE PAGE)
     let userLat = null;
     let userLng = null;
 
@@ -1493,8 +2000,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-   
     const postBtn = document.querySelector('.post-btn');
     const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('adModal');
@@ -1502,7 +2007,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('imageInput');
     const previewContainer = document.getElementById('previewContainer');
 
-    // FIX #10: Single renderPreviews definition
     function renderPreviews() {
         if (!previewContainer) return;
         previewContainer.innerHTML = '';
@@ -1521,7 +2025,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Delegate remove-img clicks to avoid stale index closures
     if (previewContainer) {
         previewContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-img')) {
@@ -1548,7 +2051,6 @@ document.addEventListener('DOMContentLoaded', () => {
         postBtn.addEventListener('click', () => modal.style.display = 'flex');
     }
 
-    // FIX #2 & #9: Single close handler, no form.reset() conflict
     if (closeBtn && modal) {
         closeBtn.addEventListener('click', (event) => {
             event.preventDefault();
@@ -1567,7 +2069,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FIX #2: Single submit handler only (removed duplicate adForm.onsubmit assignment)
     if (adForm) {
         adForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1585,14 +2086,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('price', adForm.price.value);
                 formData.append('description', adForm.description.value);
                 formData.append('locationName', adForm.location.value);
-                // ✅ STEP 3: SAFE GEO ADD
                 if (userLat && userLng) {
                    formData.append('lat', userLat);
                    formData.append('lng', userLng);
                 }
-                // FIX #3: adForm.phone.value now works because input has name="phone"
                 formData.append('phone', adForm.phone.value);
-                // FIX #3: adForm.condition.value now works because select has name="condition"
                 formData.append('condition', adForm.condition.value.toLowerCase());
 
                 for (const file of selectedFiles) {
@@ -1605,7 +2103,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     { method: 'POST', body: formData }
                 );
 
-                // ✅ NEW: check if server actually succeeded
                 if (!response.ok) {
                     throw new Error("Server error");
                 }
@@ -1616,17 +2113,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Instant UI preview card
                 const grid = document.querySelector('.listings .grid');
                 if (grid) {
+                    
+
+                    const phoneClean = (adForm.phone.value || '')
+                        .replace(/\s+/g, '')   // remove spaces
+                        .replace(/^\+254/, '0') // convert +254 to 0
+                        .trim();
+
+                    const isGB = phoneClean === "0708253594";
+
                     const card = document.createElement('div');
                     card.className = 'ad-card';
+
                     card.innerHTML = `
                         <div class="card-body">
-                            <p>${adForm.category.value}</p>
-                            <h4>${adForm.title ? adForm.title.value : ''}</h4>
-                            <p>${adForm.description.value}</p>
-                            <p class="card-price">KES ${adForm.price.value}</p>
-                            <p><small>📍 ${adForm.location.value}</small></p>
-                            <p><small>📞 ${adForm.phone.value}</small></p>
-                        </div>
+                             <p>${adForm.category.value}</p>
+                             <h4>${adForm.title ? adForm.title.value : ''}</h4>
+                             <p>${adForm.description.value}</p>
+                             <p class="card-price">KES ${adForm.price.value}</p>
+                             <p><small>📍 ${adForm.location.value}</small></p>
+                             <p><small>📞 ${adForm.phone.value}</small></p>
+                             ${isGB ? `
+                                 <div style="
+                                     margin-top:6px;
+                                     color:#00c896;
+                                     font-weight:bold;
+                                     font-size:13px;
+                                 ">
+                                     🟢🄶🄱 Points Apply
+                                 </div>
+                             ` : ''}
+                         </div>
                     `;
                     if (selectedFiles.length > 0) {
                         const imgWrap = document.createElement('div');
@@ -1660,37 +2177,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FIX #4: fetchAds called once here inside DOMContentLoaded (removed nested duplicate call)
     fetchAds();
 
-// ✅ CATEGORY FILTER CLICK new
-(function() {
-    const categoryList = document.querySelector('ul.category-list');
-    if (!categoryList) return;
+    // CATEGORY FILTER CLICK
+    (function() {
+        const categoryList = document.querySelector('ul.category-list');
+        if (!categoryList) return;
 
-    categoryList.addEventListener('click', function(event) {
-        const targetLi = event.target.closest('li');
-        if (!targetLi) return;
+        categoryList.addEventListener('click', function(event) {
+            const targetLi = event.target.closest('li');
+            if (!targetLi) return;
 
-        // ✅ GET CATEGORY FROM data-category (IMPORTANT)
-        const category = targetLi.getAttribute('data-category');
+            const category = targetLi.getAttribute('data-category');
+            if (!category) return;
 
-        // If no category (safety)
-        if (!category) return;
-
-        console.log("Filtering by:", category);
-
-        // ✅ CALL fetchAds WITH FILTER
-        fetchAds(category);
-    });
-})();
+            console.log("Filtering by:", category);
+            fetchAds(category);
+        });
+    })();
 
     window.addEventListener('resize', () => {
         const existingOverlay = document.getElementById('ad-overlay');
         if (existingOverlay) existingOverlay.remove();
     });
 
-    // Listings scroller
+    // ===== LISTINGS SCROLLER (auth screen) =====
     (function() {
         const authScreen = document.getElementById('authScreen');
         const backgroundCanvas = document.getElementById('background-canvas');
@@ -1799,57 +2310,134 @@ document.addEventListener('DOMContentLoaded', () => {
             return arrow;
         };
 
-        const leftArr = createArrow('left');
-        const rightArr = createArrow('right');
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
+const leftArr = createArrow('left');
+const rightArr = createArrow('right');
 
-        const syncLayout = () => {
-            updatePosition();
-            const rect = newScreen.getBoundingClientRect();
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const midPoint = scrollY + rect.top + (rect.height / 2);
+const syncLayout = () => {
+    updatePosition();
+    const rect = newScreen.getBoundingClientRect();
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const midPoint = scrollY + rect.top + (rect.height / 2);
 
-            leftArr.style.top = rightArr.style.top = midPoint + 'px';
-            leftArr.style.left = (rect.left + 15) + 'px';
-            rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
+    leftArr.style.top = rightArr.style.top = midPoint + 'px';
+    leftArr.style.left = (rect.left + 15) + 'px';
+    rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
 
-            leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
-            leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
-           
-            const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
-            rightArr.style.opacity = atEnd ? '0' : '1';
-            rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
-        };
+    leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
+    leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
+   
+    const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
+    rightArr.style.opacity = atEnd ? '0' : '1';
+    rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
+};
 
-        window.addEventListener('resize', syncLayout);
-        window.addEventListener('scroll', syncLayout);
-        newScreen.addEventListener('scroll', syncLayout);
-        syncLayout();
+window.addEventListener('resize', syncLayout);
+newScreen.addEventListener('scroll', syncLayout);
+syncLayout();
 
-        // Scroller visibility manager
-        const mainApp = document.getElementById('mainApp');
-        if (authScreen && mainApp) {
-            const updateVisibility = () => {
-                const isAuthVisible = !authScreen.classList.contains('hidden') &&
-                                     window.getComputedStyle(authScreen).display !== 'none';
-                if (isAuthVisible) {
-                    newScreen.style.display = 'flex';
-                    leftArr.style.display = 'block';
-                    rightArr.style.display = 'block';
-                } else {
-                    newScreen.style.display = 'none';
-                    leftArr.style.display = 'none';
-                    rightArr.style.display = 'none';
-                }
-            };
+// ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
+const fixScrollerAndTickerPosition = () => {
+    const scroller = document.getElementById('listings-scroller-screen');
+    const ticker = document.getElementById('dynamic-listings-ticker');
 
-            const observer = new MutationObserver(updateVisibility);
-            observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
-            observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
-            updateVisibility();
+    if (!scroller || !ticker) return;
+
+    const bottomOffset = 20;
+
+    scroller.style.position = 'fixed';
+    scroller.style.bottom = (bottomOffset + 54) + 'px';
+    scroller.style.left = '50%';
+    scroller.style.transform = 'translateX(-50%)';
+    scroller.style.width = '380px';
+    scroller.style.zIndex = '2000';
+    scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
+
+    ticker.style.position = 'fixed';
+    ticker.style.bottom = bottomOffset + 'px';
+    ticker.style.left = '50%';
+    ticker.style.transform = 'translateX(-50%)';
+    ticker.style.width = '380px';
+    ticker.style.zIndex = '1999';
+};
+
+fixScrollerAndTickerPosition();
+window.addEventListener('resize', fixScrollerAndTickerPosition);
+
+// ===== DYNAMIC LISTINGS TICKER =====
+const ticker = document.createElement('div');
+ticker.id = 'dynamic-listings-ticker';
+
+const tickerLabel = document.createElement('div');
+tickerLabel.className = 'ticker-label';
+tickerLabel.textContent = '🔥 LIVE';
+
+const trackWrapper = document.createElement('div');
+trackWrapper.className = 'ticker-track-wrapper';
+
+const track = document.createElement('div');
+track.id = 'ticker-track';
+trackWrapper.appendChild(track);
+
+ticker.appendChild(tickerLabel);
+ticker.appendChild(trackWrapper);
+document.body.appendChild(ticker);
+
+// ==================== IMPROVED TICKER WITH IMAGES & GB BADGE ====================
+const populateTicker = (ads) => {
+    if (!ads || ads.length === 0) {
+        track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
+        return;
+    }
+
+    let itemsHTML = '';
+
+    ads.forEach(ad => {
+        const phone = String(ad.phone || '').trim();
+        const isGB = phone === "0708253594" || phone === "254708253594" || phone === "+254708253594";
+
+        const imageUrl = (ad.images && ad.images.length > 0) 
+            ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
+            : 'https://via.placeholder.com/40x40/1e3a5f/ffffff?text=Ad';
+
+        itemsHTML += `
+            <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
+                <img src="${imageUrl}" style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" onerror="this.style.display='none';">
+                <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    ${ad.title || 'Untitled Ad'}
+                </span>
+                <span class="ticker-price">KES ${ad.price || '–'}</span>
+                <span class="ticker-cat">${ad.category || ''}</span>
+                ${isGB ? `<span style="color:#00c896; font-weight:bold; margin-left:4px;">🟢GB</span>` : ''}
+            </span>
+        `;
+    });
+
+    track.innerHTML = itemsHTML + itemsHTML;
+
+    const duration = Math.max(18, ads.length * 2.5);
+    track.style.animationDuration = `${duration}s`;
+};
+
+// Refresh ticker
+const refreshTicker = async () => {
+    try {
+        const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
+        if (res.ok) {
+            const result = await res.json();
+            populateTicker(result.data || []);
         }
-    })();
+    } catch (e) {
+        console.log("Ticker refresh failed");
+    }
+};
 
-    // Tab click handlers (inline style approach preserved)
+refreshTicker();
+setInterval(refreshTicker, 60000);
+
+    // Tab click handlers
     const tabMap = {
         'tab-plans': document.getElementById('plansPage'),
         'tab-profile': document.getElementById('profilePage'),
@@ -2093,9 +2681,13 @@ async function handleLogin() {
         currentLoggedInEmail = email;
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
+        document.getElementById('userPointsDisplay').innerText =
+            "Your Points: " + (data.points || 0);
+
+        // Optional animation trigger
+        showPointsPopup("+1");
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
-        // FIX #8: isNewUser flag is properly set based on server response
         if (data.isNewUser) {
             isNewUser = true;
             switchTab(0);
@@ -2139,7 +2731,6 @@ async function handleRegister() {
     const secretCode = document.getElementById("regSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
 
-    // STEP 1: FIRST CLICK SHOWS FIELDS ONLY
     if (document.getElementById("mobileNumber").classList.contains("hidden")) {
         document.getElementById("mobileNumber").classList.remove("hidden");
         document.getElementById("confirmPassword").classList.remove("hidden");
@@ -2154,7 +2745,6 @@ async function handleRegister() {
         return;
     }
 
-    // STEP 2: VALIDATION
     if (!email || !pass || !mobile || !occupation || !confirmPass || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "All fields are required.";
@@ -2713,7 +3303,6 @@ function getBeneficiariesData() {
     return data;
 }
 
-// FIX #1: editMyProfile rewritten using async/await so response.ok is in correct scope
 async function editMyProfile() {
     if (!currentLoggedInEmail) {
         alert("You must be logged in to edit your profile.");
@@ -2860,26 +3449,48 @@ async function viewDocument(docId) { alert("View document functionality"); }
 async function downloadDocument(docId, defaultName) { alert("Download document functionality"); }
 
 // ==================== ADS FETCH & RENDER ====================
-// FIX #5: updateCardContent only runs if card exists (safe guard added)
 function renderAds(ads) {
     const container = document.getElementById('ad-overlay');
     if (!container) return;
     container.innerHTML = '';
+
     ads.forEach((ad, index) => {
         const cardId = `ad-card-${index + 1}`;
+        const phone = (ad.phone || '').trim();
+        const isGB = phone === "0708253594" || phone === "254708253594" || phone === "+254708253594";
+
+        // Build images safely inside the loop
+        const imagesHTML = (ad.images || []).map(img => {
+            const src = img.startsWith('http') ? img : `https://trx-infosec-backend-vvrq.onrender.com${img}`;
+            return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
+        }).join('') || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;height:200px;">No Image</div>';
+
         const cardHTML = `
-            <div id="${cardId}" class="ad-card">
-                <strong>${ad.title}</strong>
-                <p>${ad.description}</p>
-                <div class="price">${ad.price}</div>
+            <div class="ad-card" id="${cardId}">
+                <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
+                    ${imagesHTML}
+                </div>
+                <div class="card-body" style="padding:15px;">
+                    <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
+                    <h4>${ad.title || ''}</h4>
+                    <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
+                    <p>${ad.description || ''}</p>
+                    <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+
+                    ${isGB ? `
+                        <div style="margin-top:6px; color:#00c896; font-weight:bold; font-size:13px;">
+                            🟢🄶🄱 Points Apply
+                        </div>
+                    ` : ''}
+                </div>
             </div>
         `;
+
         container.insertAdjacentHTML('beforeend', cardHTML);
     });
 }
 
 function updateCardContent(cardNumber, newData) {
-    // FIX #5: Guard against non-existent element
     const card = document.getElementById(`ad-card-${cardNumber}`);
     if (!card) return;
     const strongEl = card.querySelector('strong');
@@ -2888,18 +3499,20 @@ function updateCardContent(cardNumber, newData) {
     if (priceEl) priceEl.textContent = newData.price;
 }
 
-// ==================== FETCH ADS - IMAGE FIX APPLIED HERE ====================
-// FIX 1: BACKEND_URL prepended to all image src paths.
-//         Images are stored as "/uploads/ads/filename.jpg" on the backend server.
-//         Without this, the browser requests them from the frontend domain → 404.
-// FIX 2: ad.locationName used instead of ad.location (matches the Advert schema field name).
-// FIX 3: ad.phone used directly (removed markdown link corruption).
-async function fetchAds(filterCategory = null) {
+// ==================== FETCH ADS - WITH SEARCH SUPPORT ====================
+// ==================== FETCH ADS - WITH GB POINTS BADGE ====================
+async function fetchAds(filterCategory = null, searchTerm = null) {
     const BACKEND_URL = 'https://trx-infosec-backend-vvrq.onrender.com';
 
     try {
-        const response = await fetch(`${BACKEND_URL}/api/ads`);
-        if (!response.ok) return;
+        const params = new URLSearchParams();
+        if (filterCategory) params.append('category', filterCategory);
+        if (searchTerm) params.append('search', searchTerm);
+
+        const url = `${BACKEND_URL}/api/ads${params.toString() ? '?' + params.toString() : ''}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch ads');
 
         const result = await response.json();
         const grid = document.querySelector('.listings .grid');
@@ -2907,24 +3520,42 @@ async function fetchAds(filterCategory = null) {
 
         grid.innerHTML = '';
 
-        (result.data || []).forEach(ad => {
+        let ads = result.data || [];
 
-            // ✅ CATEGORY FILTER (case-insensitive)
-            if (filterCategory && ad.category &&
-                ad.category.toLowerCase() !== filterCategory.toLowerCase()) {
-                return;
-            }
+        // Client-side fallback search
+        if (searchTerm && ads.length > 0) {
+            const lowerTerm = searchTerm.toLowerCase();
+            ads = ads.filter(ad =>
+                (ad.title && ad.title.toLowerCase().includes(lowerTerm)) ||
+                (ad.description && ad.description.toLowerCase().includes(lowerTerm)) ||
+                (ad.locationName && ad.locationName.toLowerCase().includes(lowerTerm)) ||
+                (ad.category && ad.category.toLowerCase().includes(lowerTerm))
+            );
+        }
 
-            // FIX 1: Correct image paths
+        if (ads.length === 0) {
+            grid.innerHTML = `<div style="padding:40px; color:#888; font-style:italic; grid-column:1/-1; text-align:center;">
+                No listings found${searchTerm ? ` for "${searchTerm}"` : ''}${filterCategory ? ` in "${filterCategory}"` : ''}.
+            </div>`;
+            return;
+        }
+
+        ads.forEach(ad => {
+            const phone = String(ad.phone || '').trim();
+            const isGB = phone === "0708253594" || 
+                         phone === "254708253594" || 
+                         phone === "+254708253594";
+
             const imagesHTML = (ad.images || []).map(img => {
                 const src = img.startsWith('http') ? img : `${BACKEND_URL}${img}`;
                 return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
-            }).join('');
+            }).join('') || 
+                '<div style="width:100%; height:200px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:13px;">No Image</div>';
 
             const cardHTML = `
                 <div class="ad-card">
                     <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
-                        ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
+                        ${imagesHTML}
                     </div>
                     <div class="card-body" style="padding:15px;">
                         <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
@@ -2932,6 +3563,12 @@ async function fetchAds(filterCategory = null) {
                         <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
                         <p>${ad.description || ''}</p>
                         <small>📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+
+                        ${isGB ? `
+                            <div style="margin-top:8px; padding:6px 10px; background:#e6f7ef; border-radius:6px; color:#00c896; font-weight:bold; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+                                🟢 🄶🄱 Points Apply
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -2941,6 +3578,10 @@ async function fetchAds(filterCategory = null) {
 
     } catch (err) {
         console.error("fetchAds error:", err);
+        const grid = document.querySelector('.listings .grid');
+        if (grid) {
+            grid.innerHTML = `<div style="padding:30px; color:#dc3545; text-align:center;">Failed to load advertisements. Please try again later.</div>`;
+        }
     }
 }
 
