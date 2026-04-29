@@ -2311,6 +2311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
+        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
         const leftArr = createArrow('left');
         const rightArr = createArrow('right');
 
@@ -2336,25 +2337,23 @@ document.addEventListener('DOMContentLoaded', () => {
         newScreen.addEventListener('scroll', syncLayout);
         syncLayout();
 
-        // ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping up/down) =====
+        // ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
         const fixScrollerAndTickerPosition = () => {
             const scroller = document.getElementById('listings-scroller-screen');
             const ticker = document.getElementById('dynamic-listings-ticker');
 
             if (!scroller || !ticker) return;
 
-            const bottomOffset = 20; // px from bottom of screen
+            const bottomOffset = 20; // distance from bottom of screen
 
-            // Fix Scroller
             scroller.style.position = 'fixed';
-            scroller.style.bottom = (bottomOffset + 54) + 'px';   // Scroller sits above ticker
+            scroller.style.bottom = (bottomOffset + 54) + 'px';   // Scroller above ticker
             scroller.style.left = '50%';
             scroller.style.transform = 'translateX(-50%)';
             scroller.style.width = '380px';
             scroller.style.zIndex = '2000';
             scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
 
-            // Fix Ticker
             ticker.style.position = 'fixed';
             ticker.style.bottom = bottomOffset + 'px';
             ticker.style.left = '50%';
@@ -2365,15 +2364,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Call once after elements are created
         fixScrollerAndTickerPosition();
-
-        // Also handle resize
         window.addEventListener('resize', fixScrollerAndTickerPosition);
 
         // ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER =====
         const ticker = document.createElement('div');
         ticker.id = 'dynamic-listings-ticker';
-
-        // ... (keep the rest of your existing ticker creation code: tickerLabel, trackWrapper, track, etc.)
 
         const tickerLabel = document.createElement('div');
         tickerLabel.className = 'ticker-label';
@@ -2390,23 +2385,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ticker.appendChild(trackWrapper);
         document.body.appendChild(ticker);
 
-        const updateTickerPosition = () => {
-            const scrollerRect = newScreen.getBoundingClientRect();
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            ticker.style.top = (scrollY + scrollerRect.bottom) + 'px';
-            ticker.style.left = newScreen.style.left;
-            ticker.style.width = newScreen.style.width;
-        };
-        
-
-        // ==================== IMPROVED TICKER WITH IMAGES ====================
+        // ==================== IMPROVED TICKER WITH IMAGES & GB BADGE ====================
         const populateTicker = (ads) => {
             if (!ads || ads.length === 0) {
                 track.innerHTML = '<span class="ticker-item">No listings yet – be the first to post!</span>';
                 return;
             }
 
-            // Build items × 2 for seamless infinite scroll
             let itemsHTML = '';
 
             ads.forEach(ad => {
@@ -2415,50 +2400,32 @@ document.addEventListener('DOMContentLoaded', () => {
                              phone === "254708253594" || 
                              phone === "+254708253594";
 
-                const imageUrl = ad.images && ad.images.length > 0 
+                const imageUrl = (ad.images && ad.images.length > 0) 
                     ? (ad.images[0].startsWith('http') ? ad.images[0] : `https://trx-infosec-backend-vvrq.onrender.com${ad.images[0]}`)
-                    : 'https://via.placeholder.com/60x60/1e3a5f/ffffff?text=Ad';
+                    : 'https://via.placeholder.com/40x40/1e3a5f/ffffff?text=Ad';
 
                 itemsHTML += `
-                    <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px;">
+                    <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
                         <img src="${imageUrl}" 
                              style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" 
-                             onerror="this.style.display='none'">
+                             onerror="this.style.display='none';">
                         <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${ad.title || 'Untitled Ad'}
+                           ${ad.title || 'Untitled Ad'}
                         </span>
                         <span class="ticker-price">KES ${ad.price || '–'}</span>
                         <span class="ticker-cat">${ad.category || ''}</span>
-                        ${isGB ? `<span style="color:#00c896; font-size:11px; margin-left:4px;">🟢GB</span>` : ''}
+                        ${isGB ? `<span style="color:#00c896; font-weight:bold; margin-left:4px;">🟢GB</span>` : ''}
                     </span>
                 `;
             });
 
-            track.innerHTML = itemsHTML + itemsHTML;   // Duplicate for seamless loop
+            track.innerHTML = itemsHTML + itemsHTML; // seamless loop
 
-            // Adjust animation speed based on number of items
-            const duration = Math.max(15, ads.length * 2.2);
-            track.style.animationDuration = duration + 's';
-        };
-            
-
-            // Build items × 2 for seamless loop
-            const itemsHTML = ads.map(ad => `
-                <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})">
-                    ${ad.title || 'Untitled'}
-                    <span class="ticker-price">KES ${ad.price || '–'}</span>
-                    <span class="ticker-cat">${ad.category || ''}</span>
-                </span>
-            `).join('');
-            track.innerHTML = itemsHTML + itemsHTML;
-
-            // Adjust animation speed based on content width
-            const itemCount = ads.length;
-            const duration = Math.max(2, itemCount *1);
-            track.style.animationDuration = duration + 's';
+            const duration = Math.max(18, ads.length * 2.5);
+            track.style.animationDuration = `${duration}s`;
         };
 
-        // Fetch ads for ticker (separate lightweight call)
+        // Fetch ads for ticker
         const refreshTicker = async () => {
             try {
                 const res = await fetch('https://trx-infosec-backend-vvrq.onrender.com/api/ads');
@@ -2466,43 +2433,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await res.json();
                 populateTicker(result.data || []);
             } catch (e) {
-                // silently fail
+                console.log("Ticker refresh failed");
             }
         };
 
         refreshTicker();
-        // Refresh ticker every 60 seconds
         setInterval(refreshTicker, 60000);
-
-        window.addEventListener('resize', updateTickerPosition);
-        window.addEventListener('scroll', updateTickerPosition);
-        updateTickerPosition();
-
-        // Scroller + ticker visibility manager
-        const mainApp = document.getElementById('mainApp');
-        if (authScreen && mainApp) {
-            const updateVisibility = () => {
-                const isAuthVisible = !authScreen.classList.contains('hidden') &&
-                                     window.getComputedStyle(authScreen).display !== 'none';
-                if (isAuthVisible) {
-                    newScreen.style.display = 'flex';
-                    leftArr.style.display = 'block';
-                    rightArr.style.display = 'block';
-                    ticker.style.display = 'flex';
-                } else {
-                    newScreen.style.display = 'none';
-                    leftArr.style.display = 'none';
-                    rightArr.style.display = 'none';
-                    ticker.style.display = 'none';
-                }
-            };
-
-            const observer = new MutationObserver(updateVisibility);
-            observer.observe(authScreen, { attributes: true, attributeFilter: ['class', 'style'] });
-            observer.observe(mainApp, { attributes: true, attributeFilter: ['class', 'style'] });
-            updateVisibility();
-        }
-    })();
 
     // Tab click handlers
     const tabMap = {
