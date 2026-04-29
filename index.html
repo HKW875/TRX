@@ -2311,8 +2311,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
-        // ==================== SCROLLER + TICKER SETUP (FIXED POSITION) ====================
 const leftArr = createArrow('left');
 const rightArr = createArrow('right');
 
@@ -2338,11 +2336,10 @@ window.addEventListener('resize', syncLayout);
 newScreen.addEventListener('scroll', syncLayout);
 syncLayout();
 
-// ===== FIXED POSITION FOR SCROLLER + TICKER (No more jumping) =====
+// ===== FIXED SCROLLER + TICKER POSITION (No vertical jumping) =====
 const fixScrollerAndTickerPosition = () => {
     const scroller = document.getElementById('listings-scroller-screen');
     const ticker = document.getElementById('dynamic-listings-ticker');
-
     if (!scroller || !ticker) return;
 
     const bottomOffset = 20;
@@ -2353,7 +2350,6 @@ const fixScrollerAndTickerPosition = () => {
     scroller.style.transform = 'translateX(-50%)';
     scroller.style.width = '380px';
     scroller.style.zIndex = '2000';
-    scroller.style.boxShadow = '0 -5px 15px rgba(0,0,0,0.1)';
 
     ticker.style.position = 'fixed';
     ticker.style.bottom = bottomOffset + 'px';
@@ -2404,7 +2400,9 @@ const populateTicker = (ads) => {
 
         itemsHTML += `
             <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})" style="gap:8px; padding:0 12px;">
-                <img src="${imageUrl}" style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" onerror="this.style.display='none';">
+                <img src="${imageUrl}" 
+                     style="width:32px; height:32px; object-fit:cover; border-radius:4px; flex-shrink:0;" 
+                     onerror="this.style.display='none';">
                 <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                     ${ad.title || 'Untitled Ad'}
                 </span>
@@ -2415,7 +2413,7 @@ const populateTicker = (ads) => {
         `;
     });
 
-    track.innerHTML = itemsHTML + itemsHTML;
+    track.innerHTML = itemsHTML + itemsHTML; // seamless loop
 
     const duration = Math.max(18, ads.length * 2.5);
     track.style.animationDuration = `${duration}s`;
@@ -2436,7 +2434,7 @@ const refreshTicker = async () => {
 
 refreshTicker();
 setInterval(refreshTicker, 60000);
-
+        
     // Tab click handlers
     const tabMap = {
         'tab-plans': document.getElementById('plansPage'),
