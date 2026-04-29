@@ -1254,18 +1254,17 @@
 
     <label id="confirmLabel" class="hidden">Confirm Password</label>
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
-    
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
    
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
 
-    <label id="referredByLabel" style="margin-top:15px;">Referred By</label>
-    <input  type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
+    <label class="hidden" style="margin-top:15px;">Referred By</label>
+    <input class="hidden" type="text" id="referredBy" placeholder="Full names of person who referred you" disabled>
 
-    <label id="theirNumberLabel">Their Number</label>
-    <input  type="tel" id="referralPhone" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}" disabled>
+    <label class="hidden">Their Number</label>
+    <input class="hidden" type="tel" id="referralPhone" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}" disabled>
 
 
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
@@ -2702,9 +2701,7 @@ async function handleRegister() {
     const pass = document.getElementById("password").value.trim();
     const mobile = document.getElementById("mobileNumber").value.trim();
     const occupation = document.getElementById("occupationInput").value.trim();
-    const occupation = document.getElementById("referredBy").value.trim();
-    const occupation = document.getElementById("occupationInput").value.trim();
-    const confirmPass = document.getElementById("referredPhone").value.trim();
+    const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
     const msg = document.getElementById("authMessage");
 
@@ -2742,8 +2739,6 @@ async function handleRegister() {
                 password: pass,
                 mobileNumber: mobile,
                 occupation,
-                referredBy,
-                theirNumber,
                 confirmPassword: confirmPass,
                 secretCode: secretCode
             })
