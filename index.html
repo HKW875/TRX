@@ -1927,51 +1927,7 @@ const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const WARNING_TIME = 60 * 1000;
 
 
-const tickerItems = document.querySelectorAll('.ticker-item');
 
-for (const item of tickerItems) {
-  // 1. Set the item to vertical layout
-  await setElementStyles(item, {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center', // Center content horizontally
-    textAlign: 'center',
-    height: 'auto',
-    width: '300px' // Adjust width to match image or desired size
-  });
-
-  const children = Array.from(item.children);
-  for (const child of children) {
-    // 2. Double the font size for text elements
-    if (child.tagName === 'SPAN') {
-      const currentFontSize = parseFloat(window.getComputedStyle(child).fontSize);
-      await setElementStyles(child, {
-        fontSize: (currentFontSize * 2) + 'px',
-        display: 'block',
-        margin: '5px 0'
-      });
-    }
-    
-    // 3. Ensure image is block and centered
-    if (child.tagName === 'IMG') {
-       await setElementStyles(child, {
-        display: 'block',
-        margin: '0 auto 10px auto'
-      });
-    }
-  }
-}
-
-// Ensure the track container can accommodate the taller items
-const track = document.getElementById('ticker-track');
-if (track) {
-  await setElementStyles(track, {
-    height: 'auto',
-    display: 'flex',
-    alignItems: 'flex-start'
-  });
-}
-data = { count: tickerItems.length };
 
     
 
