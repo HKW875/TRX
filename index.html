@@ -24,12 +24,6 @@
             flex-shrink: 0;
         }
 
-        /* Hide description and contact number */
-        .card-body p.description,
-        .card-body small {
-            display: none !important;   /* CHANGED: Hidden as requested */
-        }
-
         .view-details-btn {
             background: #1e3a5f;
             color: white;
@@ -200,10 +194,10 @@
         }
 
     
-        /* Hide description and contact number */
+        /* Hide description and contact info by default — toggled by JS */
         .card-body p.description,
-        .card-body small {
-            display: none !important;   /* CHANGED: Hidden as requested */
+        .card-body small.ad-details {
+            display: none;
         }
 
         /* Target a specific slot by ID */
@@ -3875,7 +3869,10 @@ async function handleViewDetails(btn, adId) {
     const card = btn.closest('.card-body');
     const desc = card.querySelector('.description');
     const details = card.querySelector('.ad-details');
-    const isHidden = desc.style.display === 'none';
+
+    // Treat empty/unset as hidden (initial state)
+    const currentDisplay = desc.style.display;
+    const isHidden = !currentDisplay || currentDisplay === 'none';
 
     if (isHidden) {
         desc.style.display = 'block';
