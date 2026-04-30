@@ -1358,7 +1358,9 @@
 <canvas id="background-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></canvas>
 
 <!-- Flags Container - US | Kenya | Ghana -->
-    
+<button id="installBtn" style="display:none;">
+  Install App
+</button>  
 <!-- Auth Screen -->  
 <div id="authScreen" class="auth-container">
     <a href="/">
@@ -1916,6 +1918,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(() => console.log("Service Worker Registered"));
+}
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Show your own install button
+  document.getElementById("installBtn").style.display = "block";
+});
+
+document.getElementById("installBtn").addEventListener("click", () => {
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') {
+      console.log('User installed app');
+    }
+  });
+});
 const API_BASE = 'https://trx-infosec-backend-vvrq.onrender.com';
 
 // Global variables
