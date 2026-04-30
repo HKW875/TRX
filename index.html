@@ -24,10 +24,10 @@
             flex-shrink: 0;
         }
 
-        /* Hide description and contact number */
+        /* Description and contact info hidden by default — toggled by JS */
         .card-body p.description,
-        .card-body small {
-            display: none !important;   /* CHANGED: Hidden as requested */
+        .card-body small.ad-details {
+            display: none;
         }
 
         .view-details-btn {
@@ -199,12 +199,6 @@
             width: 100%;
         }
 
-    
-        /* Hide description and contact number */
-        .card-body p.description,
-        .card-body small {
-            display: none !important;   /* CHANGED: Hidden as requested */
-        }
 
         /* Target a specific slot by ID */
         #ad-card-1 {
@@ -474,6 +468,7 @@
             flex: 1;
             min-width: 0;
             overflow: hidden;
+            padding-right: 8px;
         }
 
         /* LAYOUT */
@@ -3893,7 +3888,8 @@ async function handleViewDetails(btn, adId) {
     const card = btn.closest('.card-body');
     const desc = card.querySelector('.description');
     const details = card.querySelector('.ad-details');
-    const isHidden = desc.style.display === 'none';
+    // Treat empty/unset as hidden (initial state before any JS has run)
+    const isHidden = !desc.style.display || desc.style.display === 'none';
 
     if (isHidden) {
         desc.style.display = 'block';
