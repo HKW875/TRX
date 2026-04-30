@@ -1662,13 +1662,13 @@
                     <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
                         Your Points: 0
                     </h4>
-                    <h5 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px;" >🎯Referral 5 points </h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px;" >🎯Post a listing 2 points </h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase marked products and services (10 points = Kes 500).</h5>
-                    <h5 style="margin-top: 10px; margin-bottom: 10px; ">Post ads for free. Click +Post Ad button. Then finish by sending advert details with photos to info@growthbase.net for photo approval and moderation.</h5>
+                    <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Referral 5 points </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Post a listing 2 points </h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase marked products and services (10 points = Kes 500).</h6>
+                    <h6 style="margin-top: 10px; margin-bottom: 10px; ">Post ads for free. Click +Post Ad button or send advert details with photos to info@growthbase.net</h6>
                     <h5>Categories</h5>
                     <ul class="category-list">
                         <li data-category="Animals">
@@ -2495,7 +2495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const authRect = authScreen.getBoundingClientRect();
             const scrollY = window.pageYOffset || document.documentElement.scrollTop;
             // Always sit at the bottom of the scroller, never float up toward authScreen
-            const desiredTop = scrollY + scrollerRect.bottom;
+            const desiredTop = scrollY + scrollerRect.bottom + 15;
             const minAllowedTop = scrollY + authRect.bottom;
             ticker.style.top = Math.max(desiredTop, minAllowedTop) + 'px';
             ticker.style.left = newScreen.style.left;
@@ -2518,7 +2518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? (ad.images[0].startsWith('http') ? ad.images[0] : BACKEND_URL_TICKER + ad.images[0])
                     : '';
                 const imgTag = imgSrc
-                    ? `<img src="${imgSrc}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
+                    ? `<img src="${imgSrc}" style="width:250px;height:250px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
                     : '';
                 return `
                 <span class="ticker-item" onclick="document.querySelector('.listings .grid')?.scrollIntoView({behavior:'smooth'})">
