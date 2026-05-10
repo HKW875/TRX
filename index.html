@@ -1670,6 +1670,13 @@
                                 animation: notifPulse 1.4s ease infinite;">0</span>
                         </button>
                     </div>
+                    <!-- Messages / Chat Inbox Button -->
+                    <div id="chatInboxBtnWrap" style="position:relative; display:none;">
+                        <button type="button" onclick="showChatInbox()" title="Messages"
+                            style="background:transparent; border:none; cursor:pointer; padding:4px 6px; position:relative; font-size:22px; line-height:1;">
+                            💬
+                        </button>
+                    </div>
                     <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
                 </div>
             </div>
@@ -1956,49 +1963,52 @@ async function registerServiceWorkerAndPush() {
     try {
         swRegistration = await navigator.serviceWorker.register('/service-worker.js');
         console.log('✅ Service Worker Registered');
+        // Listen for messages from SW (e.g. notification click)
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'NOTIF_CLICK') {
+                fetchNotifications();
+            }
+        });
     } catch (err) {
         console.warn('SW registration failed:', err);
     }
 }
 
-// Subscribe to push notifications and save to server
-// Called after login with a valid token
+// Subscribe to push notifications and save to server — called AFTER swRegistration is set
 async function subscribeToPush(token) {
-    if (!swRegistration || !('PushManager' in window)) return;
+    if (!('PushManager' in window)) return;
+    // Wait for SW to be ready
     try {
-        // Get VAPID public key from server
+        const reg = await navigator.serviceWorker.ready;
+        swRegistration = reg;
+
         const keyRes = await fetch(`${API_BASE}/api/push/vapid-public-key`);
+        if (!keyRes.ok) return;
         const { publicKey } = await keyRes.json();
 
-        // Ask user permission
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-            console.log('Push permission denied');
-            return;
+        // Check existing subscription first (avoid re-prompting)
+        let subscription = await reg.pushManager.getSubscription();
+        if (!subscription) {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') { console.log('Push permission denied'); return; }
+            subscription = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicKey)
+            });
         }
 
-        // Subscribe
-        const subscription = await swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicKey)
-        });
-
-        // Save subscription to server
+        // Always save to server (handles re-login)
         await fetch(`${API_BASE}/api/push/subscribe`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ subscription })
         });
-        console.log('✅ Push subscription saved');
+        console.log('✅ Push subscription active');
     } catch (err) {
         console.warn('Push subscription failed:', err);
     }
 }
 
-// Helper: convert VAPID base64 key to Uint8Array
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -2006,7 +2016,6 @@ function urlBase64ToUint8Array(base64String) {
     return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
 }
 
-// Register SW immediately on page load (needed for push when logged out)
 registerServiceWorkerAndPush();
 
 let deferredPrompt;
@@ -3152,6 +3161,8 @@ async function handleLogin() {
         // Start notification polling and proximity watching
         const bellWrap = document.getElementById('notifBellWrap');
         if (bellWrap) bellWrap.style.display = 'block';
+        const chatWrap = document.getElementById('chatInboxBtnWrap');
+        if (chatWrap) chatWrap.style.display = 'block';
         startNotificationPolling();
         startProximityWatch();
 
@@ -4043,11 +4054,18 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                         <p class="description" style="display:none;">${ad.description || ''}</p>
                         <small class="ad-details" style="display:none;">📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
 
-                        <!-- View Details button -->
-                        <button class="view-details-btn" 
-                                onclick="handleViewDetails(this, '${ad._id}')">
-                            View Details
-                        </button>
+                        <!-- Action buttons -->
+                        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+                            <button class="view-details-btn" style="flex:1; min-width:100px;"
+                                    onclick="handleViewDetails(this, '${ad._id}')">
+                                View Details
+                            </button>
+                            <button onclick="openChat('${ad._id}', '${(ad.title||'').replace(/'/g,"\\'")}', '${ad.phone || ''}')"
+                                style="flex:1; min-width:100px; padding:10px 14px; background:linear-gradient(90deg,#1e3a5f,#2a5298);
+                                color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
+                                💬 Chat
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -4265,6 +4283,8 @@ window.onload = function() {
         setTimeout(loadOccupationChart, 1000);
         // Start notification polling and proximity watching
         document.getElementById('notifBellWrap').style.display = 'block';
+        const ci = document.getElementById('chatInboxBtnWrap');
+        if (ci) ci.style.display = 'block';
         startNotificationPolling();
         startProximityWatch();
         // Ensure push subscription is active for this session
@@ -4278,6 +4298,189 @@ window.onload = function() {
     }, 800);
     initBackground();
 };
-</script>
+
+// ====================== CHAT SYSTEM ======================
+let chatState = {
+    roomId: null, adId: null, adTitle: null,
+    receiverId: null, receiverEmail: null, receiverName: null,
+    pollInterval: null
+};
+
+function buildRoomId(adId, uid1, uid2) {
+    return `${adId}_${[uid1, uid2].filter(Boolean).sort().join('_')}`;
+}
+
+async function openChat(adId, adTitle, adPhone) {
+    if (!currentToken) { alert('Please log in to chat with sellers.'); return; }
+    const modal = document.getElementById('chatModal');
+    modal.style.display = 'flex';
+    document.getElementById('chatInboxView').style.display = 'none';
+    document.getElementById('chatMessagesView').style.display = 'flex';
+    document.getElementById('chatInputArea').style.display = 'flex';
+    document.getElementById('chatWithName').textContent = 'Loading…';
+    document.getElementById('chatAdTitle').textContent = adTitle || '';
+    document.getElementById('chatMessagesView').innerHTML = '<div style="text-align:center;color:#aaa;padding:24px;font-size:13px;">Loading…</div>';
+    try {
+        const res = await fetch(`${API_BASE}/api/ads/${adId}/poster`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
+        const data = await res.json();
+        if (!data.posterId) {
+            document.getElementById('chatMessagesView').innerHTML = '<div style="text-align:center;color:#e53e3e;padding:24px;font-size:13px;">This seller has not registered on GrowthBase yet.<br>Use the phone number on the listing to contact them directly.</div>';
+            document.getElementById('chatWithName').textContent = 'Seller not registered';
+            document.getElementById('chatInputArea').style.display = 'none';
+            return;
+        }
+        const payload = JSON.parse(atob(currentToken.split('.')[1]));
+        const myId = payload.id;
+        if (data.posterId.toString() === myId) { showChatInbox(); return; }
+        chatState = { ...chatState, roomId: buildRoomId(adId, myId, data.posterId), adId, adTitle: data.adTitle || adTitle, receiverId: data.posterId, receiverEmail: data.posterEmail, receiverName: data.posterName };
+        document.getElementById('chatWithName').textContent = data.posterName || 'Seller';
+        document.getElementById('chatAdTitle').textContent = `re: ${data.adTitle || adTitle}`;
+        await loadChatMessages();
+        startChatPolling();
+    } catch (err) {
+        document.getElementById('chatMessagesView').innerHTML = '<div style="text-align:center;color:#e53e3e;padding:24px;font-size:13px;">Could not load chat. Please try again.</div>';
+    }
+}
+
+async function loadChatMessages() {
+    if (!chatState.roomId || !currentToken) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/chat/${encodeURIComponent(chatState.roomId)}`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
+        const data = await res.json();
+        renderChatMessages(data.messages || []);
+    } catch (e) {}
+}
+
+function renderChatMessages(messages) {
+    const container = document.getElementById('chatMessagesView');
+    if (!container) return;
+    const payload = JSON.parse(atob(currentToken.split('.')[1]));
+    const myId = payload.id;
+    if (!messages.length) {
+        container.innerHTML = '<div style="text-align:center;color:#aaa;padding:24px;font-size:13px;">No messages yet. Say hello! 👋</div>';
+        return;
+    }
+    container.innerHTML = messages.map(m => {
+        const isMine = m.senderId === myId || m.senderEmail === currentLoggedInEmail;
+        const time = new Date(m.createdAt).toLocaleTimeString('en-KE', { hour:'2-digit', minute:'2-digit' });
+        return `<div style="display:flex;justify-content:${isMine?'flex-end':'flex-start'};margin-bottom:4px;">
+            <div style="max-width:78%;padding:10px 14px;border-radius:${isMine?'18px 18px 4px 18px':'18px 18px 18px 4px'};
+                background:${isMine?'linear-gradient(135deg,#1e3a5f,#2a5298)':'white'};color:${isMine?'white':'#1e3a5f'};
+                box-shadow:0 1px 4px rgba(0,0,0,0.10);font-size:13.5px;line-height:1.45;word-break:break-word;">
+                ${!isMine?`<div style="font-size:10px;font-weight:700;color:#6b7280;margin-bottom:4px;">${m.senderName||m.senderEmail}</div>`:''}
+                ${m.message}
+                <div style="font-size:10px;opacity:0.65;margin-top:5px;text-align:right;">${time}</div>
+            </div></div>`;
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message || !chatState.roomId) return;
+    input.value = '';
+    try {
+        await fetch(`${API_BASE}/api/chat/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+            body: JSON.stringify({ roomId: chatState.roomId, adId: chatState.adId, adTitle: chatState.adTitle, receiverId: chatState.receiverId, receiverEmail: chatState.receiverEmail, message })
+        });
+        await loadChatMessages();
+    } catch (err) { console.error('Send error:', err); }
+}
+
+function startChatPolling() { stopChatPolling(); chatState.pollInterval = setInterval(loadChatMessages, 5000); }
+function stopChatPolling() { if (chatState.pollInterval) { clearInterval(chatState.pollInterval); chatState.pollInterval = null; } }
+function closeChatModal() {
+    document.getElementById('chatModal').style.display = 'none';
+    stopChatPolling();
+    chatState = { roomId:null, adId:null, adTitle:null, receiverId:null, receiverEmail:null, receiverName:null, pollInterval:null };
+}
+
+async function showChatInbox() {
+    if (!currentToken) return;
+    document.getElementById('chatModal').style.display = 'flex';
+    document.getElementById('chatInboxView').style.display = 'flex';
+    document.getElementById('chatInboxView').style.flexDirection = 'column';
+    document.getElementById('chatMessagesView').style.display = 'none';
+    document.getElementById('chatInputArea').style.display = 'none';
+    document.getElementById('chatWithName').textContent = 'Messages';
+    document.getElementById('chatAdTitle').textContent = '';
+    stopChatPolling();
+    try {
+        const res = await fetch(`${API_BASE}/api/chat/rooms/mine`, { headers: { 'Authorization': `Bearer ${currentToken}` } });
+        const data = await res.json();
+        const list = document.getElementById('chatRoomList');
+        if (!data.rooms || !data.rooms.length) {
+            list.innerHTML = '<div style="text-align:center;color:#aaa;padding:32px 16px;font-size:13px;">No conversations yet.<br>Click 💬 Chat on any listing to start one!</div>';
+            return;
+        }
+        list.innerHTML = data.rooms.map(r => {
+            const time = new Date(r.lastAt).toLocaleTimeString('en-KE', { hour:'2-digit', minute:'2-digit' });
+            const escapedAdTitle = (r.adTitle||'').replace(/'/g,"\\'");
+            const escapedName = (r.otherName||'').replace(/'/g,"\\'");
+            return `<div onclick="openRoomFromInbox('${r.roomId}','${r.adId||''}','${escapedAdTitle}','${r.otherId||''}','${r.otherEmail||''}','${escapedName}')"
+                style="padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:center;gap:12px;background:${r.unread>0?'#eef4ff':'white'};">
+                <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#2a5298);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;flex-shrink:0;">💬</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:${r.unread>0?'700':'600'};font-size:13px;color:#1e3a5f;">${r.otherName||r.otherEmail||'User'}</div>
+                    <div style="font-size:11px;color:#888;margin-top:1px;">${r.adTitle?`re: ${r.adTitle}`:''}</div>
+                    <div style="font-size:12px;color:#555;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.lastMessage||''}</div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-size:10px;color:#aaa;">${time}</div>
+                    ${r.unread>0?`<span style="display:inline-block;background:#e53e3e;color:white;border-radius:50%;min-width:18px;height:18px;line-height:18px;text-align:center;font-size:11px;font-weight:800;margin-top:4px;">${r.unread}</span>`:''}
+                </div>
+            </div>`;
+        }).join('');
+    } catch (err) { console.error('Inbox error:', err); }
+}
+
+async function openRoomFromInbox(roomId, adId, adTitle, otherId, otherEmail, otherName) {
+    document.getElementById('chatInboxView').style.display = 'none';
+    document.getElementById('chatMessagesView').style.display = 'flex';
+    document.getElementById('chatInputArea').style.display = 'flex';
+    document.getElementById('chatWithName').textContent = otherName || otherEmail;
+    document.getElementById('chatAdTitle').textContent = adTitle ? `re: ${adTitle}` : '';
+    document.getElementById('chatMessagesView').innerHTML = '';
+    chatState = { ...chatState, roomId, adId, adTitle, receiverId: otherId, receiverEmail: otherEmail, receiverName: otherName };
+    await loadChatMessages();
+    startChatPolling();
+}
+
+<!-- ===== CHAT MODAL ===== -->
+<div id="chatModal" style="display:none; position:fixed; inset:0; z-index:25000; background:rgba(0,0,0,0.6); align-items:flex-end; justify-content:center;">
+    <div style="background:white; width:100%; max-width:480px; height:88vh; border-radius:18px 18px 0 0; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -8px 40px rgba(0,0,0,0.25);">
+        <!-- Header -->
+        <div id="chatHeader" style="background:linear-gradient(90deg,#1e3a5f,#2a5298); padding:14px 16px; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <button onclick="closeChatModal()" style="background:rgba(255,255,255,0.15); border:none; color:white; width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">←</button>
+            <div style="flex:1; min-width:0;">
+                <div id="chatWithName" style="color:white; font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Chat</div>
+                <div id="chatAdTitle" style="color:rgba(255,255,255,0.75); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+            </div>
+            <button onclick="showChatInbox()" style="background:rgba(255,255,255,0.15); border:none; color:white; padding:5px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600;">📥 Inbox</button>
+        </div>
+
+        <!-- Inbox view -->
+        <div id="chatInboxView" style="display:none; flex:1; overflow-y:auto; padding:0;">
+            <div style="padding:12px 16px; background:#f8f9fa; border-bottom:1px solid #eee; font-size:13px; font-weight:700; color:#1e3a5f;">Your Conversations</div>
+            <div id="chatRoomList" style="min-height:60px;"></div>
+        </div>
+
+        <!-- Messages view -->
+        <div id="chatMessagesView" style="flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:8px; background:#f0f4f8;" id="chatMessagesContainer">
+        </div>
+
+        <!-- Input -->
+        <div id="chatInputArea" style="padding:10px 12px; background:white; border-top:1px solid #eee; display:flex; gap:8px; align-items:flex-end; flex-shrink:0;">
+            <textarea id="chatInput" placeholder="Type a message…" rows="1"
+                style="flex:1; border:1.5px solid #dde3ee; border-radius:12px; padding:10px 14px; font-size:14px; resize:none; outline:none; line-height:1.4; max-height:100px; overflow-y:auto; font-family:inherit;"
+                onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendChatMessage();}"></textarea>
+            <button onclick="sendChatMessage()" style="background:linear-gradient(135deg,#1e3a5f,#2a5298); color:white; border:none; border-radius:50%; width:42px; height:42px; font-size:18px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;">➤</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
