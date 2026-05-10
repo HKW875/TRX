@@ -6,7 +6,6 @@ self.addEventListener("fetch", (event) => {
 // Basic offline support (optional for now)
 });
 
-
 // ====================== GrowthBase Service Worker ======================
 // Handles Web Push notifications — received even when the app is closed / user logged out.
 // Version bump forces re-install when deployed.
@@ -95,3 +94,5 @@ self.addEventListener('message', (event) => {
         self.skipWaiting();
     }
 });
+
+
