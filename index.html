@@ -1736,19 +1736,10 @@
                     <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)" style="width:100%; max-width:100%; box-sizing:border-box;">
                     <button type="button" class="my-goal-btn" onclick="openMyGoalModal()">🎯 My Goal</button>
                 </div>
+                
                 <!-- Right side: modern notification bell + chat + post ad -->
                 <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-
-                    
-
-                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
-                </div>
-            </div>
-            <div class="market-container">
-                <!-- SIDEBAR -->
-                <div class="sidebar">
-
-                     <!-- Notification Bell — modern design -->
+                <!-- Notification Bell — modern design -->
                     <div id="notifBellWrap" style="position:relative; display:block;">
                         <button type="button" id="notifBellBtn" onclick="toggleNotifPanel()" title="Notifications"
                             style="position:relative; height:38px; border-radius:10px;
@@ -1783,6 +1774,14 @@
                             </svg>
                         </button>
                     </div>
+                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
+                </div>
+            </div>
+            <div class="market-container">
+                <!-- SIDEBAR -->
+                <div class="sidebar">
+
+                    
                     
                     <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
                         Your Points: 0
