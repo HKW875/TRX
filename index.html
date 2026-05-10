@@ -1656,15 +1656,14 @@
                 <div class="market-header-search-col">
                     <input type="text" id="advertSearchInput" placeholder="Search products, locations..." onkeydown="handleAdvertSearch(event)" style="width:100%; max-width:100%; box-sizing:border-box;">
                     <button type="button" class="my-goal-btn" onclick="openMyGoalModal()">🎯 My Goal</button>
+                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
                 </div>
             </div>
             <div class="market-container">
                 <!-- SIDEBAR -->
                 <div class="sidebar">
-                    <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
-                        Your Points: 0
-                    </h4>
-                    
+
+
                     <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                     <!-- Notification Bell -->
                     <div id="notifBellWrap" style="position:relative; display:none;">
@@ -1685,10 +1684,14 @@
                             💬
                         </button>
                     </div>
-                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
                     </div>
 
+
                     
+                    
+                    <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
+                        Your Points: 0
+                    </h4>
                     <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
                     <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Login 1 point (limit one per day) </h6>
