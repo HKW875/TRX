@@ -1739,10 +1739,19 @@
                 <!-- Right side: modern notification bell + chat + post ad -->
                 <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
 
-                    <!-- Notification Bell — modern design -->
+                    
+
+                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
+                </div>
+            </div>
+            <div class="market-container">
+                <!-- SIDEBAR -->
+                <div class="sidebar">
+
+                     <!-- Notification Bell — modern design -->
                     <div id="notifBellWrap" style="position:relative; display:block;">
                         <button type="button" id="notifBellBtn" onclick="toggleNotifPanel()" title="Notifications"
-                            style="position:relative; width:38px; height:38px; border-radius:10px;
+                            style="position:relative; height:38px; border-radius:10px;
                             background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.25);
                             cursor:pointer; display:flex; align-items:center; justify-content:center;
                             transition:background 0.2s; backdrop-filter:blur(4px);"
@@ -1763,7 +1772,7 @@
                     <!-- Chat / Messages — modern square icon -->
                     <div id="chatInboxBtnWrap" style="position:relative; display:block;">
                         <button type="button" onclick="showChatInbox()" title="Messages"
-                            style="position:relative; width:38px; height:38px; border-radius:10px;
+                            style="position:relative; height:38px; border-radius:10px;
                             background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.25);
                             cursor:pointer; display:flex; align-items:center; justify-content:center;
                             transition:background 0.2s; backdrop-filter:blur(4px);"
@@ -1774,13 +1783,7 @@
                             </svg>
                         </button>
                     </div>
-
-                    <button type="button" class="post-btn" id="openAdModalBtn">+ Post Ad</button>
-                </div>
-            </div>
-            <div class="market-container">
-                <!-- SIDEBAR -->
-                <div class="sidebar">
+                    
                     <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
                         Your Points: 0
                     </h4>
