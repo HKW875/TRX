@@ -1806,14 +1806,14 @@
     </div>
 </div>
 
-<!-- Inactivity Warning Modal -->
-<div id="inactivityWarningModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); align-items:center; justify-content:center; z-index:9000;">
-    <div class="modal-content" style="text-align:center;">
-        <h3 style="color:#1e3a5f;">Session Timeout Warning</h3>
+<!-- Inactivity Warning Modal — DISABLED, hidden permanently -->
+<div id="inactivityWarningModal" style="display:none !important; pointer-events:none; visibility:hidden;">
+    <div class="modal-content">
+        <h3>Session Timeout Warning</h3>
         <p>You have been inactive. You will be logged out in <strong id="countdownTimer">60</strong> seconds.</p>
         <p id="countdownText" style="display:none;">60</p>
-        <button onclick="resetInactivityTimer()" style="background:#28a745;">Stay Logged In</button>
-        <button onclick="logout()" style="background:#dc3545;">Log Out Now</button>
+        <button onclick="resetInactivityTimer()">Stay Logged In</button>
+        <button onclick="logout()">Log Out Now</button>
     </div>
 </div>
 
@@ -1948,10 +1948,66 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(() => console.log("Service Worker Registered"));
+// ==================== SERVICE WORKER + WEB PUSH SETUP ====================
+let swRegistration = null;
+
+async function registerServiceWorkerAndPush() {
+    if (!('serviceWorker' in navigator)) return;
+    try {
+        swRegistration = await navigator.serviceWorker.register('/service-worker.js');
+        console.log('✅ Service Worker Registered');
+    } catch (err) {
+        console.warn('SW registration failed:', err);
+    }
 }
+
+// Subscribe to push notifications and save to server
+// Called after login with a valid token
+async function subscribeToPush(token) {
+    if (!swRegistration || !('PushManager' in window)) return;
+    try {
+        // Get VAPID public key from server
+        const keyRes = await fetch(`${API_BASE}/api/push/vapid-public-key`);
+        const { publicKey } = await keyRes.json();
+
+        // Ask user permission
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+            console.log('Push permission denied');
+            return;
+        }
+
+        // Subscribe
+        const subscription = await swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicKey)
+        });
+
+        // Save subscription to server
+        await fetch(`${API_BASE}/api/push/subscribe`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ subscription })
+        });
+        console.log('✅ Push subscription saved');
+    } catch (err) {
+        console.warn('Push subscription failed:', err);
+    }
+}
+
+// Helper: convert VAPID base64 key to Uint8Array
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+}
+
+// Register SW immediately on page load (needed for push when logged out)
+registerServiceWorkerAndPush();
 
 let deferredPrompt;
 
@@ -1986,11 +2042,13 @@ let documentRows = [];
 let selectedBodaGoPlan = null;
 let selectedPremiumPlan = null;
 
-// ==================== INACTIVITY TIMEOUT ====================
-let inactivityTimer;
-let warningTimer;
-const INACTIVITY_LIMIT = 5 * 60 * 1000;
-const WARNING_TIME = 60 * 1000;
+// ==================== INACTIVITY TIMEOUT — DISABLED ====================
+// Session timer completely removed. Users stay logged in indefinitely.
+let inactivityTimer;  // kept as variable to avoid reference errors in legacy calls
+let warningTimer;     // kept as variable to avoid reference errors
+function resetInactivityTimer() { /* disabled */ }
+function setupInactivityListeners() { /* disabled */ }
+function showInactivityWarning() { /* disabled */ }
 
 
 
@@ -2044,14 +2102,7 @@ function showPointsPopup(text) {
     }, 1000);
 }
 
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    clearTimeout(warningTimer);
-    document.getElementById("inactivityWarningModal").style.display = "none";
-    inactivityTimer = setTimeout(() => {
-        showInactivityWarning();
-    }, INACTIVITY_LIMIT);
-}
+function resetInactivityTimer() { /* inactivity timer disabled */ }
 
 // Compress images to avoid hitting the 4.5MB Vercel limit or the 16MB MongoDB document limit
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -2104,7 +2155,12 @@ async function submitMyGoal() {
         return;
     }
 
-    const goalData = { product, category, budget, desiredDate: date, notifyMe: notify };
+    // Include user's current location so the backend can notify nearby sellers
+    const goalData = {
+        product, category, budget, desiredDate: date, notifyMe: notify,
+        latitude:  userLocation.latitude  || null,
+        longitude: userLocation.longitude || null
+    };
 
     try {
         const response = await fetch(`${API_BASE}/api/goals`, {
@@ -2164,7 +2220,7 @@ document.addEventListener('click', function(e) {
 async function fetchNotifications(markRead = false) {
     if (!currentToken) return;
     try {
-        const res = await fetch(`${API_BASE}/api/notifications`, {
+        const res = await fetch(`${API_BASE}/api/all-notifications`, {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
         if (!res.ok) return;
@@ -2172,7 +2228,6 @@ async function fetchNotifications(markRead = false) {
         updateNotifBadge(data.unreadCount || 0);
         renderNotifications(data.notifications || []);
 
-        // If panel is open, mark as read
         if (markRead && data.unreadCount > 0) {
             setTimeout(markAllNotifRead, 2000);
         }
@@ -2212,20 +2267,29 @@ function renderNotifications(notifications) {
 
     list.innerHTML = notifications.map(n => {
         const isUnread = !n.read;
-        const typeIcon = n.type === 'proximity' ? '📍' : '🎯';
-        const typeColor = n.type === 'proximity' ? '#e65c00' : '#1e3a5f';
-        const bg = isUnread ? 'linear-gradient(90deg,#eef6ff,#f8faff)' : '#fafafa';
+        const isSeller = n.notifRole === 'seller';
+        const typeIcon = isSeller ? '🛒' : (n.type === 'proximity' ? '📍' : '🎯');
+        const typeColor = isSeller ? '#7c3aed' : (n.type === 'proximity' ? '#e65c00' : '#1e3a5f');
+        const bg = isUnread
+            ? (isSeller ? 'linear-gradient(90deg,#f5f0ff,#faf8ff)' : 'linear-gradient(90deg,#eef6ff,#f8faff)')
+            : '#fafafa';
+        const roleTag = isSeller
+            ? '<span style="background:#7c3aed; color:white; font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:6px; vertical-align:middle;">SELLER</span>'
+            : '';
         const date = new Date(n.createdAt).toLocaleDateString('en-KE', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+        const phone = n.adPhone || '';
+        const waPhone = phone.replace(/^0/, '254');
+
         return `
-        <div onclick="notifItemClick('${n._id}')" style="padding:12px 14px; border-bottom:1px solid #f0f0f0; cursor:pointer;
+        <div onclick="notifItemClick('${n._id}','${n.notifRole || 'buyer'}')" style="padding:12px 14px; border-bottom:1px solid #f0f0f0; cursor:pointer;
             background:${bg}; transition:background 0.2s; border-left:3px solid ${isUnread ? typeColor : 'transparent'};">
             <div style="display:flex; align-items:flex-start; gap:8px;">
                 <span style="font-size:18px; flex-shrink:0;">${typeIcon}</span>
                 <div style="flex:1; min-width:0;">
-                    <p style="margin:0 0 4px; font-size:12.5px; color:#1e3a5f; font-weight:${isUnread ? '700' : '500'}; line-height:1.4;">${n.message}</p>
-                    ${n.adPhone ? `<div style="margin-top:5px; display:flex; gap:6px; flex-wrap:wrap;">
-                        <a href="tel:${n.adPhone}" onclick="event.stopPropagation()" style="background:#28a745; color:white; padding:3px 10px; border-radius:5px; font-size:11px; font-weight:600; text-decoration:none;">📞 Call Seller</a>
-                        <a href="https://wa.me/254${n.adPhone.replace(/^0/,'')}" target="_blank" onclick="event.stopPropagation()" style="background:#25d366; color:white; padding:3px 10px; border-radius:5px; font-size:11px; font-weight:600; text-decoration:none;">💬 WhatsApp</a>
+                    <p style="margin:0 0 4px; font-size:12.5px; color:#1e3a5f; font-weight:${isUnread ? '700' : '500'}; line-height:1.4;">${n.message}${roleTag}</p>
+                    ${phone ? `<div style="margin-top:5px; display:flex; gap:6px; flex-wrap:wrap;">
+                        <a href="tel:${phone}" onclick="event.stopPropagation()" style="background:#28a745; color:white; padding:3px 10px; border-radius:5px; font-size:11px; font-weight:600; text-decoration:none;">📞 Call</a>
+                        <a href="https://wa.me/${waPhone}" target="_blank" onclick="event.stopPropagation()" style="background:#25d366; color:white; padding:3px 10px; border-radius:5px; font-size:11px; font-weight:600; text-decoration:none;">💬 WhatsApp</a>
                     </div>` : ''}
                     <div style="margin-top:4px; font-size:10.5px; color:#999;">${date}${n.distance ? ` · ${n.distance}km away` : ''}</div>
                 </div>
@@ -2235,10 +2299,13 @@ function renderNotifications(notifications) {
     }).join('');
 }
 
-async function notifItemClick(notifId) {
+async function notifItemClick(notifId, role) {
     if (!currentToken) return;
+    const endpoint = role === 'seller'
+        ? `${API_BASE}/api/seller-notifications/mark-read/${notifId}`
+        : `${API_BASE}/api/notifications/mark-read/${notifId}`;
     try {
-        await fetch(`${API_BASE}/api/notifications/mark-read/${notifId}`, {
+        await fetch(endpoint, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
@@ -2249,10 +2316,14 @@ async function notifItemClick(notifId) {
 async function markAllNotifRead() {
     if (!currentToken) return;
     try {
-        await fetch(`${API_BASE}/api/notifications/mark-read`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${currentToken}` }
-        });
+        await Promise.all([
+            fetch(`${API_BASE}/api/notifications/mark-read`, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${currentToken}` }
+            }),
+            fetch(`${API_BASE}/api/seller-notifications/mark-read`, {
+                method: 'POST', headers: { 'Authorization': `Bearer ${currentToken}` }
+            })
+        ]);
         fetchNotifications(false);
     } catch (e) {}
 }
@@ -3006,29 +3077,11 @@ function backToLogin() {
     document.getElementById("authMessage").style.color = "#dc3545";
 }
 
-// ==================== INACTIVITY WARNING ====================
-function showInactivityWarning() {
-    let timeLeft = 60;
-    const countdownTimerEl = document.getElementById("countdownTimer");
-    const countdownTextEl = document.getElementById("countdownText");
-    document.getElementById("inactivityWarningModal").style.display = "flex";
-    warningTimer = setInterval(() => {
-        timeLeft--;
-        if (countdownTimerEl) countdownTimerEl.textContent = timeLeft;
-        if (countdownTextEl) countdownTextEl.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(warningTimer);
-            logout();
-        }
-    }, 1000);
-}
+// ==================== INACTIVITY WARNING — DISABLED ====================
+// These are kept as no-ops to prevent any reference errors
+function showInactivityWarning() { /* disabled */ }
 
-function setupInactivityListeners() {
-    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
-    events.forEach(event => {
-        document.addEventListener(event, resetInactivityTimer, { passive: true });
-    });
-}
+function setupInactivityListeners() { /* disabled */ }
 
 // ==================== AUTH FUNCTIONS ====================
 // ==================== AUTH FUNCTIONS ====================
@@ -3101,6 +3154,9 @@ async function handleLogin() {
         if (bellWrap) bellWrap.style.display = 'block';
         startNotificationPolling();
         startProximityWatch();
+
+        // Subscribe to Web Push notifications (works when logged out too)
+        subscribeToPush(currentToken);
 
         // Refresh points from server (extra safety)
         setTimeout(refreshUserPoints, 1000);
@@ -4205,14 +4261,14 @@ window.onload = function() {
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
-        resetInactivityTimer();
-        setupInactivityListeners();
         requestGeolocation();
         setTimeout(loadOccupationChart, 1000);
         // Start notification polling and proximity watching
         document.getElementById('notifBellWrap').style.display = 'block';
         startNotificationPolling();
         startProximityWatch();
+        // Ensure push subscription is active for this session
+        subscribeToPush(token);
     }
     setTimeout(() => {
         const dynDocContainer = document.getElementById("dynamicDocumentsContainer");
