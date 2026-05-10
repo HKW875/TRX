@@ -42,7 +42,7 @@ self.addEventListener('push', (event) => {
     const title   = data.title  || '🔔 GrowthBase';
     const options = {
         body:    data.body   || 'You have a new notification.',
-        icon:    data.icon   || '/icon-192.png',
+        icon:    data.icon   || '/icons/icon-192.png',
         badge:   data.badge  || '/badge-72.png',
         tag:     data.tag    || 'growthbase-notif',
         data:    data.data   || {},
