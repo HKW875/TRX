@@ -274,7 +274,7 @@
             height: 350px;
             top: 100px;
             background: linear-gradient(90deg, #1e3a5f 0%, #2a5298 50%, #1e3a5f 100%);
-            display: flex;
+    
             align-items: center;
             overflow: hidden;
             z-index: 1999;
@@ -3009,10 +3009,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isAuthVisible = !authScreen.classList.contains('hidden') &&
                                      window.getComputedStyle(authScreen).display !== 'none';
                 if (isAuthVisible) {
-                    newScreen.style.display = 'flex';
+                    newScreen.style.display = 'block';
                     leftArr.style.display = 'block';
                     rightArr.style.display = 'block';
-                    ticker.style.display = 'flex';
+                    ticker.style.display = 'block';
                 } else {
                     newScreen.style.display = 'none';
                     leftArr.style.display = 'none';
