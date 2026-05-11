@@ -1496,7 +1496,8 @@
     <label id="referralPhoneLabel" class="hidden">Their Number</label>
     <input type="tel" id="referralPhoneInput" class="hidden" placeholder="07xxxxxxxx" maxlength="10" pattern="\d{10}">
 
-
+    <label id="referralEmailLabel" class="hidden">Their Email</label>
+    <input type="email" id="referralEmailInput" class="hidden" placeholder="Email of person who referred you">
 
     <label id="secretLabel" class="hidden">Secret Code(4 numbers followed by 3 letters)</label>
     <input type="text" id="regSecretCode" class="hidden" placeholder="Create secret code">
@@ -3404,6 +3405,7 @@ async function handleRegister() {
     // NEW: Get referred by data
     const referredBy = document.getElementById("referredByInput").value.trim();
     const referralPhone = document.getElementById("referralPhoneInput").value.trim();
+    const referralEmail = document.getElementById("referralEmailInput").value.trim().toLowerCase();
 
     const confirmPass = document.getElementById("confirmPassword").value.trim();
     const secretCode = document.getElementById("regSecretCode").value.trim();
@@ -3425,6 +3427,8 @@ async function handleRegister() {
         document.getElementById("referredByInput").classList.remove("hidden");
         document.getElementById("referralPhoneLabel").classList.remove("hidden");
         document.getElementById("referralPhoneInput").classList.remove("hidden");
+        document.getElementById("referralEmailLabel").classList.remove("hidden");
+        document.getElementById("referralEmailInput").classList.remove("hidden");
 
         msg.style.color = "#1e3a5f";
         msg.textContent = "Complete registration form below.";
@@ -3453,6 +3457,7 @@ async function handleRegister() {
                 occupation,
                 referredBy,           // NEW
                 referralPhone,        // NEW
+                referralEmail,        // NEW — referrer's email for reliable point crediting
                 confirmPassword: confirmPass,
                 secretCode: secretCode
             })
@@ -4415,7 +4420,8 @@ function showRegisterFields() {
     // Show registration-only fields
     ['confirmLabel','confirmPassword','mobileLabel','mobileNumber',
      'occupationLabel','occupationInput','referredByLabel','referredByInput',
-     'referralPhoneLabel','referralPhoneInput','secretLabel','regSecretCode']
+     'referralPhoneLabel','referralPhoneInput','referralEmailLabel','referralEmailInput',
+     'secretLabel','regSecretCode']
         .forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('hidden');
@@ -4430,7 +4436,8 @@ function showRegisterFields() {
 function hideRegisterFields() {
     ['confirmLabel','confirmPassword','mobileLabel','mobileNumber',
      'occupationLabel','occupationInput','referredByLabel','referredByInput',
-     'referralPhoneLabel','referralPhoneInput','secretLabel','regSecretCode']
+     'referralPhoneLabel','referralPhoneInput','referralEmailLabel','referralEmailInput',
+     'secretLabel','regSecretCode']
         .forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
