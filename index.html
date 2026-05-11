@@ -1075,6 +1075,25 @@
             align-items: center !important;
             justify-content: center !important;
         }
+        /* ===== FIX: chatInputArea must never collapse or be overridden ===== */
+        #chatInputArea {
+            padding: 10px 12px !important;
+            background: white !important;
+            border-top: 1.5px solid #eaecf0 !important;
+            display: flex !important;
+            gap: 8px !important;
+            align-items: flex-end !important;
+            flex-shrink: 0 !important;
+            min-height: 62px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        /* When hidden by JS, override with none */
+        #chatInputArea.chat-input-hidden {
+            display: none !important;
+        }
         .save-spinner-container {
             display: none;
             align-items: center; gap: 12px;
@@ -1983,7 +2002,12 @@
     border:1.5px solid rgba(30,58,95,0.12); z-index:20000; overflow:hidden; flex-direction:column;">
     <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2a5298 100%); padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
         <div style="display:flex; align-items:center; gap:8px;">
-            <div style="width:28px; height:28px; background:rgba(255,255,255,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px;">🔔</div>
+            <div style="width:28px; height:28px; background:rgba(255,255,255,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                    <path d="M0 0 C15.84 0 31.68 0 48 0 C48 15.84 48 31.68 48 48 C32.16 48 16.32 48 0 48 C0 32.16 0 16.32 0 0 Z" fill="#1B05AE" transform="translate(0,0)"/>
+                    <path d="M0 0 C1.02802734 0.00966797 2.05605469 0.01933594 3.11523438 0.02929688 C4.72301758 0.06700195 4.72301758 0.06700195 6.36328125 0.10546875 C7.44673828 0.11900391 8.53019531 0.13253906 9.64648438 0.14648438 C12.3234153 0.18186232 14.99934963 0.23122686 17.67578125 0.29296875 C17.67578125 1.94296875 17.67578125 3.59296875 17.67578125 5.29296875 C10.74578125 5.29296875 3.81578125 5.29296875 -3.32421875 5.29296875 C-3.32421875 10.57296875 -3.32421875 15.85296875 -3.32421875 21.29296875 C1.95578125 21.29296875 7.23578125 21.29296875 12.67578125 21.29296875 C12.67578125 19.31296875 12.67578125 17.33296875 12.67578125 15.29296875 C9.37578125 15.29296875 6.07578125 15.29296875 2.67578125 15.29296875 C2.67578125 13.97296875 2.67578125 12.65296875 2.67578125 11.29296875 C7.62578125 11.29296875 12.57578125 11.29296875 17.67578125 11.29296875 C18.04679184 22.79429702 18.04679184 22.79429702 16.44262695 24.95043945 C14.1957565 26.65771327 12.91574149 26.67959813 10.11328125 26.69140625 C9.23414062 26.69527344 8.355 26.69914062 7.44921875 26.703125 C6.53398437 26.69152344 5.61875 26.67992188 4.67578125 26.66796875 C3.30292969 26.68537109 3.30292969 26.68537109 1.90234375 26.703125 C1.02320313 26.69925781 0.1440625 26.69539063 -0.76171875 26.69140625 C-1.96634766 26.68633057 -1.96634766 26.68633057 -3.1953125 26.68115234 C-5.88378521 26.19093771 -6.75690301 25.51832253 -8.32421875 23.29296875 C-8.71240234 21.1640625 -8.71240234 21.1640625 -8.72265625 18.73046875 C-8.72652344 17.85132812 -8.73039063 16.9721875 -8.734375 16.06640625 C-8.72277344 15.15117187 -8.71117187 14.2359375 -8.69921875 13.29296875 C-8.71662109 11.92011719 -8.71662109 11.92011719 -8.734375 10.51953125 C-8.73050781 9.64039063 -8.72664062 8.76125 -8.72265625 7.85546875 C-8.71758057 6.65083984 -8.71758057 6.65083984 -8.71240234 5.421875 C-8.32421875 3.29296875 -8.32421875 3.29296875 -7.13208008 1.52612305 C-4.65907766 -0.16072844 -2.97736787 -0.04934864 0 0 Z" fill="#F8F7FC" transform="translate(19.32421875,8.70703125)"/>
+                </svg>
+            </div>
             <span style="color:white; font-weight:700; font-size:14px; letter-spacing:0.02em;">Notifications</span>
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
@@ -3278,6 +3302,9 @@ async function handleLogin() {
         // Refresh points from server (extra safety)
         setTimeout(refreshUserPoints, 1000);
 
+        // Start midnight auto-points scheduler
+        scheduleMidnightPoints();
+
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error. Please try again.";
@@ -3307,11 +3334,52 @@ async function refreshUserPoints() {
     }
 }
 
+// ==================== MIDNIGHT LOGIN POINTS AUTO-AWARD ====================
+let midnightPointsTimer = null;
+
+function scheduleMidnightPoints() {
+    if (midnightPointsTimer) clearTimeout(midnightPointsTimer);
+
+    const now = new Date();
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(24, 0, 0, 100); // next midnight + 100ms buffer
+    const msUntilMidnight = nextMidnight - now;
+
+    midnightPointsTimer = setTimeout(async () => {
+        // Award login point automatically at midnight for logged-in users
+        if (currentToken) {
+            try {
+                const res = await fetch(`${API_BASE}/api/login-point`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.awarded) {
+                        showPointsPopup('+1 Daily Login Point!');
+                        setTimeout(refreshUserPoints, 500);
+                    }
+                }
+            } catch (e) { /* silent — will retry next midnight */ }
+            // Schedule the next midnight award
+            scheduleMidnightPoints();
+        }
+    }, msUntilMidnight);
+}
+
+function stopMidnightPoints() {
+    if (midnightPointsTimer) { clearTimeout(midnightPointsTimer); midnightPointsTimer = null; }
+}
+
 function logout() {
     clearTimeout(inactivityTimer);
     clearTimeout(warningTimer);
     stopNotificationPolling();
     stopProximityWatch();
+    stopMidnightPoints();
     currentToken = null;
     currentLoggedInEmail = null;
     isNewUser = false;
@@ -4168,8 +4236,9 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                             </button>
                             <button onclick="openChat('${ad._id}', '${(ad.title||'').replace(/'/g,"\\'")}', '${ad.phone || ''}')"
                                 style="flex:1; min-width:100px; padding:10px 14px; background:linear-gradient(90deg,#1e3a5f,#2a5298);
-                                color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
-                                💬 Chat
+                                color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="white"/></svg>
+                                Chat
                             </button>
                         </div>
                     </div>
@@ -4395,6 +4464,8 @@ window.onload = function() {
         startProximityWatch();
         // Ensure push subscription is active for this session
         subscribeToPush(token);
+        // Start midnight auto-points scheduler
+        scheduleMidnightPoints();
     }
     setTimeout(() => {
         const dynDocContainer = document.getElementById("dynamicDocumentsContainer");
@@ -4416,13 +4487,22 @@ function buildRoomId(adId, uid1, uid2) {
     return `${adId}_${[uid1, uid2].filter(Boolean).sort().join('_')}`;
 }
 
+function showChatInput() {
+    const el = document.getElementById('chatInputArea');
+    if (el) el.classList.remove('chat-input-hidden');
+}
+function hideChatInput() {
+    const el = document.getElementById('chatInputArea');
+    if (el) el.classList.add('chat-input-hidden');
+}
+
 async function openChat(adId, adTitle, adPhone) {
     if (!currentToken) { alert('Please log in to chat with sellers.'); return; }
     const modal = document.getElementById('chatModal');
     modal.style.display = 'flex';
     document.getElementById('chatInboxView').style.display = 'none';
     document.getElementById('chatMessagesView').style.display = 'flex';
-    document.getElementById('chatInputArea').style.display = 'flex';
+    showChatInput();
     document.getElementById('chatWithName').textContent = 'Loading…';
     document.getElementById('chatAdTitle').textContent = adTitle || '';
     document.getElementById('chatMessagesView').innerHTML = '<div style="text-align:center;color:#aaa;padding:24px;font-size:13px;align-self:center;">Loading…</div>';
@@ -4432,7 +4512,7 @@ async function openChat(adId, adTitle, adPhone) {
         if (!data.posterId) {
             document.getElementById('chatMessagesView').innerHTML = '<div style="text-align:center;color:#e53e3e;padding:24px;font-size:13px;align-self:center;">This seller has not registered on GrowthBase yet.<br><br>Use the phone number on the listing to contact them.</div>';
             document.getElementById('chatWithName').textContent = 'Seller not on GrowthBase';
-            document.getElementById('chatInputArea').style.display = 'none';
+            hideChatInput();
             return;
         }
         const payload = JSON.parse(atob(currentToken.split('.')[1]));
@@ -4519,7 +4599,7 @@ async function showChatInbox() {
     document.getElementById('chatInboxView').style.display = 'flex';
     document.getElementById('chatInboxView').style.flexDirection = 'column';
     document.getElementById('chatMessagesView').style.display = 'none';
-    document.getElementById('chatInputArea').style.display = 'none';
+    hideChatInput();
     document.getElementById('chatWithName').textContent = 'Messages';
     document.getElementById('chatAdTitle').textContent = '';
     stopChatPolling();
@@ -4555,7 +4635,7 @@ async function showChatInbox() {
 async function openRoomFromInbox(roomId, adId, adTitle, otherId, otherEmail, otherName) {
     document.getElementById('chatInboxView').style.display = 'none';
     document.getElementById('chatMessagesView').style.display = 'flex';
-    document.getElementById('chatInputArea').style.display = 'flex';
+    showChatInput();
     document.getElementById('chatWithName').textContent = otherName || otherEmail;
     document.getElementById('chatAdTitle').textContent = adTitle ? `re: ${adTitle}` : '';
     document.getElementById('chatMessagesView').innerHTML = '';
@@ -4590,7 +4670,7 @@ async function openRoomFromInbox(roomId, adId, adTitle, otherId, otherEmail, oth
         </div>
 
         <!-- Input area — flex:0 0 auto prevents it being squeezed -->
-        <div id="chatInputArea" style="padding:10px 12px; background:white; border-top:1.5px solid #eaecf0; display:flex; gap:8px; align-items:flex-end; flex-shrink:0; min-height:62px;">
+        <div id="chatInputArea">
             <textarea id="chatInput" placeholder="Type a message…" rows="1"
                 onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendChatMessage();}"></textarea>
             <button id="chatSendBtn" onclick="sendChatMessage()">
