@@ -247,16 +247,19 @@
         #listings-scroller-screen {
             -ms-overflow-style: none;
             scrollbar-width: none;
-            position: absolute;
-            height: 140px;
-            bottom: 45px;
-            left: 0;
-            right: 0;
-            width: 380px;
+            position: fixed !important;
+            height: 120px !important;
+            bottom: 0 !important;
+            top: auto !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
             display: flex;
             align-items: center;
             z-index: 2000;
-            top: auto;
+            background: #ffffff;
+            box-shadow: 0 -4px 18px rgba(0,0,0,0.10);
         }
 
         
@@ -272,12 +275,14 @@
 
         /* ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER ===== */
         #dynamic-listings-ticker {
-            position: absolute;
-            left: 0;
-            right: 0;
-            width: 380px;
-            height: 350px;
-            top: 100px;
+            position: fixed !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            height: 320px !important;
+            bottom: 120px !important;
+            top: auto !important;
             background: linear-gradient(90deg, #1e3a5f 0%, #2a5298 50%, #1e3a5f 100%);
             display: flex;
             align-items: center;
@@ -1097,7 +1102,7 @@
         }
         /* When hidden by JS, override with none */
         #chatInputArea.chat-input-hidden {
-            
+            display: none !important;
         }
         .save-spinner-container {
             display: none;
@@ -1459,6 +1464,222 @@
                 box-sizing: border-box !important;
             }
         }
+
+        /* ===== SETTINGS PAGE ===== */
+        .gb-settings-section {
+            border-bottom: 8px solid #f4f6fb;
+            padding: 4px 0;
+        }
+        .gb-settings-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 18px 9px 18px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #1e3a5f;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: #f8faff;
+            border-bottom: 1px solid #eef1f7;
+        }
+        .gb-settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 18px;
+            border-bottom: 1px solid #f5f6fa;
+            cursor: pointer;
+            transition: background 0.15s;
+            background: white;
+        }
+        .gb-settings-row:hover { background: #f8faff; }
+        .gb-settings-row:last-child { border-bottom: none; }
+        .gb-settings-label { font-size: 14px; color: #2d3748; font-weight: 500; }
+        .gb-settings-chevron { font-size: 20px; color: #c8d0dc; font-weight: 300; }
+        .gb-select {
+            border: 1.5px solid #dde3ee;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 13px;
+            color: #1e3a5f;
+            background: white;
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        /* Toggle switch */
+        .gb-toggle { position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0; }
+        .gb-toggle input { opacity:0; width:0; height:0; position:absolute; }
+        .gb-toggle-track {
+            position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+            background:#ccc; border-radius:26px; transition:background 0.25s;
+        }
+        .gb-toggle-track:before {
+            position:absolute; content:""; height:20px; width:20px;
+            left:3px; bottom:3px; background:white; border-radius:50%;
+            transition:transform 0.25s; box-shadow:0 1px 4px rgba(0,0,0,0.18);
+        }
+        .gb-toggle input:checked + .gb-toggle-track { background:#00c896; }
+        .gb-toggle input:checked + .gb-toggle-track:before { transform:translateX(20px); }
+
+        /* ===== MODERNIZED AD CARDS ===== */
+        .ad-card {
+            border-radius: 18px !important;
+            border: none !important;
+            box-shadow: 0 4px 24px rgba(30,58,95,0.09), 0 1.5px 6px rgba(0,0,0,0.05) !important;
+            overflow: hidden;
+            background: white;
+            transition: transform 0.22s, box-shadow 0.22s;
+        }
+        .ad-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 40px rgba(30,58,95,0.16), 0 2px 10px rgba(0,0,0,0.08) !important;
+        }
+        .card-body { padding: 14px 16px 16px 16px !important; }
+
+        /* ===== POSTER ROW ON LISTINGS ===== */
+        .ad-poster-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f3f8;
+        }
+        .ad-poster-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg,#1e3a5f,#2a5298);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: white;
+            flex-shrink: 0; overflow: hidden;
+        }
+        .ad-poster-avatar img { width:100%; height:100%; object-fit:cover; }
+        .ad-poster-name { font-size: 12px; font-weight: 600; color: #4a6080; }
+
+        /* ===== VIEW COUNT ===== */
+        .ad-view-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #9aabbb;
+            margin-top: 9px;
+            font-weight: 500;
+        }
+
+        /* ===== MARKET HEADER MODERNIZED ===== */
+        .market-header {
+            background: linear-gradient(135deg,#1e3a5f 0%,#2a5298 100%) !important;
+            border-radius: 0 0 14px 14px;
+            padding: 10px 12px !important;
+            box-shadow: 0 4px 20px rgba(30,58,95,0.22);
+        }
+        .market-header input {
+            border-radius: 12px !important;
+            padding: 10px 16px !important;
+            font-size: 14px !important;
+            height: 40px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+        }
+        .post-btn {
+            background: linear-gradient(135deg,#00c896,#00a87a) !important;
+            border-radius: 10px !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            box-shadow: 0 3px 10px rgba(0,200,150,0.35) !important;
+            height: 38px !important;
+            font-weight: 700 !important;
+        }
+        .my-goal-btn {
+            background: linear-gradient(135deg,#00c896,#00a87a) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 3px 10px rgba(0,200,150,0.28) !important;
+            font-size: 13px !important;
+        }
+
+        /* ===== TAB BAR MODERNIZED ===== */
+        .tabs {
+            background: white;
+            border-bottom: 2px solid #e8ecf5 !important;
+            border-radius: 10px 10px 0 0;
+            padding: 5px 5px 0 5px;
+            gap: 3px !important;
+        }
+        .tab {
+            border-radius: 8px 8px 0 0 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #7a8ba8;
+            transition: all 0.18s !important;
+        }
+        .tab.active {
+            color: #1e3a5f !important;
+            background: white !important;
+            border: 2px solid #1e3a5f !important;
+            border-bottom: 2px solid white !important;
+        }
+        .tab#tab-settings.active svg path { fill: #1e3a5f; }
+
+        /* ===== VIEW DETAILS BTN ===== */
+        .view-details-btn {
+            background: linear-gradient(90deg,#1e3a5f,#2a5298) !important;
+            border-radius: 10px !important;
+            font-weight: 700 !important;
+            transition: opacity 0.2s !important;
+            letter-spacing: 0.02em !important;
+        }
+        .view-details-btn:hover { opacity:0.88 !important; }
+
+        /* ===== GRID ===== */
+        .grid {
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)) !important;
+            gap: 18px !important;
+            padding: 10px 0 !important;
+        }
+
+        /* ===== SIDEBAR ===== */
+        #userPointsDisplay {
+            background: linear-gradient(90deg,#00c896,#00a87a);
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            display: inline-block;
+            box-shadow: 0 3px 10px rgba(0,200,150,0.22);
+            margin-bottom: 10px;
+        }
+
+        /* ===== CHAT MODAL ===== */
+        #chatModal .chat-sheet {
+            border-radius: 22px 22px 0 0 !important;
+            box-shadow: 0 -10px 40px rgba(30,58,95,0.20) !important;
+        }
+        #chatInput { border-radius: 14px !important; }
+        #chatSendBtn { border-radius: 50% !important; box-shadow: 0 3px 10px rgba(30,58,95,0.28) !important; }
+
+        /* ===== NOTIF PANEL ===== */
+        #notifPanel { border-radius: 18px !important; }
+
+        /* ===== AUTH CONTAINER ===== */
+        .auth-container {
+            backdrop-filter: blur(14px);
+            border-radius: 22px !important;
+            box-shadow: 0 28px 80px rgba(30,58,95,0.22), 0 4px 20px rgba(0,0,0,0.10) !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-radius: 16px 16px 0 0 !important;
+            background: linear-gradient(135deg,#1e3a5f,#2a5298) !important;
+        }
+
+        /* ===== CARD IMAGE BORDER RADIUS ===== */
+        .card-images {
+            border-radius: 18px 18px 0 0 !important;
+        }
+        .card-images img { object-fit: cover !important; }
     </style>
 </head>
 <body>
@@ -1560,10 +1781,153 @@
     <div class="container">
         <!-- Tabs -->
         <div class="tabs">
-            <div class="tab" onclick="switchTab(0)" id="tab-plans" style="background-color: rgb(241, 241, 241);">Plans</div>
-            <div class="tab" onclick="switchTab(1)" id="tab-profile" style="background-color: rgb(241, 241, 241);">Apply</div>
-            <div class="tab" onclick="switchTab(2)" id="tab-services" style="background-color: rgb(241, 241, 241);">Services</div>
-            <div class="tab active" onclick="switchTab(3)" id="tab-adverts" style="background-color: white;">Adverts</div>
+            <div class="tab" onclick="switchTab(0)" id="tab-settings" title="Settings" style="background-color:rgb(241,241,241); min-width:42px; max-width:50px; display:flex; align-items:center; justify-content:center; padding:10px 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="tab" onclick="switchTab(1)" id="tab-plans" style="background-color: rgb(241, 241, 241);">Plans</div>
+            <div class="tab" onclick="switchTab(2)" id="tab-profile" style="background-color: rgb(241, 241, 241);">Apply</div>
+            <div class="tab" onclick="switchTab(3)" id="tab-services" style="background-color: rgb(241, 241, 241);">Services</div>
+            <div class="tab active" onclick="switchTab(4)" id="tab-adverts" style="background-color: white;">Adverts</div>
+        </div>
+
+        <!-- ===== SETTINGS PAGE ===== -->
+        <div id="settingsPage" class="page" style="display:none;">
+            <!-- Profile Header Card -->
+            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2a5298 100%); padding:26px 20px 22px 20px; margin:-0px; border-radius:0 0 0 0;">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <!-- Photo upload -->
+                    <div style="position:relative; flex-shrink:0;">
+                        <div id="settingsAvatarWrap" onclick="document.getElementById('settingsPhotoInput').click()"
+                            style="width:78px;height:78px;border-radius:50%;border:3px solid rgba(255,255,255,0.45);overflow:hidden;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s;">
+                            <img id="settingsAvatarImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none;">
+                            <svg id="settingsAvatarPlaceholder" width="38" height="38" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.75)"/>
+                                <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div onclick="document.getElementById('settingsPhotoInput').click()"
+                            style="position:absolute;bottom:1px;right:1px;width:22px;height:22px;background:#00c896;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="white"/></svg>
+                        </div>
+                        <input type="file" id="settingsPhotoInput" accept="image/*" style="display:none;" onchange="handleSettingsPhotoUpload(this)">
+                    </div>
+                    <!-- Name + Email -->
+                    <div style="flex:1;min-width:0;">
+                        <input type="text" id="settingsDisplayName" placeholder="Enter your name"
+                            style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.35);border-radius:10px;padding:9px 14px;color:white;font-size:15px;font-weight:700;width:100%;box-sizing:border-box;outline:none;margin:0 0 6px 0;height:auto;font-family:inherit;"
+                            oninput="settingsNameChanged()">
+                        <div id="settingsEmailDisplay" style="color:rgba(255,255,255,0.72);font-size:12px;padding:0 2px;"></div>
+                        <button type="button" id="settingsSaveNameBtn" onclick="saveSettingsProfile()"
+                            style="display:none;margin-top:8px;background:#00c896;border:none;border-radius:8px;color:white;font-size:12px;font-weight:700;padding:6px 20px;cursor:pointer;margin-left:0;">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Sections -->
+            <div style="background:white;">
+                <!-- Account -->
+                <div class="gb-settings-section">
+                    <div class="gb-settings-header"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 48 48" style="vertical-align:middle;flex-shrink:0;"><path d="M0 0 C15.84 0 31.68 0 48 0 C48 15.84 48 31.68 48 48 C32.16 48 16.32 48 0 48 C0 32.16 0 16.32 0 0 Z" fill="#1B05AE"/><path d="M0 0 C1.02802734 0.00966797 2.05605469 0.01933594 3.11523438 0.02929688 C4.72301758 0.06700195 4.72301758 0.06700195 6.36328125 0.10546875 C7.44673828 0.11900391 8.53019531 0.13253906 9.64648438 0.14648438 C12.3234153 0.18186232 14.99934963 0.23122686 17.67578125 0.29296875 C17.67578125 1.94296875 17.67578125 3.59296875 17.67578125 5.29296875 C10.74578125 5.29296875 3.81578125 5.29296875 -3.32421875 5.29296875 C-3.32421875 10.57296875 -3.32421875 15.85296875 -3.32421875 21.29296875 C1.95578125 21.29296875 7.23578125 21.29296875 12.67578125 21.29296875 C12.67578125 19.31296875 12.67578125 17.33296875 12.67578125 15.29296875 C9.37578125 15.29296875 6.07578125 15.29296875 2.67578125 15.29296875 C2.67578125 13.97296875 2.67578125 12.65296875 2.67578125 11.29296875 C7.62578125 11.29296875 12.57578125 11.29296875 17.67578125 11.29296875 C18.04679184 22.79429702 18.04679184 22.79429702 16.44262695 24.95043945 C14.1957565 26.65771327 12.91574149 26.67959813 10.11328125 26.69140625 C9.23414062 26.69527344 8.355 26.69914062 7.44921875 26.703125 C6.53398437 26.69152344 5.61875 26.67992188 4.67578125 26.66796875 C3.30292969 26.68537109 3.30292969 26.68537109 1.90234375 26.703125 C1.02320313 26.69925781 0.1440625 26.69539063 -0.76171875 26.69140625 C-1.96634766 26.68633057 -1.96634766 26.68633057 -3.1953125 26.68115234 C-5.88378521 26.19093771 -6.75690301 25.51832253 -8.32421875 23.29296875 C-8.71240234 21.1640625 -8.71240234 21.1640625 -8.72265625 18.73046875 C-8.72652344 17.85132812 -8.73039063 16.9721875 -8.734375 16.06640625 C-8.72277344 15.15117187 -8.71117187 14.2359375 -8.69921875 13.29296875 C-8.71662109 11.92011719 -8.71662109 11.92011719 -8.734375 10.51953125 C-8.73050781 9.64039063 -8.72664062 8.76125 -8.72265625 7.85546875 C-8.71758057 6.65083984 -8.71758057 6.65083984 -8.71240234 5.421875 C-8.32421875 3.29296875 -8.32421875 3.29296875 -7.13208008 1.52612305 C-4.65907766 -0.16072844 -2.97736787 -0.04934864 0 0 Z" fill="#F8F7FC" transform="translate(19.32421875,8.70703125)"/></svg> Account</div>
+                    <div class="gb-settings-row" onclick="alert('Change email: coming soon')">
+                        <span class="gb-settings-label">Email Address</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                    <div class="gb-settings-row" onclick="showForgotPassword()">
+                        <span class="gb-settings-label">Change Password</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                    <div class="gb-settings-row" onclick="alert('Update mobile number: contact info@growthbase.net')">
+                        <span class="gb-settings-label">Mobile Number</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                </div>
+                <!-- Privacy -->
+                <div class="gb-settings-section">
+                    <div class="gb-settings-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5.25 3.5 10.15 8 11.35C16.5 21.15 20 16.25 20 11V5l-8-3z" stroke="#1e3a5f" stroke-width="2" stroke-linejoin="round"/></svg>
+                        Privacy
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Profile Visibility</span>
+                        <select class="gb-select"><option>Everyone</option><option>Members only</option><option>Private</option></select>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Show My Listings</span>
+                        <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Show My Points</span>
+                        <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
+                    </div>
+                </div>
+                <!-- Notifications -->
+                <div class="gb-settings-section">
+                    <div class="gb-settings-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" stroke="#1e3a5f" stroke-width="1.5" fill="none"/></svg>
+                        Notifications
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Push Notifications</span>
+                        <label class="gb-toggle"><input type="checkbox" checked onchange="if(this.checked && currentToken) subscribeToPush(currentToken);"><span class="gb-toggle-track"></span></label>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Goal Match Alerts</span>
+                        <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Chat Messages</span>
+                        <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Nearby Listings</span>
+                        <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
+                    </div>
+                </div>
+                <!-- Language -->
+                <div class="gb-settings-section">
+                    <div class="gb-settings-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1e3a5f"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        App Language
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">Language</span>
+                        <select class="gb-select"><option>English</option><option>Swahili</option><option>French</option></select>
+                    </div>
+                </div>
+                <!-- Help & Feedback -->
+                <div class="gb-settings-section" style="border-bottom:none;">
+                    <div class="gb-settings-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1e3a5f" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="#1e3a5f" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#1e3a5f"/></svg>
+                        Help &amp; Feedback
+                    </div>
+                    <div class="gb-settings-row" onclick="window.open('mailto:info@growthbase.net','_blank')">
+                        <span class="gb-settings-label">Contact Support</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                    <div class="gb-settings-row" onclick="alert('FAQ: coming soon')">
+                        <span class="gb-settings-label">FAQ</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                    <div class="gb-settings-row" onclick="window.open('mailto:info@growthbase.net?subject=Feedback&body=My feedback:','_blank')">
+                        <span class="gb-settings-label">Send Feedback</span>
+                        <span class="gb-settings-chevron">›</span>
+                    </div>
+                    <div class="gb-settings-row">
+                        <span class="gb-settings-label">App Version</span>
+                        <span style="font-size:12px;color:#aaa;font-weight:500;">v1.0</span>
+                    </div>
+                    <div style="padding:18px 16px 28px 16px;">
+                        <button type="button" onclick="logout()"
+                            style="width:100%;padding:14px;background:linear-gradient(90deg,#dc3545,#c82333);color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin:0;box-shadow:0 4px 16px rgba(220,53,69,0.3);">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Plans Page -->
@@ -2802,27 +3166,13 @@ document.addEventListener('DOMContentLoaded', () => {
         newScreen.id = 'listings-scroller-screen';
        
         Object.assign(newScreen.style, {
-            position: 'absolute',
-            height: '140px',
-            backgroundColor: '#ffffff',
             overflowX: 'auto',
             overflowY: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            boxSizing: 'border-box',
-            zIndex: '2000',
-            boxShadow: '0 -5px 15px rgba(0,0,0,0.1)',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
+            backgroundColor: '#ffffff',
         });
 
         const updatePosition = () => {
-            const authRect = authScreen.getBoundingClientRect();
-            const canvasRect = backgroundCanvas ? backgroundCanvas.getBoundingClientRect() : {left: 0, width: window.innerWidth};
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            newScreen.style.top = (scrollY + authRect.bottom - 40) + 'px';
-            newScreen.style.left = canvasRect.left + 'px';
-            newScreen.style.width = canvasRect.width + 'px';
+            // position:fixed in CSS — no JS positioning needed
         };
 
         const clonedList = originalCategoryList.cloneNode(true);
@@ -2875,7 +3225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             arrow.innerHTML = side === 'left' ? '&#10094;' : '&#10095;';
            
             Object.assign(arrow.style, {
-                position: 'absolute',
+                position: 'fixed',
                 width: '45px',
                 height: '45px',
                 backgroundColor: 'rgba(30, 58, 95, 0.8)',
@@ -2887,7 +3237,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 fontSize: '24px',
                 cursor: 'pointer',
                 zIndex: '3000',
-                transition: 'opacity 0.3s'
+                transition: 'opacity 0.3s',
+                transform: 'translateY(-50%)'
             });
 
             arrow.onclick = () => {
@@ -2903,18 +3254,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const rightArr = createArrow('right');
 
         const syncLayout = () => {
-            updatePosition();
+            // Arrows follow the scroller, which is fixed at bottom via CSS
             const rect = newScreen.getBoundingClientRect();
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            const midPoint = scrollY + rect.top + (rect.height / 2);
-
-            leftArr.style.top = rightArr.style.top = midPoint + 'px';
-            leftArr.style.left = (rect.left + 15) + 'px';
+            const midY = rect.top + rect.height / 2;
+            leftArr.style.top  = midY + 'px';
+            rightArr.style.top = midY + 'px';
+            leftArr.style.left   = (rect.left + 15) + 'px';
             rightArr.style.right = (window.innerWidth - rect.right + 15) + 'px';
-
             leftArr.style.opacity = newScreen.scrollLeft <= 5 ? '0' : '1';
             leftArr.style.pointerEvents = newScreen.scrollLeft <= 5 ? 'none' : 'auto';
-           
             const atEnd = newScreen.scrollLeft + newScreen.offsetWidth >= newScreen.scrollWidth - 10;
             rightArr.style.opacity = atEnd ? '0' : '1';
             rightArr.style.pointerEvents = atEnd ? 'none' : 'auto';
@@ -2945,15 +3293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(ticker);
 
         const updateTickerPosition = () => {
-            const scrollerRect = newScreen.getBoundingClientRect();
-            const authRect = authScreen.getBoundingClientRect();
-            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-            // Always sit at the bottom of the scroller, never float up toward authScreen
-            const desiredTop = scrollY + scrollerRect.bottom + 15;
-            const minAllowedTop = scrollY + authRect.bottom;
-            ticker.style.top = Math.max(desiredTop, minAllowedTop) + 'px';
-            ticker.style.left = newScreen.style.left;
-            ticker.style.width = newScreen.style.width;
+            // position:fixed in CSS — no JS positioning needed
         };
 
         const populateTicker = (ads) => {
@@ -3034,31 +3374,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
-    // Tab click handlers
-    const tabMap = {
-        'tab-plans': document.getElementById('plansPage'),
-        'tab-profile': document.getElementById('profilePage'),
-        'tab-services': document.getElementById('servicesPage'),
-        'tab-adverts': document.getElementById('advertsPage')
-    };
-    const tabElements = document.querySelectorAll('.tabs > div');
-    tabElements.forEach(tabElement => {
-        tabElement.addEventListener('click', () => {
-            Object.values(tabMap).forEach(page => {
-                if (page) page.style.display = 'none';
-            });
-            tabElements.forEach(el => {
-                el.style.backgroundColor = '#f1f1f1';
-                el.style.fontWeight = 'normal';
-            });
-            const targetPage = tabMap[tabElement.id];
-            if (targetPage) {
-                targetPage.style.display = 'block';
-                tabElement.style.backgroundColor = 'white';
-                tabElement.style.fontWeight = 'bold';
-            }
-        });
-    });
+    // Tab navigation handled via switchTab() called from onclick attributes
+    // Default: show Adverts tab (index 4)
+    switchTab(4);
 });
 
 // ==================== INTERACTIVE MOVING DOTS BACKGROUND ====================
@@ -3310,6 +3628,9 @@ async function handleLogin() {
 
         // Start midnight auto-points scheduler
         scheduleMidnightPoints();
+
+        // Populate settings after login
+        setTimeout(populateSettingsPanel, 200);
 
     } catch (err) {
         msg.style.color = "#dc3545";
@@ -4041,14 +4362,16 @@ function enableEditing() {
 
 function switchTab(tabIndex) {
     document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', i === tabIndex));
-    const pages = ['plansPage', 'profilePage', 'servicesPage', 'advertsPage'];
+    const pages = ['settingsPage','plansPage', 'profilePage', 'servicesPage', 'advertsPage'];
     pages.forEach((id, i) => {
         const pageEl = document.getElementById(id);
-        if (pageEl) pageEl.classList.toggle('active', i === tabIndex);
+        if (pageEl) {
+            pageEl.style.display = (i === tabIndex) ? 'block' : 'none';
+            pageEl.classList.toggle('active', i === tabIndex);
+        }
     });
-    if (tabIndex === 2) {
-        setTimeout(loadOccupationChart, 300);
-    }
+    if (tabIndex === 3) setTimeout(loadOccupationChart, 300);
+    if (tabIndex === 0) populateSettingsPanel();
 }
 
 // ==================== DOCUMENT FUNCTIONS ====================
@@ -4223,34 +4546,53 @@ async function fetchAds(filterCategory = null, searchTerm = null) {
                 return `<img src="${src}" style="flex:0 0 100%; height:200px; object-fit:cover;" onerror="this.style.display='none'">`;
             }).join('');
 
+            // Poster avatar row (name + photo from server)
+            const posterName  = ad.postedByName  || '';
+            const posterPhoto = ad.postedByPhoto || '';
+            const pInit  = posterName ? posterName.charAt(0).toUpperCase() : '?';
+            const pInner = posterPhoto
+                ? `<img src="${posterPhoto}" alt="${posterName}" onerror="this.style.display='none'">`
+                : pInit;
+            const posterRow = posterName ? `
+                <div class="ad-poster-row">
+                    <div class="ad-poster-avatar">${pInner}</div>
+                    <span class="ad-poster-name">${posterName}</span>
+                </div>` : '';
+
+            // View count
+            const vCount = ad.views || 0;
+            const eyeSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 5C7.5 5 3.73 7.61 2 12c1.73 4.39 5.5 7 10 7s8.27-2.61 10-7c-1.73-4.39-5.5-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="#9aabbb"/></svg>`;
+            const viewBadge = `<div class="ad-view-count">${eyeSVG} ${vCount} ${vCount===1?'view':'views'}</div>`;
+
             const cardHTML = `
                 <div class="ad-card">
-                    <div class="card-images" style="display:flex; overflow-x:auto; height:200px; background:#f0f0f0;">
-                        ${imagesHTML || '<div style="width:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;">No Image</div>'}
+                    <div class="card-images" style="height:200px; background:#f0f0f0;">
+                        ${imagesHTML || '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:13px;">No Image</div>'}
                     </div>
-                    <div class="card-body" style="padding:15px;">
-                        <p style="font-size:12px; color:#555;">${ad.category || ''}</p>
-                        <h4>${ad.title || ''}</h4>
-                        <p style="color:green; font-weight:bold;">KES ${ad.price || ''}</p>
-                        ${(ad.phone || '').replace(/\s/g,'') === '0708253594' ? '<div style="color:#ff4d01; font-size:16px; font-weight:300; margin-top:6px;">Use 🟢🄶🄱GrowthBase Points Discount</div>' : ''}
+                    <div class="card-body">
+                        <p style="font-size:11px;color:#9aabbb;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 4px 0;">${ad.category || ''}</p>
+                        <h4 style="margin:0 0 6px 0;font-size:15px;color:#1e3a5f;line-height:1.3;font-weight:700;">${ad.title || ''}</h4>
+                        <p style="color:#00a870;font-weight:800;font-size:16px;margin:0 0 2px 0;">KES ${ad.price || ''}</p>
+                        ${(ad.phone || '').replace(/\s/g,'') === '0708253594' ? '<div style="color:#ff4d01;font-size:12px;font-weight:700;margin-top:3px;">🟢🄶🄱 GrowthBase Points Discount</div>' : ''}
+                        ${posterRow}
 
-                        <!-- Hidden elements revealed by View Details -->
-                        <p class="description" style="display:none;">${ad.description || ''}</p>
-                        <small class="ad-details" style="display:none;">📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
+                        <p class="description" style="display:none;font-size:13px;color:#555;margin-top:8px;line-height:1.5;">${ad.description || ''}</p>
+                        <small class="ad-details" style="display:none;font-size:12px;color:#7a8ba8;margin-top:4px;">📍 ${ad.locationName || ''} | 📞 ${ad.phone || ''}</small>
 
-                        <!-- Action buttons -->
-                        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
-                            <button class="view-details-btn" style="flex:1; min-width:100px;"
+                        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                            <button class="view-details-btn" style="flex:1;min-width:100px;"
                                     onclick="handleViewDetails(this, '${ad._id}')">
                                 View Details
                             </button>
-                            <button onclick="openChat('${ad._id}', '${(ad.title||'').replace(/'/g,"\\'")}', '${ad.phone || ''}')"
-                                style="flex:1; min-width:100px; padding:10px 14px; background:linear-gradient(90deg,#1e3a5f,#2a5298);
-                                color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="white"/></svg>
+                            <button type="button" onclick="openChat('${ad._id}', '${(ad.title||'').replace(/'/g,"\\'")}', '${ad.phone || ''}')"
+                                style="flex:1;min-width:100px;padding:10px 14px;background:linear-gradient(90deg,#1e3a5f,#2a5298);
+                                color:white;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;
+                                display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px rgba(30,58,95,0.22);">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="white"/></svg>
                                 Chat
                             </button>
                         </div>
+                        ${viewBadge}
                     </div>
                 </div>
             `;
@@ -4488,6 +4830,79 @@ window.onload = function() {
     initBackground();
 };
 
+
+// ==================== SETTINGS PAGE FUNCTIONS ====================
+let settingsPhotoDataUrl = null;
+
+function populateSettingsPanel() {
+    const emailEl = document.getElementById('settingsEmailDisplay');
+    if (emailEl && currentLoggedInEmail) emailEl.textContent = currentLoggedInEmail;
+    const nameEl = document.getElementById('settingsDisplayName');
+    if (nameEl && !nameEl.value) {
+        const profileName = document.getElementById('profileFullName');
+        const saved = sessionStorage.getItem('gb_display_name');
+        if (saved) nameEl.value = saved;
+        else if (profileName && profileName.value) nameEl.value = profileName.value;
+    }
+    // Load saved photo
+    const savedPhoto = sessionStorage.getItem('gb_profile_photo');
+    if (savedPhoto) {
+        const img = document.getElementById('settingsAvatarImg');
+        const ph  = document.getElementById('settingsAvatarPlaceholder');
+        if (img) { img.src = savedPhoto; img.style.display = 'block'; }
+        if (ph)  ph.style.display = 'none';
+        settingsPhotoDataUrl = savedPhoto;
+    }
+}
+
+function handleSettingsPhotoUpload(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        settingsPhotoDataUrl = e.target.result;
+        const img = document.getElementById('settingsAvatarImg');
+        const ph  = document.getElementById('settingsAvatarPlaceholder');
+        if (img) { img.src = e.target.result; img.style.display = 'block'; }
+        if (ph)  ph.style.display = 'none';
+        try { sessionStorage.setItem('gb_profile_photo', e.target.result); } catch(e){}
+        const saveBtn = document.getElementById('settingsSaveNameBtn');
+        if (saveBtn) saveBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+function settingsNameChanged() {
+    const btn = document.getElementById('settingsSaveNameBtn');
+    if (btn) btn.style.display = 'inline-block';
+}
+
+function saveSettingsProfile() {
+    const nameEl = document.getElementById('settingsDisplayName');
+    const name = nameEl ? nameEl.value.trim() : '';
+    if (name) {
+        sessionStorage.setItem('gb_display_name', name);
+        const profName = document.getElementById('profileFullName');
+        if (profName && !profName.value) profName.value = name;
+    }
+    if (settingsPhotoDataUrl) {
+        try { sessionStorage.setItem('gb_profile_photo', settingsPhotoDataUrl); } catch(e){}
+        // Also save to server if logged in
+        if (currentToken) {
+            fetch(`${API_BASE}/api/profile/photo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+                body: JSON.stringify({ photoData: settingsPhotoDataUrl })
+            }).catch(() => {});
+        }
+    }
+    const btn = document.getElementById('settingsSaveNameBtn');
+    if (btn) {
+        btn.textContent = '✓ Saved!';
+        btn.style.background = '#00a87a';
+        setTimeout(() => { btn.textContent = 'Save'; btn.style.background = '#00c896'; btn.style.display = 'none'; }, 1800);
+    }
+}
+
 // ====================== CHAT SYSTEM ======================
 let chatState = {
     roomId: null, adId: null, adTitle: null,
@@ -4583,17 +4998,41 @@ function renderChatMessages(messages) {
 
 async function sendChatMessage() {
     const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message || !chatState.roomId) return;
+    const btn   = document.getElementById('chatSendBtn');
+    const message = (input.value || '').trim();
+    if (!message) return;
+    if (!chatState.roomId) {
+        // Room not ready yet — show brief indicator
+        if (btn) { btn.style.background = '#e53e3e'; setTimeout(() => { btn.style.background = ''; }, 800); }
+        return;
+    }
+    if (!currentToken) { alert('Please log in to send messages.'); return; }
     input.value = '';
+    input.style.height = 'auto';
+    if (btn) btn.disabled = true;
     try {
-        await fetch(`${API_BASE}/api/chat/send`, {
+        const res = await fetch(`${API_BASE}/api/chat/send`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
-            body: JSON.stringify({ roomId: chatState.roomId, adId: chatState.adId, adTitle: chatState.adTitle, receiverId: chatState.receiverId, receiverEmail: chatState.receiverEmail, message })
+            body: JSON.stringify({
+                roomId:        chatState.roomId,
+                adId:          chatState.adId,
+                adTitle:       chatState.adTitle,
+                receiverId:    chatState.receiverId,
+                receiverEmail: chatState.receiverEmail,
+                message
+            })
         });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            console.error('Chat send server error:', err);
+        }
         await loadChatMessages();
-    } catch (err) { console.error('Send error:', err); }
+    } catch (err) {
+        console.error('Send error:', err);
+    } finally {
+        if (btn) btn.disabled = false;
+    }
 }
 
 function startChatPolling() { stopChatPolling(); chatState.pollInterval = setInterval(loadChatMessages, 5000); }
@@ -4685,7 +5124,7 @@ async function openRoomFromInbox(roomId, adId, adTitle, otherId, otherEmail, oth
         <div id="chatInputArea">
             <textarea id="chatInput" placeholder="Type a message…" rows="1"
                 onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendChatMessage();}"></textarea>
-            <button id="chatSendBtn" onclick="sendChatMessage()">
+            <button id="chatSendBtn" type="button" onclick="sendChatMessage()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="white"/></svg>
             </button>
         </div>
