@@ -265,16 +265,19 @@
         
         /* 2. Ticker Images */
         .ticker-item img {
-            width: 300px !important;
-            height: 300px !important;
+            width: 350px !important;
+            height: 250px !important;
             object-fit: cover;
             border-radius: 6px;
             margin-right: 8px;
             flex-shrink: 0;
+            object-fit: contain; /* Changed from 'cover' to ensure full visibility */
+            background: #000; /* Optional: adds background if image doesn't fill space */
         }
 
         /* ===== DYNAMIC LISTINGS TICKER BELOW SCROLLER ===== */
         #dynamic-listings-ticker {
+            transform: translateY(-50px);
             position: fixed !important;
             left: 0 !important;
             right: 0 !important;
@@ -308,7 +311,10 @@
             flex: 1;
             overflow: hidden;
             position: relative;
-            height: 350px;
+            height: 365px;
+        }
+        .ticker-track-wrapper {
+            
         }
 
         #ticker-track {
@@ -325,7 +331,7 @@
         }
 
         .ticker-item {
-           
+            transform: translateY(47px);
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -1835,6 +1841,12 @@
     <input type="password" id="confirmPassword" class="hidden" placeholder="Re-enter password">
     <label id="mobileLabel" class="hidden">Mobile Number</label>
     <input type="tel" id="mobileNumber" class="hidden" placeholder="07xxxxxxxx">
+    <label class="required">Are you over 18 years old?</label>
+    <select id="regAgeVerify">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
    
     <label id="occupationLabel" class="hidden">Occupation or Business</label>
     <input type="text" id="occupationInput" class="hidden" placeholder="e.g. Teacher, Farmer, Retail Shop, Driver">
@@ -1971,22 +1983,54 @@
                 </div>
                 <!-- Privacy -->
                 <div class="gb-settings-section">
+
+                    <label>Custom Chat Name (Max 8 chars)</label>
+                    <input type="text" id="customChatName" maxlength="8" placeholder="Enter name...">
+    
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:15px;">
+                        <span>Show email in chat</span>
+                        <label class="switch">
+                            <input type="checkbox" id="showEmailToggle" onchange="validateVisibility()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:15px;">
+                        <span>Show custom name in chat</span>
+                        <label class="switch">
+                            <input type="checkbox" id="showNameToggle" onchange="validateVisibility()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:15px;">
+                        <span>Allow others to search me for chat</span>
+                        <label class="switch">
+                            <input type="checkbox" id="allowSearchToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
                     <div class="gb-settings-header">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5.25 3.5 10.15 8 11.35C16.5 21.15 20 16.25 20 11V5l-8-3z" stroke="#1e3a5f" stroke-width="2" stroke-linejoin="round"/></svg>
                         Privacy
                     </div>
+                    
                     <div class="gb-settings-row">
                         <span class="gb-settings-label">Profile Visibility</span>
                         <select class="gb-select"><option>Everyone</option><option>Members only</option><option>Private</option></select>
                     </div>
+                    
                     <div class="gb-settings-row">
                         <span class="gb-settings-label">Show My Listings</span>
                         <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
                     </div>
+                    
                     <div class="gb-settings-row">
                         <span class="gb-settings-label">Show My Points</span>
                         <label class="gb-toggle"><input type="checkbox" checked><span class="gb-toggle-track"></span></label>
                     </div>
+                    
                 </div>
                 <!-- Notifications -->
                 <div class="gb-settings-section">
@@ -2300,15 +2344,12 @@
                     <h4 id="userPointsDisplay" style="color:#28a745; font-weight:bold;">
                         Your Points: 0
                     </h4>
+ 
+                    <img src="https://github.com/HKW875/trx-infosec-backend/blob/main/pointsImage.png?raw=true" 
+                         alt="Points" 
+                         style="width: 240px; height: 489px; display: block; margin: 10px auto;">
                     
-                    
-                    <h6 style="margin-top: 0px; margin-bottom: 10px; ">Search adverts and your location above. See listings below.</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >Automatically earn points when You:</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px; display:flex; align-items:center; gap:6px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle; flex-shrink:0;"><path d="M0 0 C15.84 0 31.68 0 48 0 C48 15.84 48 31.68 48 48 C32.16 48 16.32 48 0 48 C0 32.16 0 16.32 0 0 Z" fill="#1B05AE" transform="translate(0,0)"></path><path d="M0 0 C1.02802734 0.00966797 2.05605469 0.01933594 3.11523438 0.02929688 C4.72301758 0.06700195 4.72301758 0.06700195 6.36328125 0.10546875 C7.44673828 0.11900391 8.53019531 0.13253906 9.64648438 0.14648438 C12.3234153 0.18186232 14.99934963 0.23122686 17.67578125 0.29296875 C17.67578125 1.94296875 17.67578125 3.59296875 17.67578125 5.29296875 C10.74578125 5.29296875 3.81578125 5.29296875 -3.32421875 5.29296875 C-3.32421875 10.57296875 -3.32421875 15.85296875 -3.32421875 21.29296875 C1.95578125 21.29296875 7.23578125 21.29296875 12.67578125 21.29296875 C12.67578125 19.31296875 12.67578125 17.33296875 12.67578125 15.29296875 C9.37578125 15.29296875 6.07578125 15.29296875 2.67578125 15.29296875 C2.67578125 13.97296875 2.67578125 12.65296875 2.67578125 11.29296875 C7.62578125 11.29296875 12.57578125 11.29296875 17.67578125 11.29296875 C18.04679184 22.79429702 18.04679184 22.79429702 16.44262695 24.95043945 C14.1957565 26.65771327 12.91574149 26.67959813 10.11328125 26.69140625 C9.23414062 26.69527344 8.355 26.69914062 7.44921875 26.703125 C6.53398437 26.69152344 5.61875 26.67992188 4.67578125 26.66796875 C3.30292969 26.68537109 3.30292969 26.68537109 1.90234375 26.703125 C1.02320313 26.69925781 0.1440625 26.69539063 -0.76171875 26.69140625 C-1.96634766 26.68633057 -1.96634766 26.68633057 -3.1953125 26.68115234 C-5.88378521 26.19093771 -6.75690301 25.51832253 -8.32421875 23.29296875 C-8.71240234 21.1640625 -8.71240234 21.1640625 -8.72265625 18.73046875 C-8.72652344 17.85132812 -8.73039063 16.9721875 -8.734375 16.06640625 C-8.72277344 15.15117187 -8.71117187 14.2359375 -8.69921875 13.29296875 C-8.71662109 11.92011719 -8.71662109 11.92011719 -8.734375 10.51953125 C-8.73050781 9.64039063 -8.72664062 8.76125 -8.72265625 7.85546875 C-8.71758057 6.65083984 -8.71758057 6.65083984 -8.71240234 5.421875 C-8.32421875 3.29296875 -8.32421875 3.29296875 -7.13208008 1.52612305 C-4.65907766 -0.16072844 -2.97736787 -0.04934864 0 0 Z" fill="#F8F7FC" transform="translate(19.32421875,8.70703125)"></path></svg>Login 1 point (limit one per day)</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px; display:flex; align-items:center; gap:6px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle; flex-shrink:0;"><path d="M0 0 C15.84 0 31.68 0 48 0 C48 15.84 48 31.68 48 48 C32.16 48 16.32 48 0 48 C0 32.16 0 16.32 0 0 Z" fill="#1B05AE" transform="translate(0,0)"></path><path d="M0 0 C1.02802734 0.00966797 2.05605469 0.01933594 3.11523438 0.02929688 C4.72301758 0.06700195 4.72301758 0.06700195 6.36328125 0.10546875 C7.44673828 0.11900391 8.53019531 0.13253906 9.64648438 0.14648438 C12.3234153 0.18186232 14.99934963 0.23122686 17.67578125 0.29296875 C17.67578125 1.94296875 17.67578125 3.59296875 17.67578125 5.29296875 C10.74578125 5.29296875 3.81578125 5.29296875 -3.32421875 5.29296875 C-3.32421875 10.57296875 -3.32421875 15.85296875 -3.32421875 21.29296875 C1.95578125 21.29296875 7.23578125 21.29296875 12.67578125 21.29296875 C12.67578125 19.31296875 12.67578125 17.33296875 12.67578125 15.29296875 C9.37578125 15.29296875 6.07578125 15.29296875 2.67578125 15.29296875 C2.67578125 13.97296875 2.67578125 12.65296875 2.67578125 11.29296875 C7.62578125 11.29296875 12.57578125 11.29296875 17.67578125 11.29296875 C18.04679184 22.79429702 18.04679184 22.79429702 16.44262695 24.95043945 C14.1957565 26.65771327 12.91574149 26.67959813 10.11328125 26.69140625 C9.23414062 26.69527344 8.355 26.69914062 7.44921875 26.703125 C6.53398437 26.69152344 5.61875 26.67992188 4.67578125 26.66796875 C3.30292969 26.68537109 3.30292969 26.68537109 1.90234375 26.703125 C1.02320313 26.69925781 0.1440625 26.69539063 -0.76171875 26.69140625 C-1.96634766 26.68633057 -1.96634766 26.68633057 -3.1953125 26.68115234 C-5.88378521 26.19093771 -6.75690301 25.51832253 -8.32421875 23.29296875 C-8.71240234 21.1640625 -8.71240234 21.1640625 -8.72265625 18.73046875 C-8.72652344 17.85132812 -8.73039063 16.9721875 -8.734375 16.06640625 C-8.72277344 15.15117187 -8.71117187 14.2359375 -8.69921875 13.29296875 C-8.71662109 11.92011719 -8.71662109 11.92011719 -8.734375 10.51953125 C-8.73050781 9.64039063 -8.72664062 8.76125 -8.72265625 7.85546875 C-8.71758057 6.65083984 -8.71758057 6.65083984 -8.71240234 5.421875 C-8.32421875 3.29296875 -8.32421875 3.29296875 -7.13208008 1.52612305 C-4.65907766 -0.16072844 -2.97736787 -0.04934864 0 0 Z" fill="#F8F7FC" transform="translate(19.32421875,8.70703125)"></path></svg>Referral 5 points</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px; display:flex; align-items:center; gap:6px;"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle; flex-shrink:0;"><path d="M0 0 C15.84 0 31.68 0 48 0 C48 15.84 48 31.68 48 48 C32.16 48 16.32 48 0 48 C0 32.16 0 16.32 0 0 Z" fill="#1B05AE" transform="translate(0,0)"></path><path d="M0 0 C1.02802734 0.00966797 2.05605469 0.01933594 3.11523438 0.02929688 C4.72301758 0.06700195 4.72301758 0.06700195 6.36328125 0.10546875 C7.44673828 0.11900391 8.53019531 0.13253906 9.64648438 0.14648438 C12.3234153 0.18186232 14.99934963 0.23122686 17.67578125 0.29296875 C17.67578125 1.94296875 17.67578125 3.59296875 17.67578125 5.29296875 C10.74578125 5.29296875 3.81578125 5.29296875 -3.32421875 5.29296875 C-3.32421875 10.57296875 -3.32421875 15.85296875 -3.32421875 21.29296875 C1.95578125 21.29296875 7.23578125 21.29296875 12.67578125 21.29296875 C12.67578125 19.31296875 12.67578125 17.33296875 12.67578125 15.29296875 C9.37578125 15.29296875 6.07578125 15.29296875 2.67578125 15.29296875 C2.67578125 13.97296875 2.67578125 12.65296875 2.67578125 11.29296875 C7.62578125 11.29296875 12.57578125 11.29296875 17.67578125 11.29296875 C18.04679184 22.79429702 18.04679184 22.79429702 16.44262695 24.95043945 C14.1957565 26.65771327 12.91574149 26.67959813 10.11328125 26.69140625 C9.23414062 26.69527344 8.355 26.69914062 7.44921875 26.703125 C6.53398437 26.69152344 5.61875 26.67992188 4.67578125 26.66796875 C3.30292969 26.68537109 3.30292969 26.68537109 1.90234375 26.703125 C1.02320313 26.69925781 0.1440625 26.69539063 -0.76171875 26.69140625 C-1.96634766 26.68633057 -1.96634766 26.68633057 -3.1953125 26.68115234 C-5.88378521 26.19093771 -6.75690301 25.51832253 -8.32421875 23.29296875 C-8.71240234 21.1640625 -8.71240234 21.1640625 -8.72265625 18.73046875 C-8.72652344 17.85132812 -8.73039063 16.9721875 -8.734375 16.06640625 C-8.72277344 15.15117187 -8.71117187 14.2359375 -8.69921875 13.29296875 C-8.71662109 11.92011719 -8.71662109 11.92011719 -8.734375 10.51953125 C-8.73050781 9.64039063 -8.72664062 8.76125 -8.72265625 7.85546875 C-8.71758057 6.65083984 -8.71758057 6.65083984 -8.71240234 5.421875 C-8.32421875 3.29296875 -8.32421875 3.29296875 -7.13208008 1.52612305 C-4.65907766 -0.16072844 -2.97736787 -0.04934864 0 0 Z" fill="#F8F7FC" transform="translate(19.32421875,8.70703125)"></path></svg>Post a listing 2 points</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px;" >🎯Redeem points to get discounts on 🟢🄶🄱GrowthBase marked products and services (10 points = Kes 500).</h6>
-                    <h6 style="margin-top: 10px; margin-bottom: 10px; ">Post ads for free. Click +Post Ad button or send advert details with photos to info@growthbase.net</h6>
+                
                     <h5>Categories</h5>
                     <ul class="category-list">
                         <li data-category="Animals">
@@ -2579,6 +2620,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+
+function validateVisibility() {
+    const email = document.getElementById('showEmailToggle');
+    const name = document.getElementById('showNameToggle');
+    if (!email.checked && !name.checked) {
+        alert("You must display either your email or custom chat name.");
+        email.checked = true; // Default back to email
+    }
+}
 // ==================== SERVICE WORKER + WEB PUSH SETUP ====================
 let swRegistration = null;
 
