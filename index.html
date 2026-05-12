@@ -3724,6 +3724,22 @@ async function handleLogin() {
         sessionStorage.setItem("fd_token", currentToken);
         sessionStorage.setItem("fd_logged_email", email);
 
+        // Restore saved profile photo from MongoDB login response
+        if (data.profilePhoto) {
+            sessionStorage.setItem('gb_profile_photo', data.profilePhoto);
+
+            const img = document.getElementById('settingsAvatarImg');
+            const placeholder = document.getElementById('settingsAvatarPlaceholder');
+
+            if (img) {
+                img.src = data.profilePhoto;
+                img.style.display = 'block';
+            }
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+        }
         
 
         // Update points display immediately from login response
@@ -4993,6 +5009,22 @@ function populateSettingsPanel() {
         if (img) { img.src = savedPhoto; img.style.display = 'block'; }
         if (ph)  ph.style.display = 'none';
         settingsPhotoDataUrl = savedPhoto;
+    }
+
+    const savedPhoto = sessionStorage.getItem('gb_profile_photo');
+
+    if (savedPhoto) {
+        const img = document.getElementById('settingsAvatarImg');
+        const placeholder = document.getElementById('settingsAvatarPlaceholder');
+
+        if (img) {
+            img.src = savedPhoto;
+            img.style.display = 'block';
+        }
+
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
     }
 }
 
