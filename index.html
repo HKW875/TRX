@@ -1209,74 +1209,40 @@
         }
 
         /* ===== AUTH SCREEN DESKTOP LAYOUT WITH PROMO IMAGE ===== */
+
+        /* authScreenWrapper: neutral pass-through, no flex needed */
         #authScreenWrapper {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: center;
+            display: block;
             width: 100%;
-            box-sizing: border-box;
         }
 
-        /* The promo image panel — hidden by default, shown only on desktop */
+        /* Promo panel: hidden on mobile/tablet */
         #authPromoPanel {
             display: none;
         }
 
+        /* Desktop only: fixed panel, right side, top aligned with authScreen */
         @media (min-width: 1024px) {
-            #authScreenWrapper {
-                /* Equal gap on both sides: authScreen ←gap→ image ←gap→ edge */
-                padding: 0;
-                gap: 0;
-                align-items: flex-start;
-                justify-content: center;
-            }
-
-            /* Keep authScreen in the flow but stop it centering itself */
-            #authScreen.auth-container {
-                margin-left: 0;
-                margin-right: 0;
-                flex-shrink: 0;
-            }
-
             #authPromoPanel {
                 display: flex;
                 align-items: flex-start;
-                justify-content: center;
-                flex-shrink: 0;
-                /* Match the vertical offset of auth-container (margin-top: 60px) */
-                margin-top: 60px;
+                justify-content: flex-start;
+                position: fixed;
+                top: 60px;
+                right: clamp(20px, 5vw, 80px);
+                width: clamp(280px, 38vw, 560px);
+                z-index: 5;
+                pointer-events: none;
             }
 
             #authPromoImage {
                 width: 100%;
-                max-width: 560px;
                 height: auto;
                 border-radius: 16px;
                 box-shadow: 0 8px 40px rgba(30,58,95,0.16), 0 2px 12px rgba(0,0,0,0.07);
                 display: block;
                 object-fit: contain;
-            }
-        }
-
-        /* Fine-tune spacing at larger breakpoints */
-        @media (min-width: 1024px) and (max-width: 1399px) {
-            #authScreenWrapper {
-                gap: clamp(20px, 3vw, 48px);
-                padding: 0 clamp(20px, 3vw, 48px);
-            }
-            #authPromoImage {
-                max-width: 420px;
-            }
-        }
-
-        @media (min-width: 1400px) {
-            #authScreenWrapper {
-                gap: clamp(40px, 3.5vw, 80px);
-                padding: 0 clamp(40px, 4vw, 100px);
-            }
-            #authPromoImage {
-                max-width: 560px;
+                pointer-events: none;
             }
         }
         #authScreen h2 {
@@ -1957,13 +1923,12 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
+</div><!-- /#authScreenWrapper -->
 
-<!-- Desktop Promo Image Panel -->
+<!-- Desktop Promo Image Panel — sibling of authScreenWrapper, outside it -->
 <div id="authPromoPanel">
     <img src="Best_deals_desktop_image.png" alt="Find the best deals with GrowthBase" id="authPromoImage" />
 </div>
-
-</div><!-- /#authScreenWrapper -->
 
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
@@ -3832,8 +3797,8 @@ async function handleLogin() {
         showPointsPopup("+1");
 
         // Hide auth screen and show main app
-        // Hide entire auth wrapper including desktop promo image
         document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("authPromoPanel").style.display = "none";
         document.getElementById("mainApp").classList.remove("hidden");
 
         // Handle new user vs existing user flow
@@ -3958,6 +3923,8 @@ function logout() {
     if (badge) badge.style.display = 'none';
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
+    // Restore promo panel on logout (CSS media query handles desktop-only visibility)
+    document.getElementById("authPromoPanel").style.display = "";
     document.getElementById("inactivityWarningModal").style.display = "none";
     if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => {});
 }
@@ -5035,10 +5002,8 @@ window.onload = function() {
         currentToken = token;
         currentLoggedInEmail = email;
         document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("authPromoPanel").style.display = "none";
         document.getElementById("mainApp").classList.remove("hidden");
-        loadProfile();
-        requestGeolocation();
-        setTimeout(loadOccupationChart, 1000);
         // Start notification polling and proximity watching
         document.getElementById('notifBellWrap').style.display = 'block';
         const ci = document.getElementById('chatInboxBtnWrap');
