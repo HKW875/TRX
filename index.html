@@ -3769,6 +3769,8 @@ function setupInactivityListeners() { /* disabled */ }
 
 // ==================== AUTH FUNCTIONS ====================
 // ==================== AUTH FUNCTIONS ====================
+
+    
 async function handleLogin() {
     const email = document.getElementById("email").value.trim().toLowerCase();
     const pass = document.getElementById("password").value.trim();
@@ -3830,7 +3832,8 @@ async function handleLogin() {
         showPointsPopup("+1");
 
         // Hide auth screen and show main app
-        document.getElementById("authScreen").classList.add("hidden");
+        // Hide entire auth wrapper including desktop promo image
+        document.getElementById("authScreenWrapper").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
 
         // Handle new user vs existing user flow
@@ -5031,7 +5034,7 @@ window.onload = function() {
     if (token && email) {
         currentToken = token;
         currentLoggedInEmail = email;
-        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("authScreenWrapper").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         loadProfile();
         requestGeolocation();
