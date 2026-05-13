@@ -5034,8 +5034,7 @@ window.onload = function() {
     if (token && email) {
         currentToken = token;
         currentLoggedInEmail = email;
-        document.getElementById("authScreenWrapper").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
+        
         loadProfile();
         requestGeolocation();
         setTimeout(loadOccupationChart, 1000);
