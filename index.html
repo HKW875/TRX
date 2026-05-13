@@ -1,36 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrowthBase: Advertise Free, Shop and Save Big Marketplace</title>
-
-    <!-- ===== Open Graph / WhatsApp Link Preview ===== -->
-    <meta property="og:site_name" content="GrowthBase">
-    <meta property="og:title" content="GrowthBase – Advertise Free &amp; Grow Your Business">
-    <meta property="og:description" content="Advertise Free on GrowthBase, Budget and accomplish your goals &amp; Save Big Up To 50%, Earn Points, Get Zero Interest Business Capital For Your Business">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://growthbase.net/">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#22c55e">
+    <meta property="og:title" content="GrowthBase">
+    <meta property="og:description" content="Advertise Free, Budget & Save Up To 50%, Earn Points, Get Zero Interest Business Capital For Your Business">
     <meta property="og:image" content="https://raw.githubusercontent.com/HKW875/trx-infosec-backend/main/preview.png">
     <meta property="og:image:secure_url" content="https://raw.githubusercontent.com/HKW875/trx-infosec-backend/main/preview.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="GrowthBase – Advertise Free &amp; Grow Your Business">
-
-    <!-- ===== Twitter / X Card (WhatsApp fallback) ===== -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="GrowthBase – Advertise Free &amp; Grow Your Business">
-    <meta name="twitter:description" content="Advertise Free, Budget &amp; Save Up To 50%, Earn Points, Get Zero Interest Business Capital For Your Business">
-    <meta name="twitter:image" content="https://growthbase.net/preview.png">
-    <meta name="twitter:image:alt" content="GrowthBase – Advertise Free &amp; Grow Your Business">
-
-    <!-- ===== Favicon &amp; App ===== -->
-    <link rel="icon" type="image/png" href="https://growthbase.net/preview.png">
-    <link rel="shortcut icon" type="image/png" href="https://growthbase.net/preview.png">
-    <link rel="apple-touch-icon" href="https://growthbase.net/preview.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0000CC">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertise Free, Budget & Save Up To 50%, Earn Points, Get Zero Interest Business Capital For Your Business</title>
     <style>
        
         .sidebar {
@@ -1226,6 +1207,78 @@
             position: relative;
             z-index: 10;
         }
+
+        /* ===== AUTH SCREEN DESKTOP LAYOUT WITH PROMO IMAGE ===== */
+        #authScreenWrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* The promo image panel — hidden by default, shown only on desktop */
+        #authPromoPanel {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            #authScreenWrapper {
+                /* Equal gap on both sides: authScreen ←gap→ image ←gap→ edge */
+                padding: 0;
+                gap: 0;
+                align-items: flex-start;
+                justify-content: center;
+            }
+
+            /* Keep authScreen in the flow but stop it centering itself */
+            #authScreen.auth-container {
+                margin-left: 0;
+                margin-right: 0;
+                flex-shrink: 0;
+            }
+
+            #authPromoPanel {
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                flex-shrink: 0;
+                /* Match the vertical offset of auth-container (margin-top: 60px) */
+                margin-top: 60px;
+            }
+
+            #authPromoImage {
+                width: 100%;
+                max-width: 560px;
+                height: auto;
+                border-radius: 16px;
+                box-shadow: 0 8px 40px rgba(30,58,95,0.16), 0 2px 12px rgba(0,0,0,0.07);
+                display: block;
+                object-fit: contain;
+            }
+        }
+
+        /* Fine-tune spacing at larger breakpoints */
+        @media (min-width: 1024px) and (max-width: 1399px) {
+            #authScreenWrapper {
+                gap: clamp(20px, 3vw, 48px);
+                padding: 0 clamp(20px, 3vw, 48px);
+            }
+            #authPromoImage {
+                max-width: 420px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            #authScreenWrapper {
+                gap: clamp(40px, 3.5vw, 80px);
+                padding: 0 clamp(40px, 4vw, 100px);
+            }
+            #authPromoImage {
+                max-width: 560px;
+            }
+        }
         #authScreen h2 {
             color: #1e3a5f;
             font-size: 1.6em;
@@ -1824,7 +1877,8 @@
 <button id="installBtn" style="display:none;">
   Install App
 </button>  
-<!-- Auth Screen -->  
+<!-- Auth Screen -->
+<div id="authScreenWrapper">
 <div id="authScreen" class="auth-container">
      
     <div class="auth-field">
@@ -1903,8 +1957,14 @@
     </div>
     <p id="authMessage" style="color:#dc3545; min-height:28px; margin-top:15px;"></p>
 </div>
-    
- 
+
+<!-- Desktop Promo Image Panel -->
+<div id="authPromoPanel">
+    <img src="Best_deals_desktop_image.png" alt="Find the best deals with GrowthBase" id="authPromoImage" />
+</div>
+
+</div><!-- /#authScreenWrapper -->
+
 <!-- Main Application -->
 <div id="mainApp" class="hidden">
     <header>
