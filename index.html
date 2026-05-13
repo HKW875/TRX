@@ -1216,13 +1216,15 @@
             width: 100%;
         }
 
-        /* Promo panel: hidden on mobile/tablet */
-        #authPromoPanel {
+        /* Promo panels: hidden on mobile/tablet */
+        #authPromoPanel,
+        #authPromoPanelLeft {
             display: none;
         }
 
-        /* Desktop only: fixed panel, right side, top aligned with authScreen */
+        /* Desktop only: fixed panels, top aligned with authScreen (margin-top: 60px) */
         @media (min-width: 1024px) {
+            /* Right panel */
             #authPromoPanel {
                 display: flex;
                 align-items: flex-start;
@@ -1236,6 +1238,29 @@
             }
 
             #authPromoImage {
+                width: 100%;
+                height: auto;
+                border-radius: 16px;
+                box-shadow: 0 8px 40px rgba(30,58,95,0.16), 0 2px 12px rgba(0,0,0,0.07);
+                display: block;
+                object-fit: contain;
+                pointer-events: none;
+            }
+
+            /* Left panel — mirrors right panel, anchored to the left */
+            #authPromoPanelLeft {
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+                position: fixed;
+                top: 60px;
+                left: clamp(20px, 5vw, 80px);
+                width: clamp(280px, 38vw, 560px);
+                z-index: 5;
+                pointer-events: none;
+            }
+
+            #authPromoImageLeft {
                 width: 100%;
                 height: auto;
                 border-radius: 16px;
@@ -1925,9 +1950,14 @@
 </div>
 </div><!-- /#authScreenWrapper -->
 
-<!-- Desktop Promo Image Panel — sibling of authScreenWrapper, outside it -->
+<!-- Desktop Promo Image Panel RIGHT — sibling of authScreenWrapper, outside it -->
 <div id="authPromoPanel">
     <img src="Best_deals_desktop_image.png" alt="Find the best deals with GrowthBase" id="authPromoImage" />
+</div>
+
+<!-- Desktop Promo Image Panel LEFT — sibling of authScreenWrapper, outside it -->
+<div id="authPromoPanelLeft">
+    <img src="new_left_side_image.png" alt="Grow your business with GrowthBase" id="authPromoImageLeft" />
 </div>
 
 <!-- Main Application -->
@@ -3799,6 +3829,7 @@ async function handleLogin() {
         // Hide auth screen and show main app
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("authPromoPanel").style.display = "none";
+        document.getElementById("authPromoPanelLeft").style.display = "none";
         document.getElementById("mainApp").classList.remove("hidden");
 
         // Handle new user vs existing user flow
@@ -3923,8 +3954,9 @@ function logout() {
     if (badge) badge.style.display = 'none';
     document.getElementById("mainApp").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
-    // Restore promo panel on logout (CSS media query handles desktop-only visibility)
+    // Restore promo panels on logout (CSS media query handles desktop-only visibility)
     document.getElementById("authPromoPanel").style.display = "";
+    document.getElementById("authPromoPanelLeft").style.display = "";
     document.getElementById("inactivityWarningModal").style.display = "none";
     if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => {});
 }
@@ -5003,6 +5035,7 @@ window.onload = function() {
         currentLoggedInEmail = email;
         document.getElementById("authScreen").classList.add("hidden");
         document.getElementById("authPromoPanel").style.display = "none";
+        document.getElementById("authPromoPanelLeft").style.display = "none";
         document.getElementById("mainApp").classList.remove("hidden");
         // Start notification polling and proximity watching
         document.getElementById('notifBellWrap').style.display = 'block';
