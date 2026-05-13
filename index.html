@@ -3833,8 +3833,7 @@ async function handleLogin() {
 
         // Hide auth screen and show main app
         // Hide entire auth wrapper including desktop promo image
-        document.getElementById("authScreenWrapper").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
+        
 
         // Handle new user vs existing user flow
         if (data.isNewUser) {
