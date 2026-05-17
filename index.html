@@ -333,6 +333,7 @@
             white-space: nowrap;
             animation: tickerScroll 2s linear infinite;
             gap: 0;
+            animation-duration: 6s;
         }
 
         #ticker-track:hover {
@@ -2656,6 +2657,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
+const tickerTrack = document.querySelector('div#ticker-track');
+if (tickerTrack) {
+    tickerTrack.style.animationDuration = '6s';
+}
 
 function validateVisibility() {
     const email = document.getElementById('showEmailToggle');
