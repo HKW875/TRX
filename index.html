@@ -63,6 +63,16 @@
             font-size: 11.2px;
         }
 
+        /* INSTALL BUTTON — move to right side */
+        #installBtn {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            left: auto;
+            z-index: 12000;
+         }
+
+
         .growthbase-discount {
             color: #ff4d01 !important;        /* CHANGED: Was #00c896, now orange */
             font-size: 12px; 
@@ -81,6 +91,8 @@
             text-align: center;
             transform: scale(0.7);
             transform-origin: center top;
+            position: relative;
+            z-index: 20;
         }
 
         /* 4. GrowthBase Points Discount Text - Color Changed */
@@ -389,6 +401,7 @@
             margin: 0;
             min-height: 100vh;
             color: #333;
+           
         }
 
         /* Hide all pages by default */
@@ -1211,9 +1224,17 @@
         /* ===== AUTH SCREEN DESKTOP LAYOUT WITH PROMO IMAGE ===== */
 
         /* authScreenWrapper: neutral pass-through, no flex needed */
+        /* Move auth screen upward by 26px */
         #authScreenWrapper {
-            display: block;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             width: 100%;
+            min-height: 100vh;
+            padding-top: 34px; 
+            box-sizing: border-box;
+            position: relative;
+            z-index: 20;
         }
 
         /* Promo panels: hidden on mobile/tablet */
@@ -1367,6 +1388,14 @@
                 margin: 30px auto;
                 padding: 30px 20px;
             }
+            #dynamic-listings-ticker, #listings-scroller-screen, #scroll-arrow-left, #scroll-arrow-right { 
+                display: none !important; 
+            }
+            body { 
+                overflow-x: hidden; 
+            }
+            position: relative;
+            
         }
 
         /* ===== MY GOAL MODAL ===== */
