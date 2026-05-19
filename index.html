@@ -4200,6 +4200,15 @@ async function handleRegister() {
         }
         msg.style.color = "#155724";
         msg.textContent = "Account created successfully! Please log in.";
+        // Reset back to login-only view after successful registration
+        hideRegisterFields();
+        // Clear registration fields
+        ['confirmPassword','mobileNumber','occupationInput','referredByInput',
+         'referralPhoneInput','referralEmailInput','regSecretCode']
+            .forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
     } catch (err) {
         msg.style.color = "#dc3545";
         msg.textContent = "Server error.";
@@ -5166,8 +5175,10 @@ function showRegisterFields() {
             const el = document.getElementById(id);
             if (el) el.classList.remove('hidden');
         });
-    // Show Go Back, hide Create Account is still visible but Go Back appears
+    // Show Go Back, hide Login button
     document.getElementById('goBackBtn').style.display = 'inline-block';
+    // Hide the Login button while in registration mode
+    document.querySelector('[onclick="handleLogin()"]').style.display = 'none';
     // Wire Create Account button to actually register now
     document.querySelector('[onclick="showRegisterFields()"]').setAttribute('onclick','handleRegister()');
     document.querySelector('[onclick="handleRegister()"]').textContent = 'Submit';
@@ -5183,6 +5194,8 @@ function hideRegisterFields() {
             if (el) el.classList.add('hidden');
         });
     document.getElementById('goBackBtn').style.display = 'none';
+    // Restore Login button visibility
+    document.querySelector('[onclick="handleLogin()"]').style.display = 'inline-block';
     // Reset Create Account button
     const btn = document.querySelector('[onclick="handleRegister()"]');
     if (btn) {
