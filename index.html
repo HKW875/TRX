@@ -3673,8 +3673,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const gbAds = [...electronicsAds, ...otherAds];
 
             const BACKEND_URL_TICKER = 'https://trx-infosec-backend-vvrq.onrender.com';
-            // Build items × 2 for seamless loop
-            const itemsHTML = gbAds.map(ad => {
+            // Pad items to at least 10 before repeating for a seamless loop
+            const MIN_ITEMS = 10;
+            let paddedItems = gbAds;
+            if (gbAds.length < MIN_ITEMS) {
+                // Repeat the array until we have at least MIN_ITEMS
+                while (paddedItems.length < MIN_ITEMS) {
+                    paddedItems = [...paddedItems, ...gbAds];
+                }
+                paddedItems = paddedItems.slice(0, Math.max(MIN_ITEMS, paddedItems.length));
+            }
+            const paddedHTML = paddedItems.map(ad => {
                 const imgSrc = ad.images && ad.images.length > 0
                     ? (ad.images[0].startsWith('http') ? ad.images[0] : BACKEND_URL_TICKER + ad.images[0])
                     : '';
@@ -3694,10 +3703,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span style="color:#00c896; font-size:16px; font-weight:700;">🟢🄶🄱 GrowthBase Points Discount</span>
                 </span>
             `}).join('');
-            track.innerHTML = itemsHTML + itemsHTML;
+            track.innerHTML = paddedHTML + paddedHTML;
 
-            // Speed proportional to item count
-            track.style.animationDuration = Math.max(1, gbAds.length * 4) + 's';
+            // Always scroll at a fixed 6s speed regardless of item count
+            track.style.animationDuration = '6s';
         };
 
         // Fetch ads for ticker (separate lightweight call)
@@ -4156,7 +4165,7 @@ async function handleRegister() {
         return;
     }
 
-    if (!email || !pass || !mobile || !occupation || !confirmPass || !secretCode) {
+    if (!email || !pass || !mobile || !confirmPass || !secretCode) {
         msg.style.color = "#dc3545";
         msg.textContent = "All fields are required.";
         return;
